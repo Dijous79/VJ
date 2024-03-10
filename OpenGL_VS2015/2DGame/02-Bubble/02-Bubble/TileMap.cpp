@@ -197,7 +197,7 @@ bool TileMap::collisionMoveDown(const glm::ivec2& pos, const glm::ivec2& size, i
 	y = (pos.y + size.y - 1) / tileSize;
 	for (int x = x0; x <= x1; x++)
 	{
-		if (map[y * mapSize.x + x] != 0)
+		if (map[y * mapSize.x + x] != '\0')
 		{
 			if (*posY - tileSize * y + size.y <= 4)
 			{
@@ -212,17 +212,19 @@ bool TileMap::collisionMoveDown(const glm::ivec2& pos, const glm::ivec2& size, i
 
 bool TileMap::inLadder(const glm::ivec2& pos, const glm::ivec2& size) const {
 	int x, y0, y1;
-
+	printf("func\n");
 	x = (pos.x + size.x) / tileSize;
+	float posiO = pos.y / float(tileSize);
 	y0 = pos.y / tileSize;
-	y1 = (pos.y + size.y) / tileSize;
-	for (int y = y0; y <= y1; y++)
+	if (floor(posiO) != posiO)
+		y0 += 1;
+	y1 = y0 + size.y / tileSize;
+	for (int y = y0; y < y1; y++)
 	{
 		char aux = map[y * mapSize.x + x];
-		if (aux == 'v')
+		if (aux == 'n')
 			return true;
 	}
-
 	return false;
 }
 
@@ -231,10 +233,29 @@ bool TileMap::onLadder(const glm::ivec2& pos, const glm::ivec2& size) const {
 
 	x0 = pos.x / tileSize;
 	x1 = (pos.x + size.x - 1) / tileSize;
+	y = (pos.y + size.y) / tileSize;
+	for (int x = x0; x <= x1; x++)
+	{
+		char aux = map[y * mapSize.x + x];
+		if (aux == 'n')
+		{
+			return true;
+		}
+	}
+	return false;
+}
+
+bool TileMap::underLadder(const glm::ivec2& pos, const glm::ivec2& size) const {
+	int x0, x1, y;
+
+	x0 = pos.x / tileSize;
+	x1 = (pos.x + size.x - 1) / tileSize;
 	y = (pos.y + size.y - 1) / tileSize;
 	for (int x = x0; x <= x1; x++)
 	{
-		if (map[y * mapSize.x + x] == 'v')
+		char aux = map[y * mapSize.x + x];
+		printf("%d -> %c\n", y, aux);
+		if (aux != 'n')
 		{
 			return true;
 		}
