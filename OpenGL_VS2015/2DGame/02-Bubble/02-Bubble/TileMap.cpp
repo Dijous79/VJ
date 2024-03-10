@@ -77,7 +77,7 @@ bool TileMap::loadLevel(const string &levelFile)
 	sstream >> tilesheetSize.x >> tilesheetSize.y;
 	tileTexSize = glm::vec2(1.f / tilesheetSize.x, 1.f / tilesheetSize.y);
 	
-	map = new int[mapSize.x * mapSize.y];
+	map = new char[mapSize.x * mapSize.y];
 	for(int j=0; j<mapSize.y; j++)
 	{
 		for(int i=0; i<mapSize.x; i++)
@@ -86,7 +86,7 @@ bool TileMap::loadLevel(const string &levelFile)
 			if(tile == ' ')
 				map[j*mapSize.x+i] = 0;
 			else
-				map[j*mapSize.x+i] = tile - int('0');
+				map[j*mapSize.x+i] = tile;
 		}
 		fin.get(tile);
 #ifndef _WIN32
@@ -98,25 +98,28 @@ bool TileMap::loadLevel(const string &levelFile)
 	return true;
 }
 
+
+
 void TileMap::prepareArrays(const glm::vec2 &minCoords, ShaderProgram &program)
 {
-	int tile;
+	char tile;
 	glm::vec2 posTile, texCoordTile[2], halfTexel;
 	vector<float> vertices;
 	
 	nTiles = 0;
-	halfTexel = glm::vec2(0.5f / tilesheet.width(), 0.5f / tilesheet.height());
+	halfTexel = glm::vec2(0.125f / tilesheet.width(), 0.125f / tilesheet.height());
 	for(int j=0; j<mapSize.y; j++)
 	{
 		for(int i=0; i<mapSize.x; i++)
 		{
 			tile = map[j * mapSize.x + i];
-			if(tile != 0)
+			if(tile != '\0')
 			{
 				// Non-empty tile
 				nTiles++;
 				posTile = glm::vec2(minCoords.x + i * tileSize, minCoords.y + j * tileSize);
-				texCoordTile[0] = glm::vec2(float((tile-1)%tilesheetSize.x) / tilesheetSize.x, float((tile-1)/tilesheetSize.x) / tilesheetSize.y);
+				glm::vec2 aux = decodeMap(tile);
+				texCoordTile[0] = glm::vec2(aux.y, aux.x);
 				texCoordTile[1] = texCoordTile[0] + tileTexSize;
 				//texCoordTile[0] += halfTexel;
 				texCoordTile[1] -= halfTexel;
@@ -160,7 +163,8 @@ bool TileMap::collisionMoveLeft(const glm::ivec2 &pos, const glm::ivec2 &size) c
 	y1 = (pos.y + size.y - 1) / tileSize;
 	for(int y=y0; y<=y1; y++)
 	{
-		if(map[y*mapSize.x+x] != 0)
+		char aux = map[y * mapSize.x + x];
+		if(aux != '\0' && aux != 'v' && aux != 'b' && aux != 'n')
 			return true;
 	}
 	
@@ -176,7 +180,8 @@ bool TileMap::collisionMoveRight(const glm::ivec2 &pos, const glm::ivec2 &size) 
 	y1 = (pos.y + size.y - 1) / tileSize;
 	for(int y=y0; y<=y1; y++)
 	{
-		if(map[y*mapSize.x+x] != 0)
+		char aux = map[y * mapSize.x + x];
+		if(aux != '\0' && aux != 'v' && aux != 'b' && aux != 'n')
 			return true;
 	}
 	
@@ -205,6 +210,114 @@ bool TileMap::collisionMoveDown(const glm::ivec2 &pos, const glm::ivec2 &size, i
 	return false;
 }
 
+glm::vec2 TileMap::decodeMap(char l) {
+	switch (l) {
+	case '1':
+		return glm::vec2(0.0, 0.0);
+		break;
+	case '2':
+		return glm::vec2(0.0, 0.125);
+		break;
+	case '3':
+		return glm::vec2(0.0, 0.25);
+		break;
+	case '4':
+		return glm::vec2(0.0, 0.375);
+		break;
+	case '5':
+		return glm::vec2(0.0, 0.5);
+		break;
+	case '6':
+		return glm::vec2(0.0, 0.625);
+		break;
+	case '7':
+		return glm::vec2(0.0, 0.75);
+		break;
+	case '8':
+		return glm::vec2(0.0, 0.875);
+		break;
+	case '9':
+		return glm::vec2(0.125, 0.0);
+		break;
+	case 'q':
+		return glm::vec2(0.125, 0.125);
+		break;
+	case 'w':
+		return glm::vec2(0.125, 0.25);
+		break;
+	case 'e':
+		return glm::vec2(0.125, 0.375);
+		break;
+	case 'r':
+		return glm::vec2(0.125, 0.5);
+		break;
+	case 't':
+		return glm::vec2(0.125, 0.625);
+		break;
+	case 'y':
+		return glm::vec2(0.125, 0.75);
+		break;
+	case 'u':
+		return glm::vec2(0.125, 0.875);
+	case 'i':
+		return glm::vec2(0.25, 0.0);
+		break;
+	case 'o':
+		return glm::vec2(0.25, 0.125);
+		break;
+	case 'p':
+		return glm::vec2(0.25, 0.25);
+		break;
+	case 'a':
+		return glm::vec2(0.25, 0.375);
+		break;
+	case 's':
+		return glm::vec2(0.25, 0.5);
+		break;
+	case 'd':
+		return glm::vec2(0.25, 0.625);
+		break;
+	case 'f':
+		return glm::vec2(0.25, 0.75);
+		break;
+	case 'g':
+		return glm::vec2(0.25, 0.875);
+		break;
+	case 'h':
+		return glm::vec2(0.375, 0.0);
+		break;
+	case 'j':
+		return glm::vec2(0.375, 0.125);
+	case 'k':
+		return glm::vec2(0.375, 0.25);
+		break;
+	case 'l':
+		return glm::vec2(0.375, 0.375);
+		break;
+	case 'ñ':
+		return glm::vec2(0.375, 0.5);
+		break;
+	case 'z':
+		return glm::vec2(0.375, 0.625);
+		break;
+	case 'x':
+		return glm::vec2(0.375, 0.75);
+		break;
+	case 'c':
+		return glm::vec2(0.375, 0.875);
+		break;
+	case 'b':
+		return glm::vec2(0.625, 0.875);
+		break;
+	case 'v':
+		return glm::vec2(0.75, 0.875);
+		break;
+	case 'n':
+		return glm::vec2(0.875, 0.875);
+		break;
+
+	}
+}
 
 
 
