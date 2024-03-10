@@ -63,7 +63,7 @@ void Player::update(int deltaTime)
 		else if (Game::instance().getKey(GLFW_KEY_DOWN))
 		{
 			posPlayer.y += FALL_STEP;
-			if (map->underLadder(posPlayer, glm::ivec2(48, 48))) {
+			if (map->underLadder(posPlayer, glm::ivec2(48, 48), &posPlayer.y)) {
 				bClimbing = false;
 				//Posar Sprite de pujant
 			}
@@ -109,7 +109,6 @@ void Player::update(int deltaTime)
 		}
 		if (Game::instance().getKey(GLFW_KEY_DOWN))
 		{
-			printf("downK");
 			if (map->onLadder(posPlayer, glm::ivec2(48, 48))) {
 				bClimbing = true;
 				//Posar Sprite de pujant

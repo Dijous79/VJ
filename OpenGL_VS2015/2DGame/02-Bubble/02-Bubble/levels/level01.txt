@@ -14,14 +14,14 @@ images/SpriteSheet.png 					-- Tilesheet
 1                                              1
 1                                              1
 1                                              1
-1                                              1
-1                                              1
-1                                              1
-1                    sdddfg                    1
-1                                              1
-1                                              1
-1                                              1
-1                 vbn      vbn                 1
+1                                VBN           1
+1                                vbn           1
+1                                vbn           1
+1                    sdddfg      vbn           1
+1                                vbn           1
+1                                vbn           1
+1                                vbn           1
+1                 VBN      VBN   vbn           1
 1       rttttttyyuvbn      vbnrttttttyyu       1
 1                 vbn      vbn                 1
 1                 vbn      vbn                 1

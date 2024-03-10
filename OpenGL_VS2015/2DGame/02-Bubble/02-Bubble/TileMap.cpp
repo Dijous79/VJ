@@ -164,7 +164,7 @@ bool TileMap::collisionMoveLeft(const glm::ivec2& pos, const glm::ivec2& size) c
 	for (int y = y0; y <= y1; y++)
 	{
 		char aux = map[y * mapSize.x + x];
-		if (aux != '\0' && aux != 'v' && aux != 'b' && aux != 'n')
+		if (aux != '\0' && aux != 'v' && aux != 'b' && aux != 'n' && aux != 'V' && aux != 'B' && aux != 'N')
 			return true;
 	}
 
@@ -181,7 +181,7 @@ bool TileMap::collisionMoveRight(const glm::ivec2& pos, const glm::ivec2& size) 
 	for (int y = y0; y <= y1; y++)
 	{
 		char aux = map[y * mapSize.x + x];
-		if (aux != '\0' && aux != 'v' && aux != 'b' && aux != 'n')
+		if (aux != '\0' && aux != 'v' && aux != 'b' && aux != 'n' && aux != 'V' && aux != 'B' && aux != 'N')
 			return true;
 	}
 
@@ -197,7 +197,8 @@ bool TileMap::collisionMoveDown(const glm::ivec2& pos, const glm::ivec2& size, i
 	y = (pos.y + size.y - 1) / tileSize;
 	for (int x = x0; x <= x1; x++)
 	{
-		if (map[y * mapSize.x + x] != '\0')
+		char aux = map[y * mapSize.x + x];
+		if (aux != '\0' && aux != 'v' && aux != 'b' && aux != 'n')
 		{
 			if (*posY - tileSize * y + size.y <= 4)
 			{
@@ -212,8 +213,7 @@ bool TileMap::collisionMoveDown(const glm::ivec2& pos, const glm::ivec2& size, i
 
 bool TileMap::inLadder(const glm::ivec2& pos, const glm::ivec2& size) const {
 	int x, y0, y1;
-	printf("func\n");
-	x = (pos.x + size.x) / tileSize;
+	x = (pos.x + size.x/2) / tileSize;
 	float posiO = pos.y / float(tileSize);
 	y0 = pos.y / tileSize;
 	if (floor(posiO) != posiO)
@@ -222,7 +222,7 @@ bool TileMap::inLadder(const glm::ivec2& pos, const glm::ivec2& size) const {
 	for (int y = y0; y < y1; y++)
 	{
 		char aux = map[y * mapSize.x + x];
-		if (aux == 'n')
+		if (aux == 'b' || aux == 'B')
 			return true;
 	}
 	return false;
@@ -237,7 +237,7 @@ bool TileMap::onLadder(const glm::ivec2& pos, const glm::ivec2& size) const {
 	for (int x = x0; x <= x1; x++)
 	{
 		char aux = map[y * mapSize.x + x];
-		if (aux == 'n')
+		if (aux == 'B' || aux == 'b')
 		{
 			return true;
 		}
@@ -245,20 +245,19 @@ bool TileMap::onLadder(const glm::ivec2& pos, const glm::ivec2& size) const {
 	return false;
 }
 
-bool TileMap::underLadder(const glm::ivec2& pos, const glm::ivec2& size) const {
-	int x0, x1, y;
+bool TileMap::underLadder(const glm::ivec2& pos, const glm::ivec2& size, int* posY) const {
+	int x, y;
 
-	x0 = pos.x / tileSize;
-	x1 = (pos.x + size.x - 1) / tileSize;
-	y = (pos.y + size.y - 1) / tileSize;
-	for (int x = x0; x <= x1; x++)
+	x = (pos.x + size.x/2) / tileSize;
+	float posiO = pos.y / float(tileSize) + 2;
+	y = (pos.y + size.y) / tileSize;
+	
+	char aux = map[y * mapSize.x + x];
+
+	if (aux != 'b' && aux != 'B')
 	{
-		char aux = map[y * mapSize.x + x];
-		printf("%d -> %c\n", y, aux);
-		if (aux != 'n')
-		{
-			return true;
-		}
+		*posY = *posY = tileSize * y - size.y;
+		return true;
 	}
 	return false;
 }
@@ -289,7 +288,7 @@ glm::vec2 TileMap::decodeMap(char l) {
 	case '8':
 		return glm::vec2(0.0, 0.875);
 		break;
-	case '9':
+	case 'm':
 		return glm::vec2(0.125, 0.0);
 		break;
 	case 'q':
@@ -300,6 +299,18 @@ glm::vec2 TileMap::decodeMap(char l) {
 		break;
 	case 'e':
 		return glm::vec2(0.125, 0.375);
+		break;
+	case 'M':
+		return glm::vec2(0.375, 0.5);
+		break;
+	case 'Q':
+		return glm::vec2(0.375, 0.625);
+		break;
+	case 'W':
+		return glm::vec2(0.375, 0.75);
+		break;
+	case 'E':
+		return glm::vec2(0.375, 0.875);
 		break;
 	case 'r':
 		return glm::vec2(0.125, 0.5);
@@ -312,6 +323,19 @@ glm::vec2 TileMap::decodeMap(char l) {
 		break;
 	case 'u':
 		return glm::vec2(0.125, 0.875);
+		break;
+	case 'R':
+		return glm::vec2(0.0, 0.5);
+		break;
+	case 'T':
+		return glm::vec2(0.0, 0.625);
+		break;
+	case 'Y':
+		return glm::vec2(0.0, 0.75);
+		break;
+	case 'U':
+		return glm::vec2(0.0, 0.875);
+		break;
 	case 'i':
 		return glm::vec2(0.25, 0.0);
 		break;
@@ -323,6 +347,18 @@ glm::vec2 TileMap::decodeMap(char l) {
 		break;
 	case 'a':
 		return glm::vec2(0.25, 0.375);
+		break;
+	case 'I':
+		return glm::vec2(0.5, 0.5);
+		break;
+	case 'O':
+		return glm::vec2(0.5, 0.625);
+		break;
+	case 'P':
+		return glm::vec2(0.5, 0.75);
+		break;
+	case 'A':
+		return glm::vec2(0.5, 0.875);
 		break;
 	case 's':
 		return glm::vec2(0.25, 0.5);
@@ -336,16 +372,41 @@ glm::vec2 TileMap::decodeMap(char l) {
 	case 'g':
 		return glm::vec2(0.25, 0.875);
 		break;
+	case 'S':
+		return glm::vec2(0.125, 0.5);
+		break;
+	case 'D':
+		return glm::vec2(0.125, 0.625);
+		break;
+	case 'F':
+		return glm::vec2(0.125, 0.75);
+		break;
+	case 'G':
+		return glm::vec2(0.125, 0.875);
+		break;
 	case 'h':
 		return glm::vec2(0.375, 0.0);
 		break;
 	case 'j':
 		return glm::vec2(0.375, 0.125);
+		break;
 	case 'k':
 		return glm::vec2(0.375, 0.25);
 		break;
 	case 'l':
 		return glm::vec2(0.375, 0.375);
+		break;
+	case 'H':
+		return glm::vec2(0.625, 0.5);
+		break;
+	case 'J':
+		return glm::vec2(0.625, 0.625);
+		break;
+	case 'K':
+		return glm::vec2(0.625, 0.75);
+		break;
+	case 'L':
+		return glm::vec2(0.625, 0.875);
 		break;
 	case 'ñ':
 		return glm::vec2(0.375, 0.5);
@@ -359,6 +420,18 @@ glm::vec2 TileMap::decodeMap(char l) {
 	case 'c':
 		return glm::vec2(0.375, 0.875);
 		break;
+	case 'Ñ':
+		return glm::vec2(0.25, 0.5);
+		break;
+	case 'Z':
+		return glm::vec2(0.25, 0.625);
+		break;
+	case 'X':
+		return glm::vec2(0.25, 0.75);
+		break;
+	case 'C':
+		return glm::vec2(0.25, 0.875);
+		break;
 	case 'b':
 		return glm::vec2(0.625, 0.875);
 		break;
@@ -366,6 +439,15 @@ glm::vec2 TileMap::decodeMap(char l) {
 		return glm::vec2(0.75, 0.875);
 		break;
 	case 'n':
+		return glm::vec2(0.875, 0.875);
+		break;
+	case 'V':
+		return glm::vec2(0.75, 0.875);
+		break;
+	case 'B':
+		return glm::vec2(0.625, 0.875);
+		break;
+	case 'N':
 		return glm::vec2(0.875, 0.875);
 		break;
 
