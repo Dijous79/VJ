@@ -104,6 +104,7 @@ void Player::update(int deltaTime)
 		{
 			if (map->inLadder(posPlayer, glm::ivec2(48, 48))) {
 				bClimbing = true;
+				map->closestLadder(posPlayer, glm::ivec2(48, 48), &posPlayer.x);
 				//Posar Sprite de pujant
 			}
 		}
@@ -111,6 +112,7 @@ void Player::update(int deltaTime)
 		{
 			if (map->onLadder(posPlayer, glm::ivec2(48, 48))) {
 				bClimbing = true;
+				map->closestLadder(posPlayer, glm::ivec2(48, 48), &posPlayer.x);
 				//Posar Sprite de pujant
 			}
 		}
