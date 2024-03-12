@@ -17,7 +17,7 @@ images/SpriteSheet.png 					-- Tilesheet
 1                                VBN           1
 1                                vbn           1
 1                                vbn           1
-1                    sdddfg      vbn           1
+1                    sddfg       vbn           1
 1                                vbn           1
 1                                vbn           1
 1                                vbn           1

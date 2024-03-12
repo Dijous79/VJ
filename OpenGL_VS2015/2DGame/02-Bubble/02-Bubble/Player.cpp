@@ -12,17 +12,19 @@
 
 enum PlayerAnims
 {
-	STAND_LEFT, STAND_RIGHT, MOVE_LEFT, MOVE_RIGHT
+	STAND_LEFT, STAND_RIGHT, MOVE_LEFT, MOVE_RIGHT, CLIMBING, OUT_OF_LADDER
 };
 
 
 void Player::init(const glm::ivec2& tileMapPos, ShaderProgram& shaderProgram)
 {
-	bJumping = false;
 	bClimbing = false;
-	inLadder = false;
+	inAnim = false;
+	lastDir = false;
+	Bfr = 0;
+	size = glm::ivec2(96, 96);
 	spritesheet.loadFromFile("images/character.png", TEXTURE_PIXEL_FORMAT_RGBA);
-	sprite = Sprite::createSprite(glm::ivec2(96, 96), glm::vec2(0.2, 1.0/6.0), &spritesheet, &shaderProgram);
+	sprite = Sprite::createSprite(size, glm::vec2(0.2, 1.0/6.0), &spritesheet, &shaderProgram);
 	sprite->setNumberAnimations(6);
 
 	sprite->setAnimationSpeed(STAND_LEFT, 8);
@@ -45,6 +47,15 @@ void Player::init(const glm::ivec2& tileMapPos, ShaderProgram& shaderProgram)
 	sprite->addKeyframe(MOVE_RIGHT, glm::vec2(0.6f, 0.f));
 	sprite->addKeyframe(MOVE_RIGHT, glm::vec2(0.8f, 0.f));
 
+	sprite->setAnimationSpeed(CLIMBING, 4);
+	sprite->addKeyframe(CLIMBING, glm::vec2(0.2f, 3.0 / 6.0));
+	sprite->addKeyframe(CLIMBING, glm::vec2(0.4f, 2.0 / 6.0));
+	sprite->addKeyframe(CLIMBING, glm::vec2(0.2f, 3.0 / 6.0));
+	sprite->addKeyframe(CLIMBING, glm::vec2(0.6f, 2.0 / 6.0));
+
+	sprite->setAnimationSpeed(OUT_OF_LADDER, 1);
+	sprite->addKeyframe(OUT_OF_LADDER, glm::vec2(0.6f, 3.0 / 6.0));
+
 	sprite->changeAnimation(0);
 	tileMapDispl = tileMapPos;
 	sprite->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)));
@@ -54,32 +65,56 @@ void Player::init(const glm::ivec2& tileMapPos, ShaderProgram& shaderProgram)
 void Player::update(int deltaTime)
 {
 	sprite->update(deltaTime);
-
-	if (bClimbing) {
+	if (inAnim) {
+		if (Bfr > 0) Bfr--;
+		else {
+			inAnim = false;
+			if (iOc) sprite->changeAnimation(CLIMBING);
+			else {
+				posPlayer.y -= size.y / 3.3333;
+				if (lastDir) sprite->changeAnimation(STAND_LEFT);
+				else {
+					sprite->changeAnimation(STAND_RIGHT);
+				}
+			}
+		}
+	}
+	else if (bClimbing) {
 		if (Game::instance().getKey(GLFW_KEY_UP))
 		{
+			sprite->setAnimationSpeed(CLIMBING, 4);
 			posPlayer.y -= FALL_STEP;
-			if (!map->inLadder(posPlayer, glm::ivec2(92, 92))) {
+			if (!map->inLadder(posPlayer, size)) {
 				bClimbing = false;
-				//Posar Sprite de pujant
+				inAnim = true;
+				Bfr = 5;
+				iOc = false;
+				sprite->changeAnimation(OUT_OF_LADDER);
 			}
 		}
 		else if (Game::instance().getKey(GLFW_KEY_DOWN))
 		{
+			sprite->setAnimationSpeed(CLIMBING, 4);
 			posPlayer.y += FALL_STEP;
-			if (map->underLadder(posPlayer, glm::ivec2(92, 92), &posPlayer.y)) {
+			if (map->underLadder(posPlayer, size, &posPlayer.y)) {
 				bClimbing = false;
-				//Posar Sprite de pujant
+				inAnim = false;
+				if (lastDir) sprite->changeAnimation(STAND_LEFT);
+				else sprite->changeAnimation(STAND_RIGHT);
 			}
+		}
+		else {
+			sprite->setAnimationSpeed(CLIMBING, 0);
 		}
 	}
 	else {
 		if (Game::instance().getKey(GLFW_KEY_LEFT))
 		{
+			lastDir = true;
 			if (sprite->animation() != MOVE_LEFT)
 				sprite->changeAnimation(MOVE_LEFT);
 			posPlayer.x -= 2;
-			if (map->collisionMoveLeft(posPlayer, glm::ivec2(92, 92)))
+			if (map->collisionMoveLeft(posPlayer, size))
 			{
 				posPlayer.x += 2;
 				sprite->changeAnimation(STAND_LEFT);
@@ -87,11 +122,12 @@ void Player::update(int deltaTime)
 		}
 		else if (Game::instance().getKey(GLFW_KEY_RIGHT))
 		{
+			lastDir = false;
 			if (sprite->animation() != MOVE_RIGHT) {
 				sprite->changeAnimation(MOVE_RIGHT);
 			}
 			posPlayer.x += 2;
-			if (map->collisionMoveRight(posPlayer, glm::ivec2(92, 92)))
+			if (map->collisionMoveRight(posPlayer, size))
 			{
 				posPlayer.x -= 2;
 				sprite->changeAnimation(STAND_RIGHT);
@@ -107,22 +143,25 @@ void Player::update(int deltaTime)
 
 		if (Game::instance().getKey(GLFW_KEY_UP))
 		{
-			if (map->inLadder(posPlayer, glm::ivec2(92, 92))) {
+			if (map->inLadder(posPlayer, size)) {
 				bClimbing = true;
-				map->closestLadder(posPlayer, glm::ivec2(92, 92), &posPlayer.x);
-				//Posar Sprite de pujant
+				map->closestLadder(posPlayer, size, &posPlayer.x, &posPlayer.y);
+				sprite->changeAnimation(CLIMBING);
 			}
 		}
 		if (Game::instance().getKey(GLFW_KEY_DOWN))
 		{
-			if (map->onLadder(posPlayer, glm::ivec2(92, 92))) {
+			if (map->onLadder(posPlayer, size)) {
 				bClimbing = true;
-				map->closestLadder(posPlayer, glm::ivec2(92, 92), &posPlayer.x);
-				//Posar Sprite de pujant
+				map->closestLadder(posPlayer, size, &posPlayer.x, &posPlayer.y);
+				inAnim = true;
+				Bfr = 10;
+				sprite->changeAnimation(OUT_OF_LADDER);
+				iOc = true;
 			}
 		}
 		posPlayer.y += FALL_STEP;
-		map->collisionMoveDown(posPlayer, glm::ivec2(92, 92), &posPlayer.y);
+		map->collisionMoveDown(posPlayer, size, &posPlayer.y);
 	}
 
 	sprite->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)));
