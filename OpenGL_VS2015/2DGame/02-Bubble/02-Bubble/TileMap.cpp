@@ -218,9 +218,10 @@ bool TileMap::inLadder(const glm::ivec2& pos, const glm::ivec2& size) const {
 	y0 = pos.y / tileSize;
 	if (floor(posiO) != posiO)
 		y0 += 1;
-	y1 = y0 + size.y / tileSize;
+	y1 = y0 + (size.y / 1.333333333333333333333333) / tileSize;
 	for (int y = y0; y < y1; y++)
 	{
+		printf("%f\n", posiO);
 		char aux = map[y * mapSize.x + x];
 		if (aux == 'b' || aux == 'B')
 			return true;
@@ -237,10 +238,11 @@ bool TileMap::onLadder(const glm::ivec2& pos, const glm::ivec2& size) const {
 	for (int x = x0; x <= x1; x++)
 	{
 		char aux = map[y * mapSize.x + x];
-		if (aux == 'B' || aux == 'b')
+		if (aux == 'b' || aux == 'B')
 		{
 			return true;
 		}
+			
 	}
 	return false;
 }
@@ -262,7 +264,7 @@ bool TileMap::underLadder(const glm::ivec2& pos, const glm::ivec2& size, int* po
 	return false;
 }
 
-void TileMap::closestLadder(const glm::ivec2& pos, const glm::ivec2& size, int* posX) const {
+void TileMap::closestLadder(const glm::ivec2& pos, const glm::ivec2& size, int* posX, int* posY) const {
 	int x, y0, y1;
 	x = (pos.x + size.x / 2) / tileSize;
 	float posiO = pos.y / float(tileSize);
@@ -275,6 +277,8 @@ void TileMap::closestLadder(const glm::ivec2& pos, const glm::ivec2& size, int* 
 		char aux = map[y * mapSize.x + x];
 		if (aux == 'b' || aux == 'B')
 			*posX = tileSize * x - size.x / 3;
+		if (aux == 'B')
+			*posY = tileSize * y - size.y/1.33333333;
 	}
 }
 
