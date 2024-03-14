@@ -3,6 +3,7 @@
 #include <sstream>
 #include <vector>
 #include "TileMap.h"
+#include "DynamicObj.h"
 
 
 using namespace std;
@@ -166,6 +167,16 @@ bool TileMap::collisionMoveLeft(const glm::ivec2& pos, const glm::ivec2& size) c
 		char aux = map[y * mapSize.x + x];
 		if (aux != '\0' && aux != 'v' && aux != 'b' && aux != 'n' && aux != 'V' && aux != 'B' && aux != 'N')
 			return true;
+		///////////////mirem si hi ha objectes dinamics solids/////////
+		for (auto it = objs.begin(); it != objs.end(); ++it) {
+			glm::ivec2 posA = (*it)->posObj();
+			glm::ivec2 sizeA = (*it)->sizeObj();
+			int xe = posA.x / tileSize;
+			int yt = posA.y / tileSize;
+			int yb = yt + sizeA.y / tileSize;
+			if (y <= yb && y >= yt && x == xe)
+				return true;
+		}
 	}
 
 	return false;
@@ -183,6 +194,16 @@ bool TileMap::collisionMoveRight(const glm::ivec2& pos, const glm::ivec2& size) 
 		char aux = map[y * mapSize.x + x];
 		if (aux != '\0' && aux != 'v' && aux != 'b' && aux != 'n' && aux != 'V' && aux != 'B' && aux != 'N')
 			return true;
+		///////////////mirem si hi ha objectes dinamics solids/////////
+		for (auto it = objs.begin(); it != objs.end(); ++it) {
+			glm::ivec2 posA = (*it)->posObj();
+			glm::ivec2 sizeA = (*it)->sizeObj();
+			int xe = posA.x / tileSize;
+			int yt = posA.y / tileSize;
+			int yb = yt + sizeA.y / tileSize;
+			if (y <= yb && y >= yt && x == xe)
+				return true;
+		}
 	}
 
 	return false;
@@ -197,6 +218,7 @@ bool TileMap::collisionMoveDown(const glm::ivec2& pos, const glm::ivec2& size, i
 	y = (pos.y + size.y - 1) / tileSize;
 	for (int x = x0; x <= x1; x++)
 	{
+		///////////////mirem si hi ha objectes solids de tilemap/////////
 		char aux = map[y * mapSize.x + x];
 		if (aux != '\0' && aux != 'v' && aux != 'b' && aux != 'n')
 		{
@@ -204,6 +226,21 @@ bool TileMap::collisionMoveDown(const glm::ivec2& pos, const glm::ivec2& size, i
 			{
 				*posY = tileSize * y - size.y;
 				return true;
+			}
+		}
+		///////////////mirem si hi ha objectes dinamics solids/////////
+		for (auto it = objs.begin(); it != objs.end(); ++it) {
+			glm::ivec2 posA = (*it)->posObj();
+			glm::ivec2 sizeA = (*it)->sizeObj();
+			int xe = posA.x / tileSize;
+			int xd = xe + size.x / tileSize;
+			int ya = posA.y / tileSize;
+			if (x >= xe && x <= xd && y == ya) {
+				if (*posY - tileSize * y + size.y <= 4)
+				{
+					*posY = tileSize * y - size.y;
+					return true;
+				}
 			}
 		}
 	}
@@ -275,11 +312,19 @@ void TileMap::closestLadder(const glm::ivec2& pos, const glm::ivec2& size, int* 
 	for (int y = y0; y <= y1; y++)
 	{
 		char aux = map[y * mapSize.x + x];
-		if (aux == 'b' || aux == 'B')
+		if (aux == 'b' || aux == 'B') // centre d'escala
 			*posX = tileSize * x - size.x / 3;
-		if (aux == 'B')
+		if (aux == 'B') // centre de top ladder
 			*posY = tileSize * y - size.y/1.33333333;
 	}
+}
+
+void TileMap::addDObj(DynamicObj* dObj) {
+	objs.insert(dObj);
+}
+
+void TileMap::rmDObj(DynamicObj* dObj) {
+	objs.erase(dObj);
 }
 
 glm::vec2 TileMap::decodeMap(char l) {

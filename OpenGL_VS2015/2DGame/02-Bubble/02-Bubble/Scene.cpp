@@ -35,14 +35,25 @@ void Scene::init()
 	player->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
 	player->setPosition(glm::vec2(INIT_PLAYER_X_TILES * map->getTileSize(), INIT_PLAYER_Y_TILES * map->getTileSize()));
 	player->setTileMap(map);
+	gb = new GlassBlock();
+	gb->init(glm::ivec2(SCREEN_X, SCREEN_Y), glm::ivec2(24 * 37, 24 * 15), glm::ivec2(96, 24), 1, texProgram);
+	gb->setTileMap(map);
+	map->addDObj(gb);
 	projection = glm::ortho(0.f, float(SCREEN_WIDTH), float(SCREEN_HEIGHT), 0.f);
 	currentTime = 0.0f;
+	aux = false;
 }
 
 void Scene::update(int deltaTime)
 {
 	currentTime += deltaTime;
 	player->update(deltaTime);
+	gb->update(deltaTime);
+	if (Game::instance().getKey(GLFW_KEY_SPACE) && aux == false) {
+		map->rmDObj(gb);
+		gb->destroy();
+		aux = true;
+	}
 }
 
 void Scene::render()
@@ -57,6 +68,7 @@ void Scene::render()
 	texProgram.setUniform2f("texCoordDispl", 0.f, 0.f);
 	map->render();
 	player->render();
+	gb->render();
 }
 
 void Scene::initShaders()

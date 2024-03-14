@@ -28,7 +28,7 @@ private:
 	bool lastDir;
 	bool iOc;
 	glm::ivec2 tileMapDispl, posPlayer, size;
-	int jumpAngle, startY;
+	int startY;
 	Texture spritesheet;
 	Sprite* sprite;
 	TileMap* map;
