@@ -35,10 +35,17 @@ void Scene::init()
 	player->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
 	player->setPosition(glm::vec2(INIT_PLAYER_X_TILES * map->getTileSize(), INIT_PLAYER_Y_TILES * map->getTileSize()));
 	player->setTileMap(map);
-	gb = new GlassBlock();
-	gb->init(glm::ivec2(SCREEN_X, SCREEN_Y), glm::ivec2(24 * 37, 24 * 15), glm::ivec2(96, 24), 1, texProgram);
-	gb->setTileMap(map);
-	map->addDObj(gb);
+	gb1 = new GlassBlock();
+	gb1->init(glm::ivec2(SCREEN_X, SCREEN_Y), glm::ivec2(24 * 11, 24 * 17), glm::ivec2(72, 24), 0, texProgram);
+	gb1->setTileMap(map);
+	map->addDObj(gb1);
+	gb2 = new GlassBlock();
+	gb2->init(glm::ivec2(SCREEN_X, SCREEN_Y), glm::ivec2(24 * 28, 24 * 17), glm::ivec2(72, 24), 0, texProgram);
+	gb2->setTileMap(map);
+	map->addDObj(gb2);
+	Wire* wr = new Wire();
+	wr->init(glm::ivec2(SCREEN_X, SCREEN_Y), glm::ivec2(24 * 20, 24 * 21), texProgram);
+	wrs.insert(wr);
 	projection = glm::ortho(0.f, float(SCREEN_WIDTH), float(SCREEN_HEIGHT), 0.f);
 	currentTime = 0.0f;
 	aux = false;
@@ -48,10 +55,14 @@ void Scene::update(int deltaTime)
 {
 	currentTime += deltaTime;
 	player->update(deltaTime);
-	gb->update(deltaTime);
+	for (std::set<Wire*>::iterator it = wrs.begin(); it != wrs.end(); ++it) {
+		(*it)->update(deltaTime);
+	}
+	wireCollisions();
+	gb1->update(deltaTime);
 	if (Game::instance().getKey(GLFW_KEY_SPACE) && aux == false) {
-		map->rmDObj(gb);
-		gb->destroy();
+		map->rmDObj(gb1);
+		gb1->destroy();
 		aux = true;
 	}
 }
@@ -68,7 +79,11 @@ void Scene::render()
 	texProgram.setUniform2f("texCoordDispl", 0.f, 0.f);
 	map->render();
 	player->render();
-	gb->render();
+	gb1->render();
+	gb2->render();
+	for (std::set<Wire*>::iterator it = wrs.begin(); it != wrs.end(); ++it) {
+		(*it)->render();
+	}
 }
 
 void Scene::initShaders()
@@ -101,5 +116,11 @@ void Scene::initShaders()
 	fShader.free();
 }
 
-
+void Scene::wireCollisions() {
+	for (std::set<Wire*>::iterator it = wrs.begin(); it != wrs.end(); ++it) {
+		if (map->wahtTile((*it)->topHitBox()) != '\0') {
+			(*it)->destroy();
+		}
+	}
+}
 

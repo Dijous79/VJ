@@ -13,7 +13,7 @@
 // it builds a single VBO that contains all tiles. As a result the render
 // method draws the whole map independently of what is visible.
 
-class DynamicObj;
+class GlassBlock;
 
 class TileMap
 {
@@ -39,8 +39,9 @@ public:
 	bool onLadder(const glm::ivec2& pos, const glm::ivec2& size) const;
 	bool underLadder(const glm::ivec2& pos, const glm::ivec2& size, int* posY) const;
 	void closestLadder(const glm::ivec2& pos, const glm::ivec2& size, int* posX, int* posY) const;
-	void addDObj(DynamicObj* dObj);
-	void rmDObj(DynamicObj* dObj);
+	void addDObj(GlassBlock* dObj);
+	void rmDObj(GlassBlock* dObj);
+	char wahtTile(glm::vec2 tile);
 
 private:
 	bool loadLevel(const string& levelFile);
@@ -57,7 +58,7 @@ private:
 	Texture tilesheet;
 	glm::vec2 tileTexSize;
 	char* map;
-	std::set<DynamicObj*> objs;
+	std::set<GlassBlock*> objs;
 
 };
 

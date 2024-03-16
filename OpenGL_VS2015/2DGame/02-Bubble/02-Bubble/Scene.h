@@ -7,6 +7,7 @@
 #include "TileMap.h"
 #include "Player.h"
 #include "GlassBlock.h"
+#include "Wire.h"
 
 
 // Scene contains all the entities of our game.
@@ -26,11 +27,14 @@ public:
 
 private:
 	void initShaders();
+	void wireCollisions();
 
 private:
 	TileMap *map;
 	Player *player;
-	GlassBlock* gb;
+	GlassBlock* gb1;
+	GlassBlock* gb2;
+	std::set<Wire*> wrs;
 	ShaderProgram texProgram;
 	float currentTime;
 	glm::mat4 projection;

@@ -113,11 +113,10 @@ void Player::update(int deltaTime)
 			lastDir = true;
 			if (sprite->animation() != MOVE_LEFT)
 				sprite->changeAnimation(MOVE_LEFT);
-			posPlayer.x -= 2;
+			posPlayer.x -= 4;
 			if (map->collisionMoveLeft(posPlayer, size))
 			{
-				posPlayer.x += 2;
-				sprite->changeAnimation(STAND_LEFT);
+				posPlayer.x += 4;
 			}
 		}
 		else if (Game::instance().getKey(GLFW_KEY_RIGHT))
@@ -126,11 +125,10 @@ void Player::update(int deltaTime)
 			if (sprite->animation() != MOVE_RIGHT) {
 				sprite->changeAnimation(MOVE_RIGHT);
 			}
-			posPlayer.x += 2;
+			posPlayer.x += 4;
 			if (map->collisionMoveRight(posPlayer, size))
 			{
-				posPlayer.x -= 2;
-				sprite->changeAnimation(STAND_RIGHT);
+				posPlayer.x -= 4;
 			}
 		}
 		else
@@ -153,6 +151,7 @@ void Player::update(int deltaTime)
 		{
 			if (map->onLadder(posPlayer, size)) {
 				bClimbing = true;
+				printf("%f\n", float(posPlayer.x) / 24.0);
 				map->closestLadder(posPlayer, size, &posPlayer.x, &posPlayer.y);
 				inAnim = true;
 				Bfr = 10;

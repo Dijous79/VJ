@@ -52,7 +52,6 @@ void GlassBlock::init(const glm::ivec2& tileMapPos, glm::ivec2 posiO, glm::ivec2
 	sprite->addKeyframe(DH3, glm::vec2(14.0 / 19.0, 12.0 / 13.0));
 
 	sprite->changeAnimation(decode(size, false));
-	tileMapDispl = tileMapPos;
 	sprite->setPosition(glm::vec2(float(tileMapDispl.x + posi.x), float(tileMapDispl.y + posi.y)));
 }
 void GlassBlock::update(int deltaTime) {
@@ -67,7 +66,7 @@ void GlassBlock::update(int deltaTime) {
 }
 
 void GlassBlock::destroy() {
-	sprite->changeAnimation(DH4);
+	sprite->changeAnimation(decode(size, true));
 	destroying = true;
 	cdDestroy = 21;
 }

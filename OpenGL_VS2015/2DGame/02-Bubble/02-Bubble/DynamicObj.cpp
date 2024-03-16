@@ -4,7 +4,12 @@ DynamicObj::DynamicObj() {}
 
 void DynamicObj::init(const glm::ivec2& tileMapPos, glm::ivec2 posiO, glm::ivec2 sizeObj, int col, ShaderProgram& shaderProgram) {}
 
+void DynamicObj::init(const glm::ivec2& tileMapPos, glm::ivec2 posiO, ShaderProgram& shaderProgram) {}
+
+
 void DynamicObj::update(int deltaTime) {}
+
+void DynamicObj::destroy() {}
 
 void DynamicObj::render() {
 	sprite->render();
