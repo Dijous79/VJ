@@ -24,6 +24,8 @@ public:
 	void init();
 	void update(int deltaTime);
 	void render();
+	bool space4Wire();
+	void instanceWire(glm::ivec2 pos, int off);
 
 private:
 	void initShaders();
@@ -38,7 +40,7 @@ private:
 	ShaderProgram texProgram;
 	float currentTime;
 	glm::mat4 projection;
-	bool aux;
+	int wrsAllowed;
 
 };
 

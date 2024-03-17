@@ -33,7 +33,7 @@ void Wire::update(int deltaTime) {
 }
 
 void Wire::destroy() {
-	sprite->setAnimationSpeed(Moving, 0);
+	
 }
 
 glm::vec2 Wire::topHitBox() {

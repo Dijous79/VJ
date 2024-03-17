@@ -32,7 +32,7 @@ void Scene::init()
 	initShaders();
 	map = TileMap::createTileMap("levels/level01.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
 	player = new Player();
-	player->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
+	player->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, this);
 	player->setPosition(glm::vec2(INIT_PLAYER_X_TILES * map->getTileSize(), INIT_PLAYER_Y_TILES * map->getTileSize()));
 	player->setTileMap(map);
 	gb1 = new GlassBlock();
@@ -48,7 +48,7 @@ void Scene::init()
 	wrs.insert(wr);
 	projection = glm::ortho(0.f, float(SCREEN_WIDTH), float(SCREEN_HEIGHT), 0.f);
 	currentTime = 0.0f;
-	aux = false;
+	wrsAllowed = 1;
 }
 
 void Scene::update(int deltaTime)
@@ -60,11 +60,6 @@ void Scene::update(int deltaTime)
 	}
 	wireCollisions();
 	gb1->update(deltaTime);
-	if (Game::instance().getKey(GLFW_KEY_SPACE) && aux == false) {
-		map->rmDObj(gb1);
-		gb1->destroy();
-		aux = true;
-	}
 }
 
 void Scene::render()
@@ -78,12 +73,14 @@ void Scene::render()
 	texProgram.setUniformMatrix4f("modelview", modelview);
 	texProgram.setUniform2f("texCoordDispl", 0.f, 0.f);
 	map->render();
-	player->render();
 	gb1->render();
 	gb2->render();
 	for (std::set<Wire*>::iterator it = wrs.begin(); it != wrs.end(); ++it) {
 		(*it)->render();
 	}
+	player->render();
+	
+	
 }
 
 void Scene::initShaders()
@@ -117,10 +114,26 @@ void Scene::initShaders()
 }
 
 void Scene::wireCollisions() {
+	Wire* wr = NULL;
 	for (std::set<Wire*>::iterator it = wrs.begin(); it != wrs.end(); ++it) {
-		if (map->wahtTile((*it)->topHitBox()) != '\0') {
-			(*it)->destroy();
+		char contact = map->wahtTile((*it)->topHitBox());
+		if (contact != '\0' && contact != 'v' && contact != 'b' && contact != 'n' && contact != 'V' && contact != 'B' && contact != 'N') {
+			wr = *it;
 		}
+	}
+	if (wr != NULL) {
+		wrs.erase(wr);
 	}
 }
 
+bool Scene::space4Wire() {
+	return wrs.size() < wrsAllowed;
+}
+
+void Scene::instanceWire(glm::ivec2 pos, int off) {
+	Wire* wr = new Wire();
+	glm::ivec2 posA = pos;
+	posA.x += off;
+	wr->init(glm::ivec2(SCREEN_X, SCREEN_Y), posA, texProgram);
+	wrs.insert(wr);
+}
