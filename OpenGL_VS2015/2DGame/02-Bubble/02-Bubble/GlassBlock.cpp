@@ -57,6 +57,7 @@ void GlassBlock::init(const glm::ivec2& tileMapPos, glm::ivec2 posiO, glm::ivec2
 void GlassBlock::update(int deltaTime) {
 	sprite->update(deltaTime);
 	if (destroying) {
+		printf("%d\n", cdDestroy);
 		if (cdDestroy > 0) {
 			cdDestroy--;
 		}
@@ -66,6 +67,7 @@ void GlassBlock::update(int deltaTime) {
 }
 
 void GlassBlock::destroy() {
+	printf("ha entrat\n");
 	sprite->changeAnimation(decode(size, true));
 	destroying = true;
 	cdDestroy = 21;
