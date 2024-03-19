@@ -5,8 +5,8 @@ enum WireAnims {
 };
 
 void Wire::init(const glm::ivec2& tileMapPos, glm::ivec2 posiO, ShaderProgram& shaderProgram) {
-	size = glm::ivec2(24, 24 * 24);
-	boxSize = 24 * 4;
+	size = glm::ivec2(8, 8 * 24);
+	boxSize = 8 * 4;
 	posi = posiO;
 	tileMapDispl = tileMapPos;
 	spritesheet.loadFromFile("images/StdWire.png", TEXTURE_PIXEL_FORMAT_RGBA);
@@ -14,7 +14,7 @@ void Wire::init(const glm::ivec2& tileMapPos, glm::ivec2 posiO, ShaderProgram& s
 	sprite->setNumberAnimations(2);
 
 
-	sprite->setAnimationSpeed(Moving, 45);
+	sprite->setAnimationSpeed(Moving, 53);
 	for (int i = 0; i < 70; ++i)
 		sprite->addKeyframe(Moving, glm::vec2(float(i) / 70.0, 0));
 
@@ -27,8 +27,8 @@ void Wire::init(const glm::ivec2& tileMapPos, glm::ivec2 posiO, ShaderProgram& s
 
 void Wire::update(int deltaTime) {
 	sprite->update(deltaTime);
-	posi.y -= 5;
-	boxSize += 5;
+	posi.y -= 2;
+	boxSize += 2;
 	sprite->setPosition(glm::vec2(float(tileMapDispl.x + posi.x), float(tileMapDispl.y + posi.y)));
 }
 
@@ -38,7 +38,7 @@ void Wire::destroy() {
 
 glm::vec2 Wire::topHitBox() {
 	glm::vec2 res = glm::vec2(0, 0);
-	res.x = posi.x / 24;
-	res.y = posi.y / 24;
+	res.x = posi.x / 8;
+	res.y = posi.y / 8;
 	return res;
 }

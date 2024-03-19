@@ -36,17 +36,14 @@ void Scene::init()
 	player->setPosition(glm::vec2(INIT_PLAYER_X_TILES * map->getTileSize(), INIT_PLAYER_Y_TILES * map->getTileSize()));
 	player->setTileMap(map);
 	GlassBlock* gb1 = new GlassBlock();
-	gb1->init(glm::ivec2(SCREEN_X, SCREEN_Y), glm::ivec2(24 * 11, 24 * 17), glm::ivec2(72, 24), 0, texProgram);
+	gb1->init(glm::ivec2(SCREEN_X, SCREEN_Y), glm::ivec2(8 * 11, 8 * 17), glm::ivec2(24, 8), 0, texProgram);
 	gb1->setTileMap(map);
 	gsBcks.insert(gb1);
 	GlassBlock* gb2= new GlassBlock();
-	gb2->init(glm::ivec2(SCREEN_X, SCREEN_Y), glm::ivec2(24 * 28, 24 * 17), glm::ivec2(72, 24), 0, texProgram);
+	gb2->init(glm::ivec2(SCREEN_X, SCREEN_Y), glm::ivec2(8 * 28, 8 * 17), glm::ivec2(24, 8), 0, texProgram);
 	gb2->setTileMap(map);
 	gsBcks.insert(gb2);
 	map->setGbS(&gsBcks);
-	Wire* wr = new Wire();
-	wr->init(glm::ivec2(SCREEN_X, SCREEN_Y), glm::ivec2(24 * 20, 24 * 21), texProgram);
-	wrs.insert(wr);
 	projection = glm::ortho(0.f, float(SCREEN_WIDTH), float(SCREEN_HEIGHT), 0.f);
 	currentTime = 0.0f;
 	wrsAllowed = 1;
@@ -127,7 +124,9 @@ void Scene::initShaders()
 void Scene::wireCollisions() {
 	Wire* wr = NULL;
 	for (std::set<Wire*>::iterator it = wrs.begin(); it != wrs.end(); ++it) {
+		printf("cable\n");
 		char contact = map->wahtTile((*it)->topHitBox());
+		printf("%c\n", contact);
 		if (contact != '\0' && contact != 'v' && contact != 'b' && contact != 'n' && contact != 'V' && contact != 'B' && contact != 'N') {
 			wr = *it;
 		}
@@ -136,7 +135,7 @@ void Scene::wireCollisions() {
 			glm::ivec2 pGB = (*it2)->posObj();
 			glm::ivec2 sGB = (*it2)->sizeObj();
 			glm::ivec2 pWr = (*it)->posObj();
-			if (pGB.y <= pWr.y && pGB.y + sGB.y >= pWr.y && pGB.x <= pWr.x + 12 && pGB.x + sGB.x >= pWr.x + 12) {
+			if (pGB.y <= pWr.y && pGB.y + sGB.y >= pWr.y && pGB.x <= pWr.x + 4 && pGB.x + sGB.x >= pWr.x + 4) {
 				(*it2)->destroy();
 				gb = (*it2);
 				wr = *it;

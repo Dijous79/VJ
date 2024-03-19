@@ -252,8 +252,8 @@ bool TileMap::inLadder(const glm::ivec2& pos, const glm::ivec2& size) const {
 	int x, y0, y1;
 	x = (pos.x + size.x/2) / tileSize;
 	float posiO = pos.y / float(tileSize);
-	y0 = pos.y / tileSize;
-	y1 = y0 + (size.y * (3.0 / 4.0)) / tileSize;
+	y0 = (pos.y + (size.y / 2))/ tileSize;
+	y1 = y0 + 1;
 	for (int y = y0; y <= y1; y++)
 	{
 		char aux = map[y * mapSize.x + x];
@@ -335,7 +335,8 @@ void TileMap::setGbS(std::set<GlassBlock*>* dObj) {
 
 
 char TileMap::wahtTile(glm::vec2 tile) {
-	return map[static_cast<int>(tile.y) * static_cast<int>(mapSize.x) + static_cast<int>(tile.x)];
+	char aux = map[static_cast<int>(tile.y) * static_cast<int>(mapSize.x) + static_cast<int>(tile.x)];
+	return aux;
 }
 
 glm::vec2 TileMap::decodeMap(char l) {
