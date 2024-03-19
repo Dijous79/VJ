@@ -159,6 +159,7 @@ void Scene::instanceWire(glm::ivec2 pos, int off) {
 	Wire* wr = new Wire();
 	glm::ivec2 posA = pos;
 	posA.x += off;
+	posA.y -= 4;
 	wr->init(glm::ivec2(SCREEN_X, SCREEN_Y), posA, texProgram);
 	wrs.insert(wr);
 }
