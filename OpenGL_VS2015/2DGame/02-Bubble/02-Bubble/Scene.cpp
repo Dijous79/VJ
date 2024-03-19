@@ -57,7 +57,7 @@ void Scene::update(int deltaTime)
 	for (std::set<GlassBlock*>::iterator it = gsBcks.begin(); it != gsBcks.end(); ++it) {
 		(*it)->update(deltaTime);
 	}
-	for (std::set<GlassBlock*>::iterator it = gsBcksTrencats.begin(); it != gsBcksTrencats.end(); ++it) {
+	for (std::set<DynamicObj*>::iterator it = DynObjDestr.begin(); it != DynObjDestr.end(); ++it) {
 		(*it)->update(deltaTime);
 	}
 	for (std::set<Wire*>::iterator it = wrs.begin(); it != wrs.end(); ++it) {
@@ -80,7 +80,7 @@ void Scene::render()
 	for (std::set<GlassBlock*>::iterator it = gsBcks.begin(); it != gsBcks.end(); ++it) {
 		(*it)->render();
 	}
-	for (std::set<GlassBlock*>::iterator it = gsBcksTrencats.begin(); it != gsBcksTrencats.end(); ++it) {
+	for (std::set<DynamicObj*>::iterator it = DynObjDestr.begin(); it != DynObjDestr.end(); ++it) {
 		(*it)->render();
 	}
 	for (std::set<Wire*>::iterator it = wrs.begin(); it != wrs.end(); ++it) {
@@ -142,7 +142,7 @@ void Scene::wireCollisions() {
 			}
 		}
 		if (gb != NULL) {
-			gsBcksTrencats.insert(gb);
+			DynObjDestr.insert(gb);
 			gsBcks.erase(gb);
 		}
 	}

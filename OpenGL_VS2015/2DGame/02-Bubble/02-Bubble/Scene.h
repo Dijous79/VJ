@@ -41,7 +41,7 @@ private:
 	glm::mat4 projection;
 	int wrsAllowed;
 	int cd2DestroyGlass;
-	std::set<GlassBlock*> gsBcksTrencats;
+	std::set<DynamicObj*> DynObjDestr;
 	bool destroyingGlass;
 
 };

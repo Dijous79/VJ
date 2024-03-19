@@ -251,8 +251,7 @@ bool TileMap::collisionMoveDown(const glm::ivec2& pos, const glm::ivec2& size, i
 bool TileMap::inLadder(const glm::ivec2& pos, const glm::ivec2& size) const {
 	int x, y0, y1;
 	x = (pos.x + size.x/2) / tileSize;
-	float posiO = pos.y / float(tileSize);
-	y0 = (pos.y + (size.y / 2))/ tileSize;
+	y0 = (pos.y + (size.y / 4))/ tileSize;
 	y1 = y0 + 1;
 	for (int y = y0; y <= y1; y++)
 	{
@@ -292,7 +291,7 @@ bool TileMap::underLadder(const glm::ivec2& pos, const glm::ivec2& size, int* po
 	char aux = map[y * mapSize.x + x];
 
 	printf("%c\n", aux);
-	if (aux != 'b' && aux != '\0')
+	if ((aux != 'b' && aux != '\0') ||  (aux == '\0' && !inLadder(pos, size)))
 	{
 		*posY = tileSize * y - size.y;
 		return true;

@@ -79,7 +79,7 @@ void Player::update(int deltaTime)
 			if (bClimbing) sprite->changeAnimation(CLIMBING);
 			else {
 				if (jump) {
-					posPlayer.y -= size.y / 4.0;
+					posPlayer.y -= size.y / 2.0;
 					jump = false;
 				}
 				if (lastDir) sprite->changeAnimation(STAND_LEFT);
