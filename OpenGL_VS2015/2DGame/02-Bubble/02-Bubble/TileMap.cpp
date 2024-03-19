@@ -3,6 +3,7 @@
 #include <sstream>
 #include <vector>
 #include "TileMap.h"
+#include "GlassBlock.h"
 
 
 using namespace std;
@@ -166,6 +167,16 @@ bool TileMap::collisionMoveLeft(const glm::ivec2& pos, const glm::ivec2& size) c
 		char aux = map[y * mapSize.x + x];
 		if (aux != '\0' && aux != 'v' && aux != 'b' && aux != 'n' && aux != 'V' && aux != 'B' && aux != 'N')
 			return true;
+		///////////////mirem si hi ha objectes dinamics solids/////////
+		for (auto it = objs.begin(); it != objs.end(); ++it) {
+			glm::ivec2 posA = (*it)->posObj();
+			glm::ivec2 sizeA = (*it)->sizeObj();
+			int xe = posA.x / tileSize;
+			int yt = posA.y / tileSize;
+			int yb = yt + sizeA.y / tileSize;
+			if (y <= yb && y >= yt && x == xe)
+				return true;
+		}
 	}
 
 	return false;
@@ -175,7 +186,7 @@ bool TileMap::collisionMoveRight(const glm::ivec2& pos, const glm::ivec2& size) 
 {
 	int x, y0, y1;
 
-	x = (pos.x + size.x - 1) / tileSize;
+	x = (pos.x + size.x) / tileSize - 1;
 	y0 = pos.y / tileSize;
 	y1 = (pos.y + size.y - 1) / tileSize;
 	for (int y = y0; y <= y1; y++)
@@ -183,6 +194,16 @@ bool TileMap::collisionMoveRight(const glm::ivec2& pos, const glm::ivec2& size) 
 		char aux = map[y * mapSize.x + x];
 		if (aux != '\0' && aux != 'v' && aux != 'b' && aux != 'n' && aux != 'V' && aux != 'B' && aux != 'N')
 			return true;
+		///////////////mirem si hi ha objectes dinamics solids/////////
+		for (auto it = objs.begin(); it != objs.end(); ++it) {
+			glm::ivec2 posA = (*it)->posObj();
+			glm::ivec2 sizeA = (*it)->sizeObj();
+			int xe = posA.x / tileSize;
+			int yt = posA.y / tileSize;
+			int yb = yt + sizeA.y / tileSize;
+			if (y <= yb && y >= yt && x == xe)
+				return true;
+		}
 	}
 
 	return false;
@@ -192,11 +213,12 @@ bool TileMap::collisionMoveDown(const glm::ivec2& pos, const glm::ivec2& size, i
 {
 	int x0, x1, y;
 
-	x0 = pos.x / tileSize;
-	x1 = (pos.x + size.x - 1) / tileSize;
+	x0 = (pos.x + 5 *size.x / 16) / tileSize;
+	x1 = x0 + (11 * size.x / 16) / tileSize;
 	y = (pos.y + size.y - 1) / tileSize;
 	for (int x = x0; x <= x1; x++)
 	{
+		///////////////mirem si hi ha objectes solids de tilemap/////////
 		char aux = map[y * mapSize.x + x];
 		if (aux != '\0' && aux != 'v' && aux != 'b' && aux != 'n')
 		{
@@ -204,6 +226,21 @@ bool TileMap::collisionMoveDown(const glm::ivec2& pos, const glm::ivec2& size, i
 			{
 				*posY = tileSize * y - size.y;
 				return true;
+			}
+		}
+		///////////////mirem si hi ha objectes dinamics solids/////////
+		for (auto it = objs.begin(); it != objs.end(); ++it) {
+			glm::ivec2 posA = (*it)->posObj();
+			glm::ivec2 sizeA = (*it)->sizeObj();
+			int xe = posA.x / tileSize;
+			int xd = xe + size.x / tileSize;
+			int ya = posA.y / tileSize;
+			if (x >= xe && x <= xd && y == ya) {
+				if (*posY - tileSize * y + size.y <= 4)
+				{
+					*posY = tileSize * y - size.y;
+					return true;
+				}
 			}
 		}
 	}
@@ -223,7 +260,7 @@ bool TileMap::inLadder(const glm::ivec2& pos, const glm::ivec2& size) const {
 	{
 		printf("%f\n", posiO);
 		char aux = map[y * mapSize.x + x];
-		if (aux == 'b' || aux == 'B')
+		if (aux == 'b' || aux == 'B' || aux == 'Q')
 			return true;
 	}
 	return false;
@@ -232,13 +269,13 @@ bool TileMap::inLadder(const glm::ivec2& pos, const glm::ivec2& size) const {
 bool TileMap::onLadder(const glm::ivec2& pos, const glm::ivec2& size) const {
 	int x0, x1, y;
 
-	x0 = pos.x / tileSize;
-	x1 = (pos.x + size.x - 1) / tileSize;
+	x0 = pos.x / tileSize + 1;
+	x1 = x0 + 1;
 	y = (pos.y + size.y) / tileSize;
 	for (int x = x0; x <= x1; x++)
 	{
 		char aux = map[y * mapSize.x + x];
-		if (aux == 'b' || aux == 'B')
+		if (aux == 'b' || aux == 'B' || aux == 'Q')
 		{
 			return true;
 		}
@@ -256,30 +293,55 @@ bool TileMap::underLadder(const glm::ivec2& pos, const glm::ivec2& size, int* po
 	
 	char aux = map[y * mapSize.x + x];
 
-	if (aux != 'b' && aux != 'B')
+	if (aux != 'b' && aux != 'B' && aux != 'Q')
 	{
-		*posY = *posY = tileSize * y - size.y;
+		*posY = tileSize * y - size.y;
 		return true;
 	}
 	return false;
 }
 
 void TileMap::closestLadder(const glm::ivec2& pos, const glm::ivec2& size, int* posX, int* posY) const {
-	int x, y0, y1;
-	x = (pos.x + size.x / 2) / tileSize;
+	printf("inFClosestLadder\n");
+	int x0, x1, y0, y1;
+	bool mogut = false;
+	x0 = pos.x / tileSize + 1;
+	x1 = x0 + 1;
 	float posiO = pos.y / float(tileSize);
 	y0 = pos.y / tileSize;
 	if (floor(posiO) != posiO)
 		y0 += 1;
 	y1 = y0 + size.y / tileSize;
-	for (int y = y0; y <= y1; y++)
-	{
-		char aux = map[y * mapSize.x + x];
-		if (aux == 'b' || aux == 'B')
-			*posX = tileSize * x - size.x / 3;
-		if (aux == 'B')
-			*posY = tileSize * y - size.y/1.33333333;
+	for (int x = x0; x <= x1; ++x) {
+		for (int y = y0; y <= y1; y++)
+		{
+			
+			char aux = map[y * mapSize.x + x];
+			printf("%d - %d --> %c\n", x, y, aux);
+			if (aux == 'b' || aux == 'B' || aux == 'Q') { // centre d'escala
+				*posX = tileSize * (float(x) - 1.5f);
+				mogut = true;
+			}
+			if (aux == 'B' || aux == 'Q') { // centre de top ladder
+				*posY = tileSize * y - size.y / 2;
+				mogut = true;
+			}
+			if (mogut)
+				return;
+		}
 	}
+}
+
+void TileMap::addDObj(GlassBlock* dObj) {
+	objs.insert(dObj);
+}
+
+void TileMap::rmDObj(GlassBlock* dObj) {
+	objs.erase(dObj);
+}
+
+char TileMap::wahtTile(glm::vec2 tile) {
+	return map[static_cast<int>(tile.y) * static_cast<int>(mapSize.x) + static_cast<int>(tile.x)];
 }
 
 glm::vec2 TileMap::decodeMap(char l) {
@@ -308,29 +370,14 @@ glm::vec2 TileMap::decodeMap(char l) {
 	case '8':
 		return glm::vec2(0.0, 0.875);
 		break;
-	case 'm':
-		return glm::vec2(0.125, 0.0);
-		break;
-	case 'q':
-		return glm::vec2(0.125, 0.125);
-		break;
-	case 'w':
-		return glm::vec2(0.125, 0.25);
-		break;
-	case 'e':
-		return glm::vec2(0.125, 0.375);
-		break;
 	case 'M':
-		return glm::vec2(0.375, 0.5);
+		return glm::vec2(0.5, 0.75);
 		break;
 	case 'Q':
-		return glm::vec2(0.375, 0.625);
+		return glm::vec2(0.625, 0.75);
 		break;
 	case 'W':
-		return glm::vec2(0.375, 0.75);
-		break;
-	case 'E':
-		return glm::vec2(0.375, 0.875);
+		return glm::vec2(0.5, 0.875);
 		break;
 	case 'r':
 		return glm::vec2(0.125, 0.5);
