@@ -253,13 +253,11 @@ bool TileMap::inLadder(const glm::ivec2& pos, const glm::ivec2& size) const {
 	x = (pos.x + size.x/2) / tileSize;
 	float posiO = pos.y / float(tileSize);
 	y0 = pos.y / tileSize;
-	if (floor(posiO) != posiO)
-		y0 += 1;
-	y1 = y0 + (size.y / 1.33333333333333) / tileSize;
+	y1 = y0 + (size.y * (3.0 / 4.0)) / tileSize;
 	for (int y = y0; y <= y1; y++)
 	{
-		printf("%f\n", posiO);
 		char aux = map[y * mapSize.x + x];
+		printf("%d -> %c\n", y, aux);
 		if (aux == 'b' || aux == 'B' || aux == 'Q')
 			return true;
 	}
@@ -293,7 +291,8 @@ bool TileMap::underLadder(const glm::ivec2& pos, const glm::ivec2& size, int* po
 	
 	char aux = map[y * mapSize.x + x];
 
-	if (aux != 'b' && aux != 'B' && aux != 'Q')
+	printf("%c\n", aux);
+	if (aux != 'b' && aux != '\0')
 	{
 		*posY = tileSize * y - size.y;
 		return true;
@@ -302,7 +301,6 @@ bool TileMap::underLadder(const glm::ivec2& pos, const glm::ivec2& size, int* po
 }
 
 void TileMap::closestLadder(const glm::ivec2& pos, const glm::ivec2& size, int* posX, int* posY) const {
-	printf("inFClosestLadder\n");
 	int x0, x1, y0, y1;
 	bool mogut = false;
 	x0 = pos.x / tileSize + 1;
@@ -317,13 +315,12 @@ void TileMap::closestLadder(const glm::ivec2& pos, const glm::ivec2& size, int* 
 		{
 			
 			char aux = map[y * mapSize.x + x];
-			printf("%d - %d --> %c\n", x, y, aux);
 			if (aux == 'b' || aux == 'B' || aux == 'Q') { // centre d'escala
 				*posX = tileSize * (float(x) - 1.5f);
 				mogut = true;
 			}
 			if (aux == 'B' || aux == 'Q') { // centre de top ladder
-				*posY = tileSize * y - size.y / 2;
+				//*posY = tileSize * y - size.y / 2;
 				mogut = true;
 			}
 			if (mogut)

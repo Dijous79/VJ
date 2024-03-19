@@ -28,6 +28,7 @@ private:
 	int Bfr;
 	bool lastDir;
 	bool iOc;
+	bool jump;
 	glm::ivec2 tileMapDispl, posPlayer, size;
 	int startY;
 	Texture spritesheet;

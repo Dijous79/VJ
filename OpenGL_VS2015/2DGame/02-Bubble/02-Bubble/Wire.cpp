@@ -14,7 +14,7 @@ void Wire::init(const glm::ivec2& tileMapPos, glm::ivec2 posiO, ShaderProgram& s
 	sprite->setNumberAnimations(2);
 
 
-	sprite->setAnimationSpeed(Moving, 27);
+	sprite->setAnimationSpeed(Moving, 45);
 	for (int i = 0; i < 70; ++i)
 		sprite->addKeyframe(Moving, glm::vec2(float(i) / 70.0, 0));
 
@@ -27,8 +27,8 @@ void Wire::init(const glm::ivec2& tileMapPos, glm::ivec2 posiO, ShaderProgram& s
 
 void Wire::update(int deltaTime) {
 	sprite->update(deltaTime);
-	posi.y -= 3;
-	boxSize += 3;
+	posi.y -= 5;
+	boxSize += 5;
 	sprite->setPosition(glm::vec2(float(tileMapDispl.x + posi.x), float(tileMapDispl.y + posi.y)));
 }
 

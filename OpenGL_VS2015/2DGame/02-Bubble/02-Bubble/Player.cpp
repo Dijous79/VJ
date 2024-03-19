@@ -22,6 +22,7 @@ void Player::init(const glm::ivec2& tileMapPos, ShaderProgram& shaderProgram, Sc
 	bClimbing = false;
 	inAnim = false;
 	lastDir = false;
+	jump = false;
 	Bfr = 0;
 	scn = scene;
 	size = glm::ivec2(96, 96);
@@ -79,7 +80,10 @@ void Player::update(int deltaTime)
 			inAnim = false;
 			if (bClimbing) sprite->changeAnimation(CLIMBING);
 			else {
-				posPlayer.y -= size.y * 3.0 / 4.0;
+				if (jump) {
+					posPlayer.y -= size.y / 4.0;
+					jump = false;
+				}
 				if (lastDir) sprite->changeAnimation(STAND_LEFT);
 				else {
 					sprite->changeAnimation(STAND_RIGHT);
@@ -97,6 +101,7 @@ void Player::update(int deltaTime)
 				if (!map->inLadder(posPlayer, size)) {
 					bClimbing = false;
 					inAnim = true;
+					jump = true;
 					Bfr = 5;
 					
 					sprite->changeAnimation(OUT_OF_LADDER);
@@ -108,7 +113,8 @@ void Player::update(int deltaTime)
 				posPlayer.y += (2 * 24 / 8);
 				if (map->underLadder(posPlayer, size, &posPlayer.y)) {
 					bClimbing = false;
-					inAnim = false;
+					inAnim = true;
+					Bfr = 5;
 					if (lastDir) sprite->changeAnimation(STAND_LEFT);
 					else sprite->changeAnimation(STAND_RIGHT);
 				}
@@ -162,6 +168,7 @@ void Player::update(int deltaTime)
 				if (map->onLadder(posPlayer, size)) {
 					bClimbing = true;
 					map->closestLadder(posPlayer, size, &posPlayer.x, &posPlayer.y);
+					posPlayer.y += size.y / 4.0;
 					inAnim = true;
 					Bfr = 10;
 					sprite->changeAnimation(OUT_OF_LADDER);
