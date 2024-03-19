@@ -35,17 +35,15 @@ void Scene::init()
 	player->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, this);
 	player->setPosition(glm::vec2(INIT_PLAYER_X_TILES * map->getTileSize(), INIT_PLAYER_Y_TILES * map->getTileSize()));
 	player->setTileMap(map);
-	gb1 = new GlassBlock();
-	gb1->init(glm::ivec2(SCREEN_X, SCREEN_Y), glm::ivec2(24 * 11, 24 * 17), glm::ivec2(72, 24), 0, texProgram);
+	GlassBlock* gb1 = new GlassBlock();
+	gb1->init(glm::ivec2(SCREEN_X, SCREEN_Y), glm::ivec2(8 * 11, 8 * 17), glm::ivec2(24, 8), 0, texProgram);
 	gb1->setTileMap(map);
-	map->addDObj(gb1);
-	gb2 = new GlassBlock();
-	gb2->init(glm::ivec2(SCREEN_X, SCREEN_Y), glm::ivec2(24 * 28, 24 * 17), glm::ivec2(72, 24), 0, texProgram);
+	gsBcks.insert(gb1);
+	GlassBlock* gb2= new GlassBlock();
+	gb2->init(glm::ivec2(SCREEN_X, SCREEN_Y), glm::ivec2(8 * 28, 8 * 17), glm::ivec2(24, 8), 0, texProgram);
 	gb2->setTileMap(map);
-	map->addDObj(gb2);
-	Wire* wr = new Wire();
-	wr->init(glm::ivec2(SCREEN_X, SCREEN_Y), glm::ivec2(24 * 20, 24 * 21), texProgram);
-	wrs.insert(wr);
+	gsBcks.insert(gb2);
+	map->setGbS(&gsBcks);
 	projection = glm::ortho(0.f, float(SCREEN_WIDTH), float(SCREEN_HEIGHT), 0.f);
 	currentTime = 0.0f;
 	wrsAllowed = 1;
@@ -55,11 +53,17 @@ void Scene::update(int deltaTime)
 {
 	currentTime += deltaTime;
 	player->update(deltaTime);
+
+	for (std::set<GlassBlock*>::iterator it = gsBcks.begin(); it != gsBcks.end(); ++it) {
+		(*it)->update(deltaTime);
+	}
+	for (std::set<GlassBlock*>::iterator it = gsBcksTrencats.begin(); it != gsBcksTrencats.end(); ++it) {
+		(*it)->update(deltaTime);
+	}
 	for (std::set<Wire*>::iterator it = wrs.begin(); it != wrs.end(); ++it) {
 		(*it)->update(deltaTime);
 	}
 	wireCollisions();
-	gb1->update(deltaTime);
 }
 
 void Scene::render()
@@ -73,8 +77,12 @@ void Scene::render()
 	texProgram.setUniformMatrix4f("modelview", modelview);
 	texProgram.setUniform2f("texCoordDispl", 0.f, 0.f);
 	map->render();
-	gb1->render();
-	gb2->render();
+	for (std::set<GlassBlock*>::iterator it = gsBcks.begin(); it != gsBcks.end(); ++it) {
+		(*it)->render();
+	}
+	for (std::set<GlassBlock*>::iterator it = gsBcksTrencats.begin(); it != gsBcksTrencats.end(); ++it) {
+		(*it)->render();
+	}
 	for (std::set<Wire*>::iterator it = wrs.begin(); it != wrs.end(); ++it) {
 		(*it)->render();
 	}
@@ -116,9 +124,26 @@ void Scene::initShaders()
 void Scene::wireCollisions() {
 	Wire* wr = NULL;
 	for (std::set<Wire*>::iterator it = wrs.begin(); it != wrs.end(); ++it) {
+		printf("cable\n");
 		char contact = map->wahtTile((*it)->topHitBox());
+		printf("%c\n", contact);
 		if (contact != '\0' && contact != 'v' && contact != 'b' && contact != 'n' && contact != 'V' && contact != 'B' && contact != 'N') {
 			wr = *it;
+		}
+		GlassBlock* gb = NULL;
+		for (std::set<GlassBlock*>::iterator it2 = gsBcks.begin(); it2 != gsBcks.end(); ++it2) {
+			glm::ivec2 pGB = (*it2)->posObj();
+			glm::ivec2 sGB = (*it2)->sizeObj();
+			glm::ivec2 pWr = (*it)->posObj();
+			if (pGB.y <= pWr.y && pGB.y + sGB.y >= pWr.y && pGB.x <= pWr.x + 4 && pGB.x + sGB.x >= pWr.x + 4) {
+				(*it2)->destroy();
+				gb = (*it2);
+				wr = *it;
+			}
+		}
+		if (gb != NULL) {
+			gsBcksTrencats.insert(gb);
+			gsBcks.erase(gb);
 		}
 	}
 	if (wr != NULL) {
@@ -134,6 +159,7 @@ void Scene::instanceWire(glm::ivec2 pos, int off) {
 	Wire* wr = new Wire();
 	glm::ivec2 posA = pos;
 	posA.x += off;
+	posA.y -= 4;
 	wr->init(glm::ivec2(SCREEN_X, SCREEN_Y), posA, texProgram);
 	wrs.insert(wr);
 }

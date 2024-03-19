@@ -39,8 +39,7 @@ public:
 	bool onLadder(const glm::ivec2& pos, const glm::ivec2& size) const;
 	bool underLadder(const glm::ivec2& pos, const glm::ivec2& size, int* posY) const;
 	void closestLadder(const glm::ivec2& pos, const glm::ivec2& size, int* posX, int* posY) const;
-	void addDObj(GlassBlock* dObj);
-	void rmDObj(GlassBlock* dObj);
+	void setGbS(std::set<GlassBlock*>* dObj);
 	char wahtTile(glm::vec2 tile);
 
 private:
@@ -58,7 +57,7 @@ private:
 	Texture tilesheet;
 	glm::vec2 tileTexSize;
 	char* map;
-	std::set<GlassBlock*> objs;
+	std::set<GlassBlock*>* objs;
 
 };
 

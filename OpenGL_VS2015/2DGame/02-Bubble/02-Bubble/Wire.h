@@ -9,6 +9,6 @@ public:
 	glm::vec2 topHitBox();
 private:
 	int boxSize;
-
+	int cd;
 };
 

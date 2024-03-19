@@ -168,7 +168,7 @@ bool TileMap::collisionMoveLeft(const glm::ivec2& pos, const glm::ivec2& size) c
 		if (aux != '\0' && aux != 'v' && aux != 'b' && aux != 'n' && aux != 'V' && aux != 'B' && aux != 'N')
 			return true;
 		///////////////mirem si hi ha objectes dinamics solids/////////
-		for (auto it = objs.begin(); it != objs.end(); ++it) {
+		for (auto it = (*objs).begin(); it != (*objs).end(); ++it) {
 			glm::ivec2 posA = (*it)->posObj();
 			glm::ivec2 sizeA = (*it)->sizeObj();
 			int xe = posA.x / tileSize;
@@ -195,7 +195,7 @@ bool TileMap::collisionMoveRight(const glm::ivec2& pos, const glm::ivec2& size) 
 		if (aux != '\0' && aux != 'v' && aux != 'b' && aux != 'n' && aux != 'V' && aux != 'B' && aux != 'N')
 			return true;
 		///////////////mirem si hi ha objectes dinamics solids/////////
-		for (auto it = objs.begin(); it != objs.end(); ++it) {
+		for (auto it = (*objs).begin(); it != (*objs).end(); ++it) {
 			glm::ivec2 posA = (*it)->posObj();
 			glm::ivec2 sizeA = (*it)->sizeObj();
 			int xe = posA.x / tileSize;
@@ -213,7 +213,7 @@ bool TileMap::collisionMoveDown(const glm::ivec2& pos, const glm::ivec2& size, i
 {
 	int x0, x1, y;
 
-	x0 = (pos.x + 5 *size.x / 16) / tileSize;
+	x0 = (pos.x + (5 *size.x / 16)) / tileSize;
 	x1 = x0 + (11 * size.x / 16) / tileSize;
 	y = (pos.y + size.y - 1) / tileSize;
 	for (int x = x0; x <= x1; x++)
@@ -229,7 +229,7 @@ bool TileMap::collisionMoveDown(const glm::ivec2& pos, const glm::ivec2& size, i
 			}
 		}
 		///////////////mirem si hi ha objectes dinamics solids/////////
-		for (auto it = objs.begin(); it != objs.end(); ++it) {
+		for (auto it = (*objs).begin(); it != (*objs).end(); ++it) {
 			glm::ivec2 posA = (*it)->posObj();
 			glm::ivec2 sizeA = (*it)->sizeObj();
 			int xe = posA.x / tileSize;
@@ -252,14 +252,12 @@ bool TileMap::inLadder(const glm::ivec2& pos, const glm::ivec2& size) const {
 	int x, y0, y1;
 	x = (pos.x + size.x/2) / tileSize;
 	float posiO = pos.y / float(tileSize);
-	y0 = pos.y / tileSize;
-	if (floor(posiO) != posiO)
-		y0 += 1;
-	y1 = y0 + (size.y / 1.333333333333333333333333) / tileSize;
-	for (int y = y0; y < y1; y++)
+	y0 = (pos.y + (size.y / 2))/ tileSize;
+	y1 = y0 + 1;
+	for (int y = y0; y <= y1; y++)
 	{
-		printf("%f\n", posiO);
 		char aux = map[y * mapSize.x + x];
+		printf("%d -> %c\n", y, aux);
 		if (aux == 'b' || aux == 'B' || aux == 'Q')
 			return true;
 	}
@@ -293,7 +291,8 @@ bool TileMap::underLadder(const glm::ivec2& pos, const glm::ivec2& size, int* po
 	
 	char aux = map[y * mapSize.x + x];
 
-	if (aux != 'b' && aux != 'B' && aux != 'Q')
+	printf("%c\n", aux);
+	if (aux != 'b' && aux != '\0')
 	{
 		*posY = tileSize * y - size.y;
 		return true;
@@ -302,7 +301,6 @@ bool TileMap::underLadder(const glm::ivec2& pos, const glm::ivec2& size, int* po
 }
 
 void TileMap::closestLadder(const glm::ivec2& pos, const glm::ivec2& size, int* posX, int* posY) const {
-	printf("inFClosestLadder\n");
 	int x0, x1, y0, y1;
 	bool mogut = false;
 	x0 = pos.x / tileSize + 1;
@@ -317,13 +315,12 @@ void TileMap::closestLadder(const glm::ivec2& pos, const glm::ivec2& size, int* 
 		{
 			
 			char aux = map[y * mapSize.x + x];
-			printf("%d - %d --> %c\n", x, y, aux);
 			if (aux == 'b' || aux == 'B' || aux == 'Q') { // centre d'escala
 				*posX = tileSize * (float(x) - 1.5f);
 				mogut = true;
 			}
 			if (aux == 'B' || aux == 'Q') { // centre de top ladder
-				*posY = tileSize * y - size.y / 2;
+				//*posY = tileSize * y - size.y / 2;
 				mogut = true;
 			}
 			if (mogut)
@@ -332,16 +329,14 @@ void TileMap::closestLadder(const glm::ivec2& pos, const glm::ivec2& size, int* 
 	}
 }
 
-void TileMap::addDObj(GlassBlock* dObj) {
-	objs.insert(dObj);
+void TileMap::setGbS(std::set<GlassBlock*>* dObj) {
+	objs = dObj;
 }
 
-void TileMap::rmDObj(GlassBlock* dObj) {
-	objs.erase(dObj);
-}
 
 char TileMap::wahtTile(glm::vec2 tile) {
-	return map[static_cast<int>(tile.y) * static_cast<int>(mapSize.x) + static_cast<int>(tile.x)];
+	char aux = map[static_cast<int>(tile.y) * static_cast<int>(mapSize.x) + static_cast<int>(tile.x)];
+	return aux;
 }
 
 glm::vec2 TileMap::decodeMap(char l) {

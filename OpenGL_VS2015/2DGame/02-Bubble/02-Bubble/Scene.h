@@ -34,13 +34,15 @@ private:
 private:
 	TileMap *map;
 	Player *player;
-	GlassBlock* gb1;
-	GlassBlock* gb2;
+	std::set<GlassBlock*> gsBcks;
 	std::set<Wire*> wrs;
 	ShaderProgram texProgram;
 	float currentTime;
 	glm::mat4 projection;
 	int wrsAllowed;
+	int cd2DestroyGlass;
+	std::set<GlassBlock*> gsBcksTrencats;
+	bool destroyingGlass;
 
 };
 

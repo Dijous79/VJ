@@ -5,13 +5,13 @@ enum GlassAnims {
 };
 
 GlassAnims decode(glm::ivec2 sz, bool dynamic) {
-	if (sz.x / 24 == 3) {
+	if (sz.x / 8 == 3) {
 		if (dynamic)
 			return DH3;
 		else
 			return SH3;
 	}
-	else if (sz.x / 24 == 4) {
+	else if (sz.x / 8 == 4) {
 		if (dynamic)
 			return DH4;
 		else
@@ -26,7 +26,7 @@ void GlassBlock::init(const glm::ivec2& tileMapPos, glm::ivec2 posiO, glm::ivec2
 	destroying = false;
 	tileMapDispl = tileMapPos;
 	spritesheet.loadFromFile("images/BreakingGlasses.png", TEXTURE_PIXEL_FORMAT_RGBA);
-	sprite = Sprite::createSprite(size, glm::vec2((sizeObj.x / 24) / 19.0, (sizeObj.y / 24) / 13.0), &spritesheet, &shaderProgram);
+	sprite = Sprite::createSprite(size, glm::vec2((sizeObj.x / 8) / 19.0, (sizeObj.y / 8) / 13.0), &spritesheet, &shaderProgram);
 	sprite->setNumberAnimations(4);
 
 	sprite->setAnimationSpeed(SH4, 8);

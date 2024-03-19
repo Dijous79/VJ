@@ -6,8 +6,6 @@
 #include "Scene.h"
 
 
-#define JUMP_ANGLE_STEP 4
-#define JUMP_HEIGHT 96
 #define FALL_STEP 4
 
 
@@ -22,9 +20,10 @@ void Player::init(const glm::ivec2& tileMapPos, ShaderProgram& shaderProgram, Sc
 	bClimbing = false;
 	inAnim = false;
 	lastDir = false;
+	jump = false;
 	Bfr = 0;
 	scn = scene;
-	size = glm::ivec2(96, 96);
+	size = glm::ivec2(32, 32);
 	spritesheet.loadFromFile("images/character.png", TEXTURE_PIXEL_FORMAT_RGBA);
 	sprite = Sprite::createSprite(size, glm::vec2(0.2, 1.0/6.0), &spritesheet, &shaderProgram);
 	sprite->setNumberAnimations(8);
@@ -79,6 +78,10 @@ void Player::update(int deltaTime)
 			inAnim = false;
 			if (bClimbing) sprite->changeAnimation(CLIMBING);
 			else {
+				if (jump) {
+					posPlayer.y -= size.y / 4.0;
+					jump = false;
+				}
 				if (lastDir) sprite->changeAnimation(STAND_LEFT);
 				else {
 					sprite->changeAnimation(STAND_RIGHT);
@@ -92,22 +95,24 @@ void Player::update(int deltaTime)
 			if (Game::instance().getKey(GLFW_KEY_UP))
 			{
 				sprite->setAnimationSpeed(CLIMBING, 4);
-				posPlayer.y -= FALL_STEP;
+				posPlayer.y -= (2 * 8 / 8);
 				if (!map->inLadder(posPlayer, size)) {
 					bClimbing = false;
 					inAnim = true;
+					jump = true;
 					Bfr = 5;
-					posPlayer.y -= size.y / 3.3333;
+					
 					sprite->changeAnimation(OUT_OF_LADDER);
 				}
 			}
 			else if (Game::instance().getKey(GLFW_KEY_DOWN))
 			{
 				sprite->setAnimationSpeed(CLIMBING, 4);
-				posPlayer.y += FALL_STEP;
+				posPlayer.y += (2 * 8 / 8);
 				if (map->underLadder(posPlayer, size, &posPlayer.y)) {
 					bClimbing = false;
-					inAnim = false;
+					inAnim = true;
+					Bfr = 5;
 					if (lastDir) sprite->changeAnimation(STAND_LEFT);
 					else sprite->changeAnimation(STAND_RIGHT);
 				}
@@ -122,10 +127,10 @@ void Player::update(int deltaTime)
 				lastDir = true;
 				if (sprite->animation() != MOVE_LEFT)
 					sprite->changeAnimation(MOVE_LEFT);
-				posPlayer.x -= 4;
+				posPlayer.x -= (2 * 8 / 8);
 				if (map->collisionMoveLeft(posPlayer, size))
 				{
-					posPlayer.x += 4;
+					posPlayer.x += (2 * 8 / 8);
 				}
 			}
 			else if (Game::instance().getKey(GLFW_KEY_RIGHT))
@@ -134,10 +139,10 @@ void Player::update(int deltaTime)
 				if (sprite->animation() != MOVE_RIGHT) {
 					sprite->changeAnimation(MOVE_RIGHT);
 				}
-				posPlayer.x += 4;
+				posPlayer.x += (2 * 8 / 8);
 				if (map->collisionMoveRight(posPlayer, size))
 				{
-					posPlayer.x -= 4;
+					posPlayer.x -= (2 * 8 / 8);
 				}
 			}
 			else
@@ -160,8 +165,8 @@ void Player::update(int deltaTime)
 			{
 				if (map->onLadder(posPlayer, size)) {
 					bClimbing = true;
-					printf("%f\n", float(posPlayer.x) / 24.0);
 					map->closestLadder(posPlayer, size, &posPlayer.x, &posPlayer.y);
+					posPlayer.y += size.y / 4.0;
 					inAnim = true;
 					Bfr = 10;
 					sprite->changeAnimation(OUT_OF_LADDER);
@@ -170,13 +175,11 @@ void Player::update(int deltaTime)
 			posPlayer.y += FALL_STEP;
 			map->collisionMoveDown(posPlayer, size, &posPlayer.y);
 		}
-		printf("si\n");
 		if (Game::instance().getKey(GLFW_KEY_S)) {
-			printf("dsfdsfasdfasd\n");
 			if (scn->space4Wire()) {
-				int off = 24;
+				int off = 8;
 				if (!lastDir)
-					off += 24;
+					off += 8;
 				scn->instanceWire(posPlayer, off);
 				inAnim = true;
 				Bfr = 4;
