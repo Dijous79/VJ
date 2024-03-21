@@ -6,7 +6,7 @@
 #include <set>
 #include "Texture.h"
 #include "ShaderProgram.h"
-
+#include <vector>
 
 // Class Tilemap is capable of loading a tile map from a text file in a very
 // simple format (see level01.txt for an example). With this information
@@ -39,6 +39,8 @@ public:
 	bool onLadder(const glm::ivec2& pos, const glm::ivec2& size) const;
 	bool underLadder(const glm::ivec2& pos, const glm::ivec2& size, int* posY) const;
 	void closestLadder(const glm::ivec2& pos, const glm::ivec2& size, int* posX, int* posY) const;
+	vector<glm::ivec2> getDownTilePos(const glm::ivec2& pos, const glm::ivec2& size) const;
+	bool circleRect(int cx, int cy, int radius, int rx, int ry, int rw, int rh, int* posY);
 	void setGbS(std::set<GlassBlock*>* dObj);
 	char wahtTile(glm::vec2 tile);
 

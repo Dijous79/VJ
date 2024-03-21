@@ -9,6 +9,7 @@
 #include "GlassBlock.h"
 #include "Wire.h"
 #include "Drops.h"
+#include "Bubble.h"
 
 
 // Scene contains all the entities of our game.
@@ -35,6 +36,7 @@ private:
 private:
 	TileMap *map;
 	Player *player;
+	Bubble* bubble1, * bubble2, * bubble3, * bubble4;
 	std::set<GlassBlock*> gsBcks;
 	std::set<Wire*> wrs;
 	std::set<Drops*> drops;

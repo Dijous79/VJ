@@ -30,11 +30,32 @@ Scene::~Scene()
 void Scene::init()
 {
 	initShaders();
-	map = TileMap::createTileMap("levels/level01.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
+	map = TileMap::createTileMap("levels/level00.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
 	player = new Player();
 	player->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, this);
 	player->setPosition(glm::vec2(INIT_PLAYER_X_TILES * map->getTileSize(), INIT_PLAYER_Y_TILES * map->getTileSize()));
 	player->setTileMap(map);
+
+	bubble1 = new Bubble();
+	bubble1->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, 0, 10 * map->getTileSize());
+	bubble1->setPosition(glm::vec2(10 * map->getTileSize(), 10 * map->getTileSize()));
+	bubble1->setTileMap(map);
+
+	bubble2 = new Bubble();
+	bubble2->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, 1, 10 * map->getTileSize());
+	bubble2->setPosition(glm::vec2(10 * map->getTileSize(), 10 * map->getTileSize()));
+	bubble2->setTileMap(map);
+
+	bubble3 = new Bubble();
+	bubble3->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, 2, 10 * map->getTileSize());
+	bubble3->setPosition(glm::vec2(10 * map->getTileSize(), 10 * map->getTileSize()));
+	bubble3->setTileMap(map);
+
+	bubble4 = new Bubble();
+	bubble4->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, 3, 10 * map->getTileSize());
+	bubble4->setPosition(glm::vec2(10 * map->getTileSize(), 10 * map->getTileSize()));
+	bubble4->setTileMap(map);
+
 	GlassBlock* gb1 = new GlassBlock();
 	gb1->init(glm::ivec2(SCREEN_X, SCREEN_Y), glm::ivec2(8 * 11, 8 * 17), glm::ivec2(24, 8), 0, texProgram);
 	gsBcks.insert(gb1);
@@ -51,6 +72,11 @@ void Scene::update(int deltaTime)
 {
 	currentTime += deltaTime;
 	player->update(deltaTime);
+
+	bubble1->update(deltaTime);
+	bubble2->update(deltaTime);
+	bubble3->update(deltaTime);
+	bubble4->update(deltaTime);
 
 	for (std::set<GlassBlock*>::iterator it = gsBcks.begin(); it != gsBcks.end(); ++it) {
 		(*it)->update(deltaTime);
@@ -85,6 +111,11 @@ void Scene::render()
 		(*it)->render();
 	}
 	player->render();
+	
+	bubble1->render();
+	bubble2->render();
+	bubble3->render();
+	bubble4->render();
 	
 	
 }

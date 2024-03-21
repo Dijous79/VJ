@@ -248,6 +248,49 @@ bool TileMap::collisionMoveDown(const glm::ivec2& pos, const glm::ivec2& size, i
 	return false;
 }
 
+vector<glm::ivec2> TileMap::getDownTilePos(const glm::ivec2& pos, const glm::ivec2& size) const
+{
+	int x0, x1, y;
+
+	x0 = pos.x / tileSize;
+	x1 = (pos.x + size.x - 1) / tileSize;
+	y = (pos.y + size.y - 1) / tileSize;
+	vector<glm::ivec2> tiles = vector<glm::ivec2>();
+	int i = 0;
+	for (int x = x0; x < x1; x++)
+	{
+		char aux = map[y * mapSize.x + x];
+		if (aux != '\0' && aux != 'v' && aux != 'b' && aux != 'n' && aux != 'V' && aux != 'B' && aux != 'N')
+		{
+			tiles.push_back(glm::vec2(x * tileSize, y * tileSize));
+		}
+		i = i + 1;
+	}
+
+	return tiles;
+}
+
+bool TileMap::circleRect(int cx, int cy, int radius, int rx, int ry, int rw, int rh, int* posY) {
+
+	int testX = cx;
+	int testY = cy;
+
+	if (cx < rx)         testX = rx;      // test left edge
+	else if (cx > rx + rw) testX = rx + rw;   // right edge
+	if (cy < ry)         testY = ry;      // top edge
+	else if (cy > ry + rh) testY = ry + rh;   // bottom edge
+
+	int distX = cx - testX;
+	int distY = cy - testY;
+	float distance = sqrt((distX * distX) + (distY * distY));
+
+	if (distance <= radius) {
+		*posY = ry - (2 * radius);
+		return true;
+	}
+	return false;
+}
+
 bool TileMap::inLadder(const glm::ivec2& pos, const glm::ivec2& size) const {
 	int x, y0, y1;
 	x = (pos.x + size.x/2) / tileSize;

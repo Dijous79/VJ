@@ -4,28 +4,35 @@
 
 #include "Sprite.h"
 #include "TileMap.h"
-
+#include <vector>
 
 class Bubble
 {
 
 public:
-	void init(const glm::ivec2& tileMapPos, ShaderProgram& shaderProgram);
+	void init(const glm::ivec2& tileMapPos, ShaderProgram& shaderProgram, int bubble, int Yini);
 	void update(int deltaTime);
 	void render();
 
 	void setTileMap(TileMap* tileMap);
 	void setPosition(const glm::vec2& pos);
 
+
 private:
-	bool jumping;
+	bool jumping, first_jump;
 	bool fwd;
-	double Caiguda_en_y;
 	glm::ivec2 tileMapDispl, posBubble;
-	int jump_x,colission_cooldown;
+	int jump_x, colission_cooldown, Yini;
+	glm::ivec2 tam_txt;
+	glm::vec2 pos_txt, part_txt;
 	Texture spritesheet;
 	Sprite* sprite;
 	TileMap* map;
+	vector<int> timers;
+	vector<glm::ivec2> blocs;
+
+	glm::vec2 getTextPosBubble(int type);
+	void infoBubble(glm::ivec2* tam, glm::vec2* part, int type);
 
 };
 
