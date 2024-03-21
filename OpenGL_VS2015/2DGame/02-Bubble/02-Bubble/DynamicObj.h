@@ -14,18 +14,16 @@ public:
 	void render();
 	virtual void destroy();
 
-	void setTileMap(TileMap* tileMap);
 	glm::ivec2 posObj();
 	glm::ivec2 sizeObj();
-
-	glm::ivec2 tileMapDispl, posi, size;
-	Texture spritesheet;
-	Sprite* sprite;
-	TileMap* map;
 
 
 protected:
 	DynamicObj();
+
+	glm::ivec2 tileMapDispl, posi, size;
+	Texture spritesheet;
+	Sprite* sprite;
 };
 
 #endif

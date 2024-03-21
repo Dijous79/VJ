@@ -37,11 +37,9 @@ void Scene::init()
 	player->setTileMap(map);
 	GlassBlock* gb1 = new GlassBlock();
 	gb1->init(glm::ivec2(SCREEN_X, SCREEN_Y), glm::ivec2(8 * 11, 8 * 17), glm::ivec2(24, 8), 0, texProgram);
-	gb1->setTileMap(map);
 	gsBcks.insert(gb1);
 	GlassBlock* gb2= new GlassBlock();
 	gb2->init(glm::ivec2(SCREEN_X, SCREEN_Y), glm::ivec2(8 * 28, 8 * 17), glm::ivec2(24, 8), 0, texProgram);
-	gb2->setTileMap(map);
 	gsBcks.insert(gb2);
 	map->setGbS(&gsBcks);
 	projection = glm::ortho(0.f, float(SCREEN_WIDTH), float(SCREEN_HEIGHT), 0.f);

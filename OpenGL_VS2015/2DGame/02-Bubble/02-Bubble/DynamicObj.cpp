@@ -15,10 +15,6 @@ void DynamicObj::render() {
 	sprite->render();
 }
 
-void DynamicObj::setTileMap(TileMap* tileMap) {
-	map = tileMap;
-}
-
 glm::ivec2 DynamicObj::posObj() {
 	return posi;
 }

@@ -8,6 +8,7 @@
 #include "Player.h"
 #include "GlassBlock.h"
 #include "Wire.h"
+#include "Drops.h"
 
 
 // Scene contains all the entities of our game.
@@ -36,6 +37,7 @@ private:
 	Player *player;
 	std::set<GlassBlock*> gsBcks;
 	std::set<Wire*> wrs;
+	std::set<Drops*> drops;
 	ShaderProgram texProgram;
 	float currentTime;
 	glm::mat4 projection;
