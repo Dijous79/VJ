@@ -82,12 +82,13 @@ void Bubble::infoBubble(glm::ivec2* tam, glm::vec2* part, int type) {
 	}
 }
 
-void Bubble::init(const glm::ivec2& tileMapPos, ShaderProgram& shaderProgram, int bubble, int Yini)
+void Bubble::init(const glm::ivec2& tileMapPos, ShaderProgram& shaderProgram, int bubble, int Yini, bool dir)
 {
 
 	spritesheet.loadFromFile("images/bubble.png", TEXTURE_PIXEL_FORMAT_RGBA);
 	infoBubble(&tam_txt, &part_txt, bubble % 4);
 	pos_txt = getTextPosBubble(bubble);
+	bub = bubble;
 	sprite = Sprite::createSprite(tam_txt, part_txt, &spritesheet, &shaderProgram);
 	sprite->setNumberAnimations(1);
 	sprite->setAnimationSpeed(0, 1);
@@ -96,7 +97,7 @@ void Bubble::init(const glm::ivec2& tileMapPos, ShaderProgram& shaderProgram, in
 	tileMapDispl = tileMapPos;
 	sprite->setPosition(glm::vec2(float(tileMapDispl.x + posBubble.x), float(tileMapDispl.y + posBubble.y)));
 	jumping = true;
-	fwd = true;
+	fwd = dir;
 	first_jump = true;
 	this->Yini = Yini;
 	jump_x = 0;
@@ -169,7 +170,7 @@ void Bubble::update(int deltaTime)
 
 	for (int i = 0; i < blocs.size(); i++) {
 		glm::ivec2 pos = blocs[i];
-		if (map->circleRect(posBubble.x + tam_txt.x / 2, posBubble.y + tam_txt.y / 2, tam_txt.x / 2, pos.x, pos.y, 8 * 3, 8 * 3, &posBubble.y)) {
+		if (map->circleRect(posBubble.x + tam_txt.x / 2, posBubble.y + tam_txt.y / 2, tam_txt.x / 2, pos.x, pos.y, 8, 8, &posBubble.y)) {
 			if (first_jump && posBubble.y + tam_txt.x > 20 * 8) {
 				first_jump = false;
 				switch (tam_txt.x) { // canviar en funcó de la amplada de la parabola
@@ -225,6 +226,16 @@ void Bubble::setPosition(const glm::vec2& pos)
 	sprite->setPosition(glm::vec2(float(tileMapDispl.x + posBubble.x), float(tileMapDispl.y + posBubble.y)));
 }
 
+bool Bubble::impacte(glm::ivec2 posCable) {
+	return map->circleRect(posBubble.x + tam_txt.x / 2, posBubble.y + tam_txt.y / 2, tam_txt.x / 2, posCable.x, posCable.y, 4, 400, &posBubble.y);
+}
 
+glm::ivec2 Bubble::getPos() {
+	return posBubble;
+}
+
+int Bubble::getType() {
+	return bub;
+}
 
 

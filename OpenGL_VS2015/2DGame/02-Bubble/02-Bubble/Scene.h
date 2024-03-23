@@ -40,6 +40,7 @@ private:
 	std::set<GlassBlock*> gsBcks;
 	std::set<Wire*> wrs;
 	std::set<Drops*> drops;
+	std::set<Bubble*> bubbles;
 	ShaderProgram texProgram;
 	float currentTime;
 	glm::mat4 projection;
