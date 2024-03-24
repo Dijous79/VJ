@@ -45,6 +45,8 @@ void Scene::init()
 	projection = glm::ortho(0.f, float(SCREEN_WIDTH), float(SCREEN_HEIGHT), 0.f);
 	currentTime = 0.0f;
 	wrsAllowed = 1;
+	points = 0;
+	multiplier = 1;
 }
 
 void Scene::update(int deltaTime)
@@ -61,7 +63,11 @@ void Scene::update(int deltaTime)
 	for (std::set<Wire*>::iterator it = wrs.begin(); it != wrs.end(); ++it) {
 		(*it)->update(deltaTime);
 	}
+	for (std::set<Drops*>::iterator it = drops.begin(); it != drops.end(); ++it) {
+		(*it)->update(deltaTime);
+	}
 	wireCollisions();
+	dropCollisions();
 }
 
 void Scene::render()
@@ -82,6 +88,9 @@ void Scene::render()
 		(*it)->render();
 	}
 	for (std::set<Wire*>::iterator it = wrs.begin(); it != wrs.end(); ++it) {
+		(*it)->render();
+	}
+	for (std::set<Drops*>::iterator it = drops.begin(); it != drops.end(); ++it) {
 		(*it)->render();
 	}
 	player->render();
@@ -122,9 +131,7 @@ void Scene::initShaders()
 void Scene::wireCollisions() {
 	Wire* wr = NULL;
 	for (std::set<Wire*>::iterator it = wrs.begin(); it != wrs.end(); ++it) {
-		printf("cable\n");
 		char contact = map->wahtTile((*it)->topHitBox());
-		printf("%c\n", contact);
 		if (contact != '\0' && contact != 'v' && contact != 'b' && contact != 'n' && contact != 'V' && contact != 'B' && contact != 'N') {
 			wr = *it;
 		}
@@ -132,7 +139,7 @@ void Scene::wireCollisions() {
 		for (std::set<GlassBlock*>::iterator it2 = gsBcks.begin(); it2 != gsBcks.end(); ++it2) {
 			glm::ivec2 pGB = (*it2)->posObj();
 			glm::ivec2 sGB = (*it2)->sizeObj();
-			glm::ivec2 pWr = (*it)->posObj();
+			glm::ivec2 pWr = (*it)->posObj(); 
 			if (pGB.y <= pWr.y && pGB.y + sGB.y >= pWr.y && pGB.x <= pWr.x + 4 && pGB.x + sGB.x >= pWr.x + 4) {
 				(*it2)->destroy();
 				gb = (*it2);
@@ -140,6 +147,8 @@ void Scene::wireCollisions() {
 			}
 		}
 		if (gb != NULL) {
+			glm::ivec2 centreBlock = gb->getCenter();
+			instanceDrop(centreBlock);
 			DynObjDestr.insert(gb);
 			gsBcks.erase(gb);
 		}
@@ -161,3 +170,39 @@ void Scene::instanceWire(glm::ivec2 pos, int off) {
 	wr->init(glm::ivec2(SCREEN_X, SCREEN_Y), posA, texProgram);
 	wrs.insert(wr);
 }
+
+void Scene::setMaxWires(int nnw) {
+	wrsAllowed = nnw;
+}
+
+void Scene::dropCollisions() {
+	Drops* d = NULL;
+	for (std::set<Drops*>::iterator it = drops.begin(); it != drops.end(); ++it) {
+		glm::ivec2 Dp = (*it)->posObj();
+		glm::ivec2 Ds = (*it)->sizeObj();
+		glm::ivec2 Pp = player->getPos();
+		glm::ivec2 Ps = player->getSize();
+
+		if (Dp.y > Pp.y + Ps.y / 4 && Dp.y < Pp.y + 3*Ps.y / 4 || Dp.y + Ds.y > Pp.y + Ps.y / 4 && Dp.y + Ds.y < Pp.y + 3 * Ps.y / 4) {
+			if (Dp.x > Pp.x + Ps.x / 4 && Dp.x < Pp.x + 3 * Ps.x / 4 || Dp.x + Ds.x > Pp.x + Ps.x / 4 && Dp.x + Ds.x < Pp.x + 3 * Ps.x / 4) {
+				(*it)->destroy();
+				d = (*it);
+				it = drops.end();
+				--it;
+			}
+		}
+	}
+	if (d != NULL)
+		drops.erase(d);
+}
+
+void Scene::instanceDrop(glm::ivec2 centerSpawn) {
+	Food* aux = new Food();
+	centerSpawn -= glm::ivec2(8, 8);
+	aux->init(glm::ivec2(SCREEN_X, SCREEN_Y), centerSpawn, texProgram, 20);
+	aux->setTileMap(map);
+	aux->setScene(this);
+	drops.insert(aux);
+}
+
+void Scene::addPoints(int pts) { points += pts * multiplier; }

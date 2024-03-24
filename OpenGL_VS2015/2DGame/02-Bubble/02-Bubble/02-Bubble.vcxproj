@@ -15,6 +15,7 @@
     <ClInclude Include="Bubble.h" />
     <ClInclude Include="Drops.h" />
     <ClInclude Include="DynamicObj.h" />
+    <ClInclude Include="Food.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GlassBlock.h" />
     <ClInclude Include="Player.h" />
@@ -31,6 +32,7 @@
     <ClCompile Include="Bubble.cpp" />
     <ClCompile Include="Drops.cpp" />
     <ClCompile Include="DynamicObj.cpp" />
+    <ClCompile Include="Food.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GlassBlock.cpp" />
     <ClCompile Include="main.cpp" />

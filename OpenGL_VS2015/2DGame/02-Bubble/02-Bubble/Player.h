@@ -22,6 +22,9 @@ public:
 	void setTileMap(TileMap* tileMap);
 	void setPosition(const glm::vec2& pos);
 
+	glm::ivec2 getPos();
+	glm::ivec2 getSize();
+
 private:
 	bool bClimbing;
 	bool inAnim;
@@ -29,6 +32,7 @@ private:
 	bool lastDir;
 	bool iOc;
 	bool jump;
+	int cdShoot;
 	glm::ivec2 tileMapDispl, posPlayer, size;
 	int startY;
 	Texture spritesheet;

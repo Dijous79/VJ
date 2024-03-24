@@ -9,6 +9,7 @@ class DynamicObj
 {
 public:
 	virtual void init(const glm::ivec2& tileMapPos, glm::ivec2 posiO, ShaderProgram& shaderProgram);
+	virtual void init(const glm::ivec2& tileMapPos, glm::ivec2 posiO, ShaderProgram& shaderProgram, int pwu);
 	virtual void init(const glm::ivec2& tileMapPos, glm::ivec2 posiO, glm::ivec2 sizeObj, int col, ShaderProgram& shaderProgram);
 	virtual void update(int deltaTime);
 	void render();

@@ -6,7 +6,7 @@
 #include "Scene.h"
 
 
-#define FALL_STEP 4
+#define FALL_STEP 2
 
 
 enum PlayerAnims
@@ -22,6 +22,7 @@ void Player::init(const glm::ivec2& tileMapPos, ShaderProgram& shaderProgram, Sc
 	lastDir = false;
 	jump = false;
 	Bfr = 0;
+	cdShoot = 0;
 	scn = scene;
 	size = glm::ivec2(32, 32);
 	spritesheet.loadFromFile("images/character.png", TEXTURE_PIXEL_FORMAT_RGBA);
@@ -72,6 +73,7 @@ void Player::init(const glm::ivec2& tileMapPos, ShaderProgram& shaderProgram, Sc
 void Player::update(int deltaTime)
 {
 	sprite->update(deltaTime);
+	cdShoot--;
 	if (inAnim) {
 		if (Bfr > 0) Bfr--;
 		else {
@@ -175,14 +177,17 @@ void Player::update(int deltaTime)
 			posPlayer.y += FALL_STEP;
 			map->collisionMoveDown(posPlayer, size, &posPlayer.y);
 		}
-		if (Game::instance().getKey(GLFW_KEY_S)) {
+		if (Game::instance().getKey(GLFW_KEY_S) && cdShoot < 0) {
 			if (scn->space4Wire()) {
 				int off = 8;
-				if (!lastDir)
+				if (bClimbing)
+					off += 4;
+				else if (!lastDir)
 					off += 8;
 				scn->instanceWire(posPlayer, off);
 				inAnim = true;
 				Bfr = 4;
+				cdShoot = 9;
 				if (!bClimbing) {
 					if (lastDir)
 						sprite->changeAnimation(SHOOTING_LEFT);
@@ -212,6 +217,8 @@ void Player::setPosition(const glm::vec2& pos)
 	sprite->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)));
 }
 
+glm::ivec2 Player::getPos() { return posPlayer; }
 
+glm::ivec2 Player::getSize() { return size; }
 
 
