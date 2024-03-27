@@ -43,7 +43,7 @@ public:
 	void setGbS(std::set<GlassBlock*>* dObj);
 	char wahtTile(glm::vec2 tile);
 	vector<glm::ivec2> getDownTilePos(const glm::ivec2& pos, const glm::ivec2& size) const;
-	bool circleRect(int cx, int cy, int radius, int rx, int ry, int rw, int rh, int* posY);
+	bool circleRect(int cx, int cy, int radius, int rx, int ry, int rw, int rh, int* posY, bool move);
 
 private:
 	bool loadLevel(const string& levelFile);

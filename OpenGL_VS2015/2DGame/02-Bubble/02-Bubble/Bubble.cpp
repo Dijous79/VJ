@@ -170,7 +170,7 @@ void Bubble::update(int deltaTime)
 
 	for (int i = 0; i < blocs.size(); i++) {
 		glm::ivec2 pos = blocs[i];
-		if (map->circleRect(posBubble.x + tam_txt.x / 2, posBubble.y + tam_txt.y / 2, tam_txt.x / 2, pos.x, pos.y, 8, 8, &posBubble.y)) {
+		if (map->circleRect(posBubble.x + tam_txt.x / 2, posBubble.y + tam_txt.y / 2, tam_txt.x / 2, pos.x, pos.y, 8, 8, &posBubble.y, true)) {
 			if (first_jump && posBubble.y + tam_txt.x > 20 * 8) {
 				first_jump = false;
 				switch (tam_txt.x) { // canviar en funcó de la amplada de la parabola
@@ -227,7 +227,7 @@ void Bubble::setPosition(const glm::vec2& pos)
 }
 
 bool Bubble::impacte(glm::ivec2 posCable) {
-	return map->circleRect(posBubble.x + tam_txt.x / 2, posBubble.y + tam_txt.y / 2, tam_txt.x / 2, posCable.x, posCable.y, 4, 400, &posBubble.y);
+	return map->circleRect(posBubble.x + tam_txt.x / 2, posBubble.y + tam_txt.y / 2, tam_txt.x / 2, posCable.x, posCable.y, 4, 400, &posBubble.y, false);
 }
 
 glm::ivec2 Bubble::getPos() {
@@ -236,4 +236,8 @@ glm::ivec2 Bubble::getPos() {
 
 int Bubble::getType() {
 	return bub;
+}
+
+glm::ivec2 Bubble::getCenter() {
+	return posBubble + tam_txt / 2;
 }

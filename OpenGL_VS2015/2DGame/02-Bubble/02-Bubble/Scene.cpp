@@ -303,15 +303,16 @@ void Scene::wireCollisions() {
 					for (int b = 0; b < 2; b++) {
 						Bubble* bubble = new Bubble();
 						bubble->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, type - 1, pos.y, b);
-						bubble->setPosition(glm::vec2(pos.x + b * 10, pos.y + b * 10));
+						bubble->setPosition(glm::vec2(pos.x + b * 10, pos.y + 10));
 						bubble->setTileMap(map);
 						bubbles.insert(bubble);
 					}
 				}
-				std::set<Bubble*>::iterator it3 = it2;
-				it2++;
-				bubbles.erase(*it3);
+				glm::ivec2 centreBlock = (*it2)->getCenter();
+				instanceDrop(centreBlock);
+				bubbles.erase(it2);
 				wr = *it;
+				it2 = bubbles.end();
 			}
 			else
 			{

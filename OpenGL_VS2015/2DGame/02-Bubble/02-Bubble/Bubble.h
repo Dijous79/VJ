@@ -21,6 +21,8 @@ public:
 	glm::ivec2 getPos();
 	int getType();
 
+	glm::ivec2 getCenter();
+
 
 private:
 	bool jumping, first_jump;

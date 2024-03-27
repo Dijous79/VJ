@@ -159,13 +159,13 @@ bool TileMap::collisionMoveLeft(const glm::ivec2& pos, const glm::ivec2& size) c
 {
 	int x, y0, y1;
 
-	x = pos.x / tileSize;
+	x = (pos.x + size.x) / tileSize - 3;
 	y0 = pos.y / tileSize;
 	y1 = (pos.y + size.y - 1) / tileSize;
 	for (int y = y0; y <= y1; y++)
 	{
 		char aux = map[y * mapSize.x + x];
-		if (aux != '\0' && aux != 'v' && aux != 'b' && aux != 'n' && aux != 'V' && aux != 'B' && aux != 'N')
+		if (aux != '\0' && aux != 'v' && aux != 'b' && aux != 'n' && aux != 'V' && aux != 'B' && aux != 'N' && aux != '2')
 			return true;
 		///////////////mirem si hi ha objectes dinamics solids/////////
 		for (auto it = (*objs).begin(); it != (*objs).end(); ++it) {
@@ -371,7 +371,7 @@ vector<glm::ivec2> TileMap::getDownTilePos(const glm::ivec2& pos, const glm::ive
 	return tiles;
 }
 
-bool TileMap::circleRect(int cx, int cy, int radius, int rx, int ry, int rw, int rh, int* posY) {
+bool TileMap::circleRect(int cx, int cy, int radius, int rx, int ry, int rw, int rh, int* posY, bool move) {
 
 	int testX = cx;
 	int testY = cy;
@@ -386,7 +386,8 @@ bool TileMap::circleRect(int cx, int cy, int radius, int rx, int ry, int rw, int
 	float distance = sqrt((distX * distX) + (distY * distY));
 
 	if (distance <= radius) {
-		*posY = ry - (2 * radius);
+		if (move)
+			*posY = ry - (2 * radius);
 		return true;
 	}
 	return false;
