@@ -12,20 +12,20 @@ images/SpriteSheet.png 					-- Tilesheet
 1                                              1
 1                                              1
 1                                              1
-1      sddddddddddddddMQWddddddddddddddddfg VBN1
-1                     vbn                   vbn1
-1                                           vbn1
-1                                           vbn1
-1                                           vbn1
-1                                           vbn1
 1                                              1
 1                                              1
-1      sdfg   sdddddddMQWdfg   sdddddddddfg VBN1
-1                     vbn  7                vbn1
-1                                           vbn1
-1                                           vbn1
-1                                           vbn1
-1                                           vbn1
-1                                           vbn1
-1                                           vbn1
+1                                              1
+1                                              1
+1                                              1
+1                                              1
+1                                              1
+1                                              1
+1                                              1
+1                                              1
+1                                              1
+1                                              1
+1                                              1
+1                                              1
+1                                              1
+1                                              1
 122222222222222222222222222222222222222222222221

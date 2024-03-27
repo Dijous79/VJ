@@ -70,3 +70,7 @@ void GlassBlock::destroy() {
 	destroying = true;
 	cdDestroy = 21;
 }
+
+glm::ivec2 GlassBlock::getCenter() {
+	return posi + size / 2;
+}

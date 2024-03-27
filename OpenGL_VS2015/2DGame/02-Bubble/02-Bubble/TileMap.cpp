@@ -213,7 +213,7 @@ bool TileMap::collisionMoveDown(const glm::ivec2& pos, const glm::ivec2& size, i
 {
 	int x0, x1, y;
 
-	x0 = (pos.x + (5 *size.x / 16)) / tileSize;
+	x0 = (pos.x + (5 * size.x / 16)) / tileSize;
 	x1 = x0 + (11 * size.x / 16) / tileSize;
 	y = (pos.y + size.y - 1) / tileSize;
 	for (int x = x0; x <= x1; x++)
@@ -338,6 +338,60 @@ char TileMap::wahtTile(glm::vec2 tile) {
 	return aux;
 }
 
+vector<glm::ivec2> TileMap::getDownTilePos(const glm::ivec2& pos, const glm::ivec2& size) const
+{
+	int x0, x1, y;
+
+	x0 = pos.x / tileSize;
+	x1 = (pos.x + size.x - 1) / tileSize;
+	y = (pos.y + size.y - 1) / tileSize;
+	vector<glm::ivec2> tiles = vector<glm::ivec2>();
+	int i = 0;
+	for (int x = x0 - 1; x < x1 + 1; x++)
+	{
+		char aux = map[y * mapSize.x + x];
+		if (aux != '\0' && aux != 'v' && aux != 'b' && aux != 'n' && aux != 'V' && aux != 'B' && aux != 'N' && aux != '1')
+		{
+			tiles.push_back(glm::vec2(x * tileSize, y * tileSize));
+		}
+		i = i + 1;
+
+		for (auto it = (*objs).begin(); it != (*objs).end(); ++it) {
+			glm::ivec2 posA = (*it)->posObj();
+			glm::ivec2 sizeA = (*it)->sizeObj();
+			int xe = posA.x / tileSize;
+			int xd = xe + size.x / tileSize;
+			int ya = posA.y / tileSize;
+			if (x >= xe && x <= xd && y == ya) {
+				tiles.push_back(glm::vec2(x * tileSize, y * tileSize));
+			}
+		}
+	}
+
+	return tiles;
+}
+
+bool TileMap::circleRect(int cx, int cy, int radius, int rx, int ry, int rw, int rh, int* posY) {
+
+	int testX = cx;
+	int testY = cy;
+
+	if (cx < rx)         testX = rx;      // test left edge
+	else if (cx > rx + rw) testX = rx + rw;   // right edge
+	if (cy < ry)         testY = ry;      // top edge
+	else if (cy > ry + rh) testY = ry + rh;   // bottom edge
+
+	int distX = cx - testX;
+	int distY = cy - testY;
+	float distance = sqrt((distX * distX) + (distY * distY));
+
+	if (distance <= radius) {
+		*posY = ry - (2 * radius);
+		return true;
+	}
+	return false;
+}
+
 glm::vec2 TileMap::decodeMap(char l) {
 	switch (l) {
 	case '1':
@@ -433,7 +487,7 @@ glm::vec2 TileMap::decodeMap(char l) {
 	case 'g':
 		return glm::vec2(0.25, 0.875);
 		break;
-	case 'S':
+	case 'Ñ':
 		return glm::vec2(0.125, 0.5);
 		break;
 	case 'D':
@@ -481,17 +535,17 @@ glm::vec2 TileMap::decodeMap(char l) {
 	case 'c':
 		return glm::vec2(0.375, 0.875);
 		break;
-	case 'Ñ':
-		return glm::vec2(0.25, 0.5);
+	case 'S':
+		return glm::vec2(0.5, 0.25);
 		break;
 	case 'Z':
-		return glm::vec2(0.25, 0.625);
+		return glm::vec2(0.625, 0.25);
 		break;
 	case 'X':
-		return glm::vec2(0.25, 0.75);
+		return glm::vec2(0.75, 0.25);
 		break;
 	case 'C':
-		return glm::vec2(0.25, 0.875);
+		return glm::vec2(0.875, 0.25);
 		break;
 	case 'b':
 		return glm::vec2(0.625, 0.875);

@@ -7,12 +7,31 @@ void Game::init()
 {
 	bPlay = true;
 	glClearColor(0.3f, 0.3f, 0.3f, 1.0f);
-	scene.init();
+	scene.init1();
+	keyDown = false;
 }
 
 bool Game::update(int deltaTime)
 {
 	scene.update(deltaTime);
+
+	if (Game::instance().getKey(GLFW_KEY_1) && !keyDown) {
+		scene.flush();
+		scene.init1();
+		keyDown = true;
+	}
+	else if (Game::instance().getKey(GLFW_KEY_2) && !keyDown) {
+		scene.flush();
+		scene.init2();
+		keyDown = true;
+	}
+	else if (Game::instance().getKey(GLFW_KEY_3) && !keyDown) {
+		scene.flush();
+		scene.init3();
+		keyDown = true;
+	}
+	else
+		keyDown = false;
 
 	return bPlay;
 }
