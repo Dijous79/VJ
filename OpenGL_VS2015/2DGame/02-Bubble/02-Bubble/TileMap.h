@@ -4,6 +4,7 @@
 
 #include <glm/glm.hpp>
 #include <set>
+#include <vector>
 #include "Texture.h"
 #include "ShaderProgram.h"
 
@@ -41,6 +42,8 @@ public:
 	void closestLadder(const glm::ivec2& pos, const glm::ivec2& size, int* posX, int* posY) const;
 	void setGbS(std::set<GlassBlock*>* dObj);
 	char wahtTile(glm::vec2 tile);
+	vector<glm::ivec2> getDownTilePos(const glm::ivec2& pos, const glm::ivec2& size) const;
+	bool circleRect(int cx, int cy, int radius, int rx, int ry, int rw, int rh, int* posY);
 
 private:
 	bool loadLevel(const string& levelFile);

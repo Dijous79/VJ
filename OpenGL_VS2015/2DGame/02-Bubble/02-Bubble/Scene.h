@@ -12,6 +12,7 @@
 #include "PowerUp.h"
 #include "Food.h"
 #include "Interface.h"
+#include "Bubble.h"
 
 
 // Scene contains all the entities of our game.
@@ -50,6 +51,7 @@ private:
 	std::set<GlassBlock*> gsBcks;
 	std::set<Wire*> wrs;
 	std::set<Drops*> drops;
+	std::set<Bubble*> bubbles;
 	ShaderProgram texProgram;
 	float currentTime;
 	glm::mat4 projection;
@@ -64,6 +66,10 @@ private:
 	Interface* ui;
 	int whatScene;
 	int startCd;
+	Bubble* bubble1;
+	Bubble* bubble2;
+	Bubble* bubble3;
+	Bubble* bubble4;
 };
 
 

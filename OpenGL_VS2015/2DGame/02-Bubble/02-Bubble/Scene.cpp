@@ -53,6 +53,30 @@ void Scene::init1()
 	map->setGbS(&gsBcks);
 	projection = glm::ortho(0.f, float(SCREEN_WIDTH), float(SCREEN_HEIGHT), 0.f);
 	
+	bubble1 = new Bubble();
+	bubble1->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, 0, 10 * map->getTileSize(), true);
+	bubble1->setPosition(glm::vec2(10 * map->getTileSize(), 10 * map->getTileSize()));
+	bubble1->setTileMap(map);
+	bubbles.insert(bubble1);
+
+	bubble2 = new Bubble();
+	bubble2->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, 1, 10 * map->getTileSize(), true);
+	bubble2->setPosition(glm::vec2(10 * map->getTileSize(), 10 * map->getTileSize()));
+	bubble2->setTileMap(map);
+	bubbles.insert(bubble2);
+
+	bubble3 = new Bubble();
+	bubble3->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, 2, 10 * map->getTileSize(), true);
+	bubble3->setPosition(glm::vec2(10 * map->getTileSize(), 10 * map->getTileSize()));
+	bubble3->setTileMap(map);
+	bubbles.insert(bubble3);
+
+	bubble4 = new Bubble();
+	bubble4->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, 3, 10 * map->getTileSize(), true);
+	bubble4->setPosition(glm::vec2(10 * map->getTileSize(), 10 * map->getTileSize()));
+	bubble4->setTileMap(map);
+	bubbles.insert(bubble4);
+
 	backGround->addKeyframe(0, glm::vec2(0.0, 0.0));
 	backGround->changeAnimation(0);
 	whatScene = 1;
@@ -110,6 +134,7 @@ void Scene::flush() {
 	wrs.clear();
 	drops.clear();
 	dynObjDestr.clear();
+	bubbles.clear();
 	delete backGround;
 	delete ui;
 }
@@ -153,6 +178,9 @@ void Scene::update(int deltaTime)
 				(*it)->update(deltaTime);
 			}
 			for (std::set<Drops*>::iterator it = drops.begin(); it != drops.end(); ++it) {
+				(*it)->update(deltaTime);
+			}
+			for (std::set<Bubble*>::iterator it = bubbles.begin(); it != bubbles.end(); ++it) {
 				(*it)->update(deltaTime);
 			}
 			wireCollisions();
@@ -202,6 +230,9 @@ void Scene::render()
 	for (std::set<Drops*>::iterator it = drops.begin(); it != drops.end(); ++it) {
 		(*it)->render();
 	}
+	for (std::set<Bubble*>::iterator it = bubbles.begin(); it != bubbles.end(); ++it) {
+		(*it)->render();
+	}
 	player->render();
 	ui->render();
 	
@@ -244,11 +275,11 @@ void Scene::wireCollisions() {
 		if (contact != '\0' && contact != 'v' && contact != 'b' && contact != 'n' && contact != 'V' && contact != 'B' && contact != 'N') {
 			wr = *it;
 		}
+		glm::ivec2 pWr = (*it)->posObj();
 		GlassBlock* gb = NULL;
 		for (std::set<GlassBlock*>::iterator it2 = gsBcks.begin(); it2 != gsBcks.end(); ++it2) {
 			glm::ivec2 pGB = (*it2)->posObj();
 			glm::ivec2 sGB = (*it2)->sizeObj();
-			glm::ivec2 pWr = (*it)->posObj(); 
 			if (pGB.y <= pWr.y && pGB.y + sGB.y >= pWr.y && pGB.x <= pWr.x + 4 && pGB.x + sGB.x >= pWr.x + 4) {
 				(*it2)->destroy();
 				gb = (*it2);
@@ -262,6 +293,30 @@ void Scene::wireCollisions() {
 			instanceDrop(centreBlock);
 			dynObjDestr.insert(gb);
 			gsBcks.erase(gb);
+		}
+		std::set<Bubble*>::iterator it2 = bubbles.begin();
+		while (it2 != bubbles.end()) {
+			if ((*it2)->impacte(pWr)) {
+				glm::ivec2 pos = (*it2)->getPos();
+				int type = (*it2)->getType();
+				if (type % 4 != 0) {
+					for (int b = 0; b < 2; b++) {
+						Bubble* bubble = new Bubble();
+						bubble->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, type - 1, pos.y, b);
+						bubble->setPosition(glm::vec2(pos.x + b * 10, pos.y + b * 10));
+						bubble->setTileMap(map);
+						bubbles.insert(bubble);
+					}
+				}
+				std::set<Bubble*>::iterator it3 = it2;
+				it2++;
+				bubbles.erase(*it3);
+				wr = *it;
+			}
+			else
+			{
+				++it2;
+			}
 		}
 	}
 	if (wr != NULL) {
