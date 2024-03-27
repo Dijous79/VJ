@@ -15,6 +15,7 @@ class Player
 {
 
 public:
+	Player();
 	void init(const glm::ivec2& tileMapPos, ShaderProgram& shaderProgram, Scene* scene);
 	void update(int deltaTime);
 	void render();

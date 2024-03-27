@@ -15,6 +15,8 @@ enum PlayerAnims
 };
 
 
+Player::Player() {}
+
 void Player::init(const glm::ivec2& tileMapPos, ShaderProgram& shaderProgram, Scene* scene)
 {
 	bClimbing = false;
@@ -154,9 +156,10 @@ void Player::update(int deltaTime)
 				else if (sprite->animation() == MOVE_RIGHT)
 					sprite->changeAnimation(STAND_RIGHT);
 			}
-
+			
 			if (Game::instance().getKey(GLFW_KEY_UP))
 			{
+				
 				if (map->inLadder(posPlayer, size)) {
 					bClimbing = true;
 					map->closestLadder(posPlayer, size, &posPlayer.x, &posPlayer.y);

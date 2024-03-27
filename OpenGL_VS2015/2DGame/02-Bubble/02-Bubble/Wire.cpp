@@ -47,7 +47,7 @@ void Wire::destroy() {
 
 glm::vec2 Wire::topHitBox() {
 	glm::vec2 res = glm::vec2(0, 0);
-	res.x = posi.x / 8;
+	res.x = (posi.x + 4) / 8;
 	res.y = posi.y / 8;
 	return res;
 }

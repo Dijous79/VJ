@@ -433,7 +433,7 @@ glm::vec2 TileMap::decodeMap(char l) {
 	case 'g':
 		return glm::vec2(0.25, 0.875);
 		break;
-	case 'S':
+	case 'Ñ':
 		return glm::vec2(0.125, 0.5);
 		break;
 	case 'D':
@@ -481,17 +481,17 @@ glm::vec2 TileMap::decodeMap(char l) {
 	case 'c':
 		return glm::vec2(0.375, 0.875);
 		break;
-	case 'Ñ':
-		return glm::vec2(0.25, 0.5);
+	case 'S':
+		return glm::vec2(0.5, 0.25);
 		break;
 	case 'Z':
-		return glm::vec2(0.25, 0.625);
+		return glm::vec2(0.625, 0.25);
 		break;
 	case 'X':
-		return glm::vec2(0.25, 0.75);
+		return glm::vec2(0.75, 0.25);
 		break;
 	case 'C':
-		return glm::vec2(0.25, 0.875);
+		return glm::vec2(0.875, 0.25);
 		break;
 	case 'b':
 		return glm::vec2(0.625, 0.875);

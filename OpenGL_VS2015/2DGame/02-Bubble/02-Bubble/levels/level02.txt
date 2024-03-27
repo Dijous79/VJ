@@ -4,6 +4,13 @@ TILEMAP
 images/SpriteSheet.png 					-- Tilesheet
 8 8 								-- Number of tiles in tilesheet
 122222222222222222222222222222222222222222222221
+1               S              S               1
+1               Z              Z               1
+1               Z              Z               1
+1               Z              Z               1
+1               Z              Z               1
+1               X              X               1
+1               C              C               1
 1                                              1
 1                                              1
 1                                              1
@@ -11,14 +18,7 @@ images/SpriteSheet.png 					-- Tilesheet
 1                                              1
 1                                              1
 1                                              1
-1                                              1
-1                                              1
-1                                              1
-1                                              1
-1                                              1
-1                                              1
-1                                              1
-1                                              1
+1        6                            6        1
 1                                              1
 1                                              1
 1                                              1

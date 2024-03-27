@@ -35,7 +35,7 @@ void Food::destroy() {
 	switch (whatIsIt)
 	{
 	case 0:
-		scn->setMaxWires(2);
+		scn->addPoints(100);
 		break;
 	default:
 		break;
