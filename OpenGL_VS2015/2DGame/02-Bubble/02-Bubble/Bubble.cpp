@@ -225,8 +225,8 @@ void Bubble::setPosition(const glm::vec2& pos)
 	sprite->setPosition(glm::vec2(float(tileMapDispl.x + posBubble.x), float(tileMapDispl.y + posBubble.y)));
 }
 
-bool Bubble::impacte(glm::ivec2 posCable) {
-	return map->circleRect(posBubble.x + tam_txt.x / 2, posBubble.y + tam_txt.y / 2, tam_txt.x / 2, posCable.x, posCable.y, 4, 400, &posBubble.y, false);
+bool Bubble::impacte(glm::ivec2 posCable, int superficie) {
+	return map->circleRect(posBubble.x + tam_txt.x / 2, posBubble.y + tam_txt.y / 2, tam_txt.x / 2, posCable.x, posCable.y, superficie, 400, &posBubble.y, false);
 }
 
 glm::ivec2 Bubble::getPos() {

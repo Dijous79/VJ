@@ -13,6 +13,7 @@
 #include "Food.h"
 #include "Interface.h"
 #include "Bubble.h"
+#include "Cadaver.h"
 
 
 // Scene contains all the entities of our game.
@@ -36,18 +37,22 @@ public:
 	void setMaxWires(int nnw);
 	void addPoints(int pts);
 	void flush();
+	void godCheat();
 
 private:
 	void initBase();
 	void initShaders();
 	void wireCollisions();
 	void dropCollisions();
+	void playerBubbleCollisions();
 	void instanceDrop(glm::ivec2 centerSpawn);
 	void moriste();
 
 private:
+	int lives;
 	TileMap *map;
 	Player *player;
+	Cadaver* cadaver;
 	std::set<GlassBlock*> gsBcks;
 	std::set<Wire*> wrs;
 	std::set<Drops*> drops;
@@ -70,6 +75,8 @@ private:
 	Bubble* bubble2;
 	Bubble* bubble3;
 	Bubble* bubble4;
+	int timerInvulnerabilty, timerTxtInvulnerabilty;
+	bool god,playerVisible, viu;
 };
 
 
