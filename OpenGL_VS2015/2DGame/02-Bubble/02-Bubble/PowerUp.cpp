@@ -45,6 +45,13 @@ void PowerUp::destroy() {
 	{
 	case 0:
 		scn->setMaxWires(2);
+		scn->addPoints(100);
+		break;
+	case 1:
+		scn->addPoints(100);
+		break;
+	case 2:
+		scn->addPoints(100);
 		break;
 	default:
 		break;
