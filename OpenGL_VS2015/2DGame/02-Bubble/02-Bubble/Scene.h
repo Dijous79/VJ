@@ -37,6 +37,7 @@ public:
 	void setMaxWires(int nnw);
 	void addPoints(int pts);
 	void flush();
+	void godCheat();
 
 private:
 	void initBase();

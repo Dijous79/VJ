@@ -40,6 +40,7 @@ void Scene::initBase() {
 	multiplier = 1;
 	startCd = 0;
 	lives = 3;
+	timerInvulnerabilty = timerTxtInvulnerabilty = 0;
 	god = false;
 	playerVisible = true;
 	viu = true;
@@ -194,7 +195,7 @@ void Scene::update(int deltaTime)
 			}
 			wireCollisions();
 			dropCollisions();
-			if (timerInvulnerabilty == 0) {
+			if (timerInvulnerabilty == 0 && !god) {
 				playerBubbleCollisions();
 			}
 			else {
@@ -261,7 +262,7 @@ void Scene::render()
 		(*it)->render();
 	}
 	if (playerVisible && viu) player->render();
-	else cadaver-> render();
+	else if(!viu) cadaver-> render();
 	ui->render();
 	
 }
@@ -440,4 +441,10 @@ void Scene::addPoints(int pts) { points += pts * multiplier; }
 
 void Scene::moriste() {
 	ui->gameOverText();
+}
+
+void Scene::godCheat() {
+	god = !god;
+	timerTxtInvulnerabilty = timerInvulnerabilty= 0;
+	playerVisible=true;
 }

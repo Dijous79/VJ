@@ -1,6 +1,7 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 #include "Game.h"
+#include <iostream>
 
 
 void Game::init()
@@ -16,23 +17,37 @@ bool Game::update(int deltaTime)
 	scene.update(deltaTime);
 	
 
-	if (Game::instance().getKey(GLFW_KEY_1) && !keyDown) {
-		scene.flush();
-		scene.init1();
-		keyDown = true;
+	if (Game::instance().getKey(GLFW_KEY_1)) {
+		if (!keyDown) {
+			scene.flush();
+			scene.init1();
+			keyDown = true;
+		}
 	}
-	else if (Game::instance().getKey(GLFW_KEY_2) && !keyDown) {
-		scene.flush();
-		scene.init2();
-		keyDown = true;
+	else if (Game::instance().getKey(GLFW_KEY_2)) {
+		if (!keyDown) {
+			scene.flush();
+			scene.init2();
+			keyDown = true;
+		}
 	}
-	else if (Game::instance().getKey(GLFW_KEY_3) && !keyDown) {
-		scene.flush();
-		scene.init3();
-		keyDown = true;
+	else if (Game::instance().getKey(GLFW_KEY_3)) {
+		if (!keyDown) {
+			scene.flush();
+			scene.init3();
+			keyDown = true;
+		}
+	}
+	else if (Game::instance().getKey(GLFW_KEY_G)) {
+		if (!keyDown) {
+			scene.godCheat();
+			keyDown = true;
+		}
 	}
 	else
 		keyDown = false;
+
+	
 
 	return bPlay;
 }
