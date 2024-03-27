@@ -14,6 +14,7 @@ void Game::init()
 bool Game::update(int deltaTime)
 {
 	scene.update(deltaTime);
+	
 
 	if (Game::instance().getKey(GLFW_KEY_1) && !keyDown) {
 		scene.flush();

@@ -11,6 +11,8 @@
 #define INIT_PLAYER_X_TILES 23
 #define INIT_PLAYER_Y_TILES 21
 
+#define INVULNERABILITY 120
+
 
 Scene::Scene()
 {
@@ -29,6 +31,7 @@ Scene::~Scene()
 void Scene::initBase() {
 	player = new Player();
 	player->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, this);
+	cadaver = new Cadaver();
 	ui = new Interface();
 	ui->init(texProgram);
 	currentTime = -(1000.0f * 40.0f) / 60.0;
@@ -36,6 +39,10 @@ void Scene::initBase() {
 	points = 0;
 	multiplier = 1;
 	startCd = 0;
+	lives = 3;
+	god = false;
+	playerVisible = true;
+	viu = true;
 	spritesheet.loadFromFile("images/backgrounds.png", TEXTURE_PIXEL_FORMAT_RGBA);
 	backGround = Sprite::createSprite(glm::ivec2(8 * 48, 8 * 26), glm::vec2(1.0 / 3.0, 1.0), &spritesheet, &texProgram);
 	backGround->setNumberAnimations(1);
@@ -53,6 +60,7 @@ void Scene::init1()
 	map->setGbS(&gsBcks);
 	projection = glm::ortho(0.f, float(SCREEN_WIDTH), float(SCREEN_HEIGHT), 0.f);
 	
+
 	bubble1 = new Bubble();
 	bubble1->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, 0, 10 * map->getTileSize(), true);
 	bubble1->setPosition(glm::vec2(10 * map->getTileSize(), 10 * map->getTileSize()));
@@ -166,7 +174,8 @@ void Scene::update(int deltaTime)
 		}
 		else {
 			ui->timeAct(100 - (currentTime) / 1000);
-			player->update(deltaTime);
+			if(viu)player->update(deltaTime);
+			else cadaver->update(deltaTime);
 
 			for (std::set<GlassBlock*>::iterator it = gsBcks.begin(); it != gsBcks.end(); ++it) {
 				(*it)->update(deltaTime);
@@ -185,6 +194,24 @@ void Scene::update(int deltaTime)
 			}
 			wireCollisions();
 			dropCollisions();
+			if (timerInvulnerabilty == 0) {
+				playerBubbleCollisions();
+			}
+			else {
+				if (!god) {
+					timerInvulnerabilty--;
+					if (timerInvulnerabilty == 0) {
+						playerVisible = true;
+					}
+				}
+				if (timerTxtInvulnerabilty == 0) {
+					playerVisible=!playerVisible;
+					timerTxtInvulnerabilty = 10;
+				}
+				else {
+					timerTxtInvulnerabilty--;
+				}
+			}
 		}
 		if (currentTime > 104000) {
 			flush();
@@ -233,7 +260,8 @@ void Scene::render()
 	for (std::set<Bubble*>::iterator it = bubbles.begin(); it != bubbles.end(); ++it) {
 		(*it)->render();
 	}
-	player->render();
+	if (playerVisible && viu) player->render();
+	else cadaver-> render();
 	ui->render();
 	
 }
@@ -296,7 +324,7 @@ void Scene::wireCollisions() {
 		}
 		std::set<Bubble*>::iterator it2 = bubbles.begin();
 		while (it2 != bubbles.end()) {
-			if ((*it2)->impacte(pWr)) {
+			if ((*it2)->impacte(pWr,4)) {
 				glm::ivec2 pos = (*it2)->getPos();
 				int type = (*it2)->getType();
 				if (type % 4 != 0) {
@@ -379,6 +407,32 @@ void Scene::instanceDrop(glm::ivec2 centerSpawn) {
 		aux->setTileMap(map);
 		aux->setScene(this);
 		drops.insert(aux);
+	}
+}
+
+void Scene::playerBubbleCollisions() {
+	glm::ivec2 pP = player->getPos();
+	std::set<Bubble*>::iterator it2 = bubbles.begin();
+
+	while (it2 != bubbles.end()) {
+		if ((*it2)->impacte(pP, 16)) {
+			if (lives != 0) {
+				lives--;
+				timerInvulnerabilty = INVULNERABILITY;
+				viu = false;
+				cadaver->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, false);
+				cadaver->setPosition(player->getPos());
+				cadaver->setTileMap(map);
+			}
+			else
+				moriste();
+
+			it2 = bubbles.end();
+		}
+		else
+		{
+			++it2;
+		}
 	}
 }
 
