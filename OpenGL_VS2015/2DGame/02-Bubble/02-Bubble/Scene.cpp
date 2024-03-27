@@ -30,7 +30,6 @@ void Scene::initBase() {
 	player = new Player();
 	player->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, this);
 	ui = new Interface();
-	ui->init(texProgram);
 	currentTime = -(1000.0f * 40.0f) / 60.0;
 	wrsAllowed = 1;
 	points = 0;
@@ -51,6 +50,7 @@ void Scene::init1()
 	player->setPosition(glm::vec2(INIT_PLAYER_X_TILES * map->getTileSize(), INIT_PLAYER_Y_TILES * map->getTileSize()));
 	player->setTileMap(map);
 	map->setGbS(&gsBcks);
+	ui->init(texProgram, 0);
 	projection = glm::ortho(0.f, float(SCREEN_WIDTH), float(SCREEN_HEIGHT), 0.f);
 	
 	bubble1 = new Bubble();
@@ -89,6 +89,7 @@ void Scene::init2()
 	map = TileMap::createTileMap("levels/level02.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
 	player->setPosition(glm::vec2(INIT_PLAYER_X_TILES * map->getTileSize(), INIT_PLAYER_Y_TILES * map->getTileSize()));
 	player->setTileMap(map);
+	ui->init(texProgram, 1);
 	GlassBlock* gb1 = new GlassBlock();
 	gb1->init(glm::ivec2(SCREEN_X, SCREEN_Y), glm::ivec2(8 * 16, 8 * 8), glm::ivec2(32, 8), 1, texProgram);
 	gsBcks.insert(gb1);
@@ -115,6 +116,7 @@ void Scene::init3()
 	map = TileMap::createTileMap("levels/level03.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
 	player->setPosition(glm::vec2(INIT_PLAYER_X_TILES * map->getTileSize(), INIT_PLAYER_Y_TILES * map->getTileSize()));
 	player->setTileMap(map);
+	ui->init(texProgram, 2);
 	GlassBlock* gb1 = new GlassBlock();
 	gb1->init(glm::ivec2(SCREEN_X, SCREEN_Y), glm::ivec2(8 * 11, 8 * 17), glm::ivec2(24, 8), 0, texProgram);
 	gsBcks.insert(gb1);
@@ -167,7 +169,7 @@ void Scene::update(int deltaTime)
 		else {
 			ui->timeAct(100 - (currentTime) / 1000);
 			player->update(deltaTime);
-
+			ui->update(deltaTime);
 			for (std::set<GlassBlock*>::iterator it = gsBcks.begin(); it != gsBcks.end(); ++it) {
 				(*it)->update(deltaTime);
 			}
@@ -382,7 +384,10 @@ void Scene::instanceDrop(glm::ivec2 centerSpawn) {
 	}
 }
 
-void Scene::addPoints(int pts) { points += pts * multiplier; }
+void Scene::addPoints(int pts) { 
+	points += pts * multiplier; 
+	ui->setScore(points);
+}
 
 void Scene::moriste() {
 	ui->gameOverText();

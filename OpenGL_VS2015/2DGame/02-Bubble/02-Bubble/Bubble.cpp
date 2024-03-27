@@ -188,7 +188,6 @@ void Bubble::update(int deltaTime)
 					break;
 				}
 			}
-			cout << jump_x << endl;
 			jump_x = abs(jump_x) * -1;
 			jump_x += 1;
 			blocs.erase(blocs.begin() + i);

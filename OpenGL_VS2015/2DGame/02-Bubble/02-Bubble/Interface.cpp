@@ -9,7 +9,8 @@ void Interface::setTimeNumber(Sprite* tn, ShaderProgram& shaderProgram) {
 	tn->addKeyframe(0, glm::vec2(0.0, 0.0));
 }
 
-void Interface::init(ShaderProgram& shaderProgram) {
+void Interface::init(ShaderProgram& shaderProgram, int city) {
+	cdAnimInsertCoin = 20;
 	timeImage.loadFromFile("images/timeLabel.png", TEXTURE_PIXEL_FORMAT_RGBA);
 	timeLabel = Sprite::createSprite(glm::ivec2(8 * 8, 16), glm::vec2(1.0, 1.0), &timeImage, &shaderProgram);
 	timeLabel->setNumberAnimations(1);
@@ -26,7 +27,6 @@ void Interface::init(ShaderProgram& shaderProgram) {
 	timeNumber3 = Sprite::createSprite(glm::ivec2(16, 16), glm::vec2(0.1, 1.0), &timeNumbersImage, &shaderProgram);
 	timeNumber3->setNumberAnimations(10);
 	for (int i = 0; i < 10; ++i) {
-		printf("%d\n", i);
 		timeNumber1->setAnimationSpeed(i, 1);
 		timeNumber1->addKeyframe(i, glm::vec2(float(i) / 10.0, 0.0));
 		timeNumber2->setAnimationSpeed(i, 1);
@@ -62,9 +62,75 @@ void Interface::init(ShaderProgram& shaderProgram) {
 	readyLabel->setPosition(glm::ivec2(8 * 20, 8 * 12));
 	readyLabel->changeAnimation(1);
 	bReady = true;
+
+	panelBase.loadFromFile("images/BaseImageUi.png", TEXTURE_PIXEL_FORMAT_RGBA);
+	baseInfoPanel = Sprite::createSprite(glm::ivec2(8 * 48 + 1, 8 * 4), glm::vec2(1.0, 1.0), &panelBase, &shaderProgram);
+	baseInfoPanel->setNumberAnimations(1);
+	baseInfoPanel->setAnimationSpeed(0, 1);
+	baseInfoPanel->addKeyframe(0, glm::vec2(0.0, 0.0));
+	baseInfoPanel->setPosition(glm::ivec2(-1, 8 * 26));
+	baseInfoPanel->changeAnimation(0);
+
+	insertCoinImage.loadFromFile("images/insertCoin.png", TEXTURE_PIXEL_FORMAT_RGBA);
+	insertCoinLabel = Sprite::createSprite(glm::ivec2(8 * 12, 8), glm::vec2(1.0, 0.5), &insertCoinImage, &shaderProgram);
+	insertCoinLabel->setNumberAnimations(2);
+	insertCoinLabel->setAnimationSpeed(0, 1);
+	insertCoinLabel->addKeyframe(0, glm::vec2(0.0, 0.5));
+	insertCoinLabel->setAnimationSpeed(1, 1);
+	insertCoinLabel->addKeyframe(1, glm::vec2(0.0, 0.0));
+	insertCoinLabel->setPosition(glm::ivec2(8 * 34, 8 * 28));
+	insertCoinLabel->changeAnimation(1);
+	bInsertCoin = true;
+
+	citiesNameImage.loadFromFile("images/cities.png", TEXTURE_PIXEL_FORMAT_RGBA);
+	cityLabel = Sprite::createSprite(glm::ivec2(8 * 10, 9), glm::vec2(1.0, 1.0 / 3.0), &citiesNameImage, &shaderProgram);
+	cityLabel->setNumberAnimations(3);
+	cityLabel->setAnimationSpeed(0, 1);
+	cityLabel->addKeyframe(0, glm::vec2(0.0, 0.0));
+	cityLabel->setAnimationSpeed(2, 1);
+	cityLabel->addKeyframe(2, glm::vec2(0.0, 1.0 / 3.0));
+	cityLabel->setAnimationSpeed(1, 1);
+	cityLabel->addKeyframe(1, glm::vec2(0.0, 2.0 / 3.0));
+	cityLabel->setPosition(glm::ivec2(8 * 19, 8 * 26));
+	cityLabel->changeAnimation(city);
+
+	scoreNumbersImage.loadFromFile("images/scoreNumbers.png", TEXTURE_PIXEL_FORMAT_RGBA);
+	scoreLabel = *(new vector<Sprite*>(6));
+	for (int i = 0; i < 6; ++i) {
+		scoreLabel[i] = Sprite::createSprite(glm::ivec2(8, 9), glm::vec2(1.0 / 11.0, 1.0), &scoreNumbersImage, &shaderProgram);
+		scoreLabel[i]->setNumberAnimations(11);
+		for (int j = 0; j < 11; ++j) {
+			scoreLabel[i]->setAnimationSpeed(j, 1);
+			scoreLabel[i]->addKeyframe(j, glm::vec2(float(j) / 11.0, 0.0));
+		}
+		scoreLabel[i]->setPosition(glm::ivec2(8 * (15 - i), 8 * 27));
+		scoreLabel[i]->changeAnimation(10);
+	}
+	scoreLabel[0]->changeAnimation(0);
+}
+
+void Interface::update(int deltaTime) {
+	if (cdAnimInsertCoin > 0)
+		cdAnimInsertCoin--;
+	else {
+		cdAnimInsertCoin = 20;
+		if (bInsertCoin) {
+			bInsertCoin = false;
+			insertCoinLabel->changeAnimation(0);
+		}
+		else {
+			bInsertCoin = true;
+			insertCoinLabel->changeAnimation(1);
+		}
+	}
 }
 
 void Interface::render() {
+	baseInfoPanel->render();
+	insertCoinLabel->render();
+	cityLabel->render();
+	for (int i = 0; i < 6; ++i)
+		scoreLabel[i]->render();
 	timeLabel->render();
 	timeNumber1->render();
 	timeNumber2->render();
@@ -93,5 +159,16 @@ void Interface::toggleReadyLabel() {
 	else {
 		readyLabel->changeAnimation(1);
 		bReady = true;
+	}
+}
+
+void Interface::setScore(int n) {
+	for (int i = 0; i < scoreLabel.size(); ++i) {
+		if (n > 0) {
+			scoreLabel[i]->changeAnimation(n % 10);
+			n /= 10;
+		}
+		else
+			scoreLabel[i]->changeAnimation(10);
 	}
 }
