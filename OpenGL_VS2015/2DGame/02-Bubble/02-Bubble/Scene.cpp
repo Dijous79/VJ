@@ -23,6 +23,8 @@ Scene::Scene(Game* game)
 	gm = game;
 	lives = 3;
 	points = 0;
+	god = false;
+	timerPum = 0;
 	mciSendString(L"open \"sounds/Continue.wav\" type mpegvideo alias Continue", NULL, 0, NULL);
 
 }
@@ -46,7 +48,7 @@ void Scene::initBase() {
 	multiplier = 1;
 	startCd = 0;
 	timerInvulnerabilty = 0;
-	god = false;
+	escut = false;
 	playerVisible = true;
 	viu = true;
 	cdStopBubs = 0;
@@ -315,6 +317,7 @@ void Scene::flush() {
 
 void Scene::update(int deltaTime)
 {
+	
 	switch (moment)
 	{
 	case 0:
@@ -368,16 +371,23 @@ void Scene::update(int deltaTime)
 			}
 			wireCollisions();
 			dropCollisions();
-			if (timerInvulnerabilty == 0 && !god && !bubbleStoped) {
+			
+			if (timerPum == 1) pum();
+			else if(timerPum>1) timerPum--;
+
+			if (timerInvulnerabilty <= 0 && !god && !bubbleStoped) {
 				playerBubbleCollisions();
 			}
+			
 			else {
+				cout << god << timerInvulnerabilty << endl;
 				if (!god) {
 					timerInvulnerabilty--;
 					if (timerInvulnerabilty == 0) {
 						playerVisible = true;
 					}
 				}
+				cout << god << timerInvulnerabilty << endl;
 				if (timerTxtInvulnerabilty == 0) {
 					playerVisible = !playerVisible;
 					timerTxtInvulnerabilty = 10;
@@ -425,6 +435,10 @@ void Scene::update(int deltaTime)
 		}
 		wireCollisions();
 		dropCollisions();
+
+		if (timerPum == 1) pum();
+		else if (timerPum > 1) timerPum--;
+
 		if (timerInvulnerabilty == 0 && !god && !bubbleStoped) {
 			playerBubbleCollisions();
 		}
@@ -595,7 +609,8 @@ void Scene::wireCollisions() {
 		}
 		std::set<Bubble*>::iterator it2 = bubbles.begin();
 		while (it2 != bubbles.end()) {
-			if ((*it2)->impacte(pWr,4)) {
+			if ((*it2)->impacte(pWr, 4)) {
+				
 				mciSendString(L"stop pang", NULL, 0, NULL);
 				mciSendString(L"open \"sounds/pang.wav\" type mpegvideo alias pang", NULL, 0, NULL);
 				mciSendString(L"seek pang to start", NULL, 0, NULL);
@@ -630,8 +645,9 @@ void Scene::wireCollisions() {
 					if (whatScene == 4)
 						moriste();
 					else
-					moment = 2;
+						moment = 2;
 					timerRetry = 0;
+					
 				}
 			}
 			else
@@ -718,27 +734,34 @@ void Scene::playerBubbleCollisions() {
 	while (it2 != bubbles.end()) {
 		
 		if ((*it2)->impacte(pP, 16)) {
-			bool direccio = (*it2)->impacte(pP,8);
-			if (lives != 0) {
-
-				mciSendString(L"stop Missed", NULL, 0, NULL);
-				mciSendString(L"open \"sounds/Missed.wav\" type mpegvideo alias missed", NULL, 0, NULL);
-				mciSendString(L"seek Missed to start", NULL, 0, NULL);
-				mciSendString(L"play Missed", NULL, 0, NULL);
-				
-				lives--;
-				ui->setLives(lives);
-				viu = false;
-				moment = 3;
-				timerRetry = 0;
-				cadaver->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, direccio);
-				cadaver->setPosition(player->getPos());
-				cadaver->setTileMap(map);
+			if (escut) {
+				escut = false;
+				timerInvulnerabilty = 60 * 1;
+				break;
 			}
-			else
-				moriste();
+			else {
+				bool direccio = (*it2)->impacte(pP, 8);
+				if (lives != 0) {
 
-			it2 = bubbles.end();
+					mciSendString(L"stop Missed", NULL, 0, NULL);
+					mciSendString(L"open \"sounds/Missed.wav\" type mpegvideo alias missed", NULL, 0, NULL);
+					mciSendString(L"seek Missed to start", NULL, 0, NULL);
+					mciSendString(L"play Missed", NULL, 0, NULL);
+
+					lives--;
+					ui->setLives(lives);
+					viu = false;
+					moment = 3;
+					timerRetry = 0;
+					cadaver->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, direccio);
+					cadaver->setPosition(player->getPos());
+					cadaver->setTileMap(map);
+				}
+				else
+					moriste();
+
+				it2 = bubbles.end();
+			}
 		}
 		else
 		{
@@ -760,4 +783,46 @@ void Scene::godCheat() {
 void Scene::stopTime() {
 	bubbleStoped = true;
 	cdStopBubs = 6 * 60;
+	timerInvulnerabilty = 6 * 60;
+}
+
+void Scene::shield() {
+	escut = true;
+}
+
+void Scene::pum() {
+	std::set<Bubble*>::iterator it2 = bubbles.begin();
+	while (it2 != bubbles.end()) {
+		if ((*it2)->getType() % 4 != 0) {
+
+			mciSendString(L"stop pang", NULL, 0, NULL);
+			mciSendString(L"open \"sounds/pang.wav\" type mpegvideo alias pang", NULL, 0, NULL);
+			mciSendString(L"seek pang to start", NULL, 0, NULL);
+			mciSendString(L"play pang", NULL, 0, NULL);
+
+
+			glm::ivec2 pos = (*it2)->getPos();
+			int type = (*it2)->getType();
+			for (int b = 0; b < 2; b++) {
+				Bubble* bubble = new Bubble();
+				bubble->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, type - 1, pos.y - (type % 4) * 8, b);
+				bubble->setPosition(glm::vec2(pos.x + b * (type % 4) * 8, pos.y + (type % 4) + 1 * 8));
+				bubble->setJumpx(-10);
+				bubble->setTileMap(map);
+				bubbles.insert(bubble);
+			}
+			glm::ivec2 centreBlock = (*it2)->getCenter();
+			instanceDrop(centreBlock);
+			bubbles.erase(it2);
+			it2 = bubbles.begin();
+			timerPum=10;
+			break;
+		}
+		else
+		{
+			++it2;
+			if(it2 == bubbles.end()) 
+				timerPum = 0;
+		}
+	}
 }
