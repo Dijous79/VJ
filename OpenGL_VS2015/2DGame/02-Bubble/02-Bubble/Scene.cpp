@@ -269,21 +269,13 @@ void Scene::update(int deltaTime)
 			}
 		}
 		if (currentTime > 104000) {
-			flush();
-			switch (whatScene)
-			{
-			case 1:
-				init1();
-				break;
-			case 2:
-				init2();
-				break;
-			case 3:
-				init3();
-				break;
-			default:
-				break;
+			lives--;
+			if (lives != 0) {
+				flush();
+				retry();
 			}
+			else
+				moriste();
 		}
 		break;
 	case 3:
