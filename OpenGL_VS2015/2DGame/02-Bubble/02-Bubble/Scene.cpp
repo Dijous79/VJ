@@ -41,7 +41,7 @@ void Scene::initBase() {
 	points = 0;
 	multiplier = 1;
 	startCd = 0;
-	timerInvulnerabilty = timerTxtInvulnerabilty = 0;
+	timerInvulnerabilty = 0;
 	god = false;
 	playerVisible = true;
 	viu = true;
@@ -52,7 +52,6 @@ void Scene::initBase() {
 	backGround->setNumberAnimations(1);
 	backGround->setAnimationSpeed(0, 1);
 	backGround->setPosition(glm::ivec2(SCREEN_X, SCREEN_X));
-	moment = 0;
 }
 
 void Scene::retry() {
@@ -113,6 +112,7 @@ void Scene::init1()
 	backGround->addKeyframe(0, glm::vec2(0.0, 0.0));
 	backGround->changeAnimation(0);
 	whatScene = 1;
+	moment = 0;
 }
 
 void Scene::init2()
@@ -142,6 +142,7 @@ void Scene::init2()
 	backGround->addKeyframe(0, glm::vec2(2.0 / 3.0, 0.0));
 	backGround->changeAnimation(0);
 	whatScene = 2;
+	moment = 0;
 }
 
 void Scene::init3()
@@ -191,6 +192,23 @@ void Scene::init3()
 	backGround->addKeyframe(0, glm::vec2(1.0 / 3.0, 0.0));
 	backGround->changeAnimation(0);
 	whatScene = 3;
+	moment = 0;
+}
+
+void Scene::initMm() {
+	initShaders();
+	moment = 4;
+
+	mainMenuWallaperImage.loadFromFile("images/MainMenuWallaper.png", TEXTURE_PIXEL_FORMAT_RGBA);
+	mainMenuWallaper = Sprite::createSprite(glm::ivec2(8 * 48, 8 * 30), glm::vec2(1.0, 1.0), &mainMenuWallaperImage, &texProgram);
+	mainMenuWallaper->setNumberAnimations(1);
+	mainMenuWallaper->setAnimationSpeed(0, 1);
+	mainMenuWallaper->setPosition(glm::ivec2(SCREEN_X, SCREEN_X));
+
+	projection = glm::ortho(0.f, float(SCREEN_WIDTH), float(SCREEN_HEIGHT), 0.f);
+
+	mainMenuWallaper->addKeyframe(0, glm::vec2(0.0, 0.0));
+	mainMenuWallaper->changeAnimation(0);
 }
 
 void Scene::flush() {
@@ -297,42 +315,48 @@ void Scene::update(int deltaTime)
 			retry();
 		}
 		break;
+	case 4:
+		break;
 	}
 }
 
 void Scene::render()
 {
 	glm::mat4 modelview;
-	backGround->render();
 	texProgram.use();
 	texProgram.setUniformMatrix4f("projection", projection);
 	texProgram.setUniform4f("color", 1.0f, 1.0f, 1.0f, 1.0f);
 	modelview = glm::mat4(1.0f);
 	texProgram.setUniformMatrix4f("modelview", modelview);
 	texProgram.setUniform2f("texCoordDispl", 0.f, 0.f);
-	
-	map->render();
-	for (std::set<GlassBlock*>::iterator it = gsBcks.begin(); it != gsBcks.end(); ++it) {
-		(*it)->render();
+	if (moment == 4) {
+		mainMenuWallaper->render();
 	}
-	for (std::set<DynamicObj*>::iterator it = dynObjDestr.begin(); it != dynObjDestr.end(); ++it) {
-		(*it)->render();
-	}
-	for (std::set<Wire*>::iterator it = wrs.begin(); it != wrs.end(); ++it) {
-		(*it)->render();
-	}
-	for (std::set<Drops*>::iterator it = drops.begin(); it != drops.end(); ++it) {
-		(*it)->render();
-	}
-	if (!(cdStopBubs > 0 && cdStopBubs < 120 && (cdStopBubs / 4) % 2 == 0)) {
-		for (std::set<Bubble*>::iterator it = bubbles.begin(); it != bubbles.end(); ++it) {
+	else {
+		backGround->render();
+
+		map->render();
+		for (std::set<GlassBlock*>::iterator it = gsBcks.begin(); it != gsBcks.end(); ++it) {
 			(*it)->render();
 		}
+		for (std::set<DynamicObj*>::iterator it = dynObjDestr.begin(); it != dynObjDestr.end(); ++it) {
+			(*it)->render();
+		}
+		for (std::set<Wire*>::iterator it = wrs.begin(); it != wrs.end(); ++it) {
+			(*it)->render();
+		}
+		for (std::set<Drops*>::iterator it = drops.begin(); it != drops.end(); ++it) {
+			(*it)->render();
+		}
+		if (!(cdStopBubs > 0 && cdStopBubs < 120 && (cdStopBubs / 4) % 2 == 0)) {
+			for (std::set<Bubble*>::iterator it = bubbles.begin(); it != bubbles.end(); ++it) {
+				(*it)->render();
+			}
+		}
+		if (playerVisible && viu) player->render();
+		else if (!viu) cadaver->render();
+		ui->render();
 	}
-	if (playerVisible && viu) player->render();
-	else if(!viu) cadaver-> render();
-	ui->render();
-	
 }
 
 void Scene::initShaders()
