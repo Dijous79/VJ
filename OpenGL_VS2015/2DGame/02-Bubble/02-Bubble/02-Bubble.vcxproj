@@ -20,6 +20,7 @@
     <ClInclude Include="Game.h" />
     <ClInclude Include="GlassBlock.h" />
     <ClInclude Include="Interface.h" />
+    <ClInclude Include="Menu.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="PowerUp.h" />
     <ClInclude Include="Scene.h" />
@@ -40,6 +41,7 @@
     <ClCompile Include="GlassBlock.cpp" />
     <ClCompile Include="Interface.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Menu.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="PowerUp.cpp" />
     <ClCompile Include="Scene.cpp" />

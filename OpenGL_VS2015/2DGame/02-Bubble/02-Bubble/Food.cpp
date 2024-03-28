@@ -1,14 +1,12 @@
 #include "Food.h"
 #include "Scene.h"
 
-enum FoodAnims {
-	BASE, DISAPEARING
-};
-
 void Food::init(const glm::ivec2& tileMapPos, glm::ivec2 posiO, ShaderProgram& shaderProgram, int pwu) {
 	setPosSize(pwu, posiO);
 	tileMapDispl = tileMapPos;
 	whatIsIt = pwu;
+	cd = 60 * 6;
+	dis = false;
 	spritesheet.loadFromFile("images/Food.png", TEXTURE_PIXEL_FORMAT_RGBA);
 	sprite = Sprite::createSprite(size, glm::vec2((size.x / 16) / 6.0, 1.0 / 6.0), &spritesheet, &shaderProgram);
 	sprite->setNumberAnimations(2);
@@ -16,15 +14,15 @@ void Food::init(const glm::ivec2& tileMapPos, glm::ivec2 posiO, ShaderProgram& s
 	if (pwu < 20) {
 		sprite->setAnimationSpeed(BASE, 1);
 		sprite->addKeyframe(BASE, glm::vec2((pwu % 6) * (1.0 / 6.0), (pwu / 6) * (1.0 / 6.0)));
-		sprite->setAnimationSpeed(DISAPEARING, 4);
+		sprite->setAnimationSpeed(DISAPEARING, 12);
 		sprite->addKeyframe(DISAPEARING, glm::vec2((pwu % 6) * (1.0 / 6.0), (pwu / 6) * (1.0 / 6.0)));
 		sprite->addKeyframe(DISAPEARING, glm::vec2(5.0 / 6.0, 5.0 / 6.0));
 	}
 	else {
 		sprite->setAnimationSpeed(BASE, 1);
 		sprite->addKeyframe(BASE, glm::vec2(1.0 / 3.0, 5.0 / 6.0));
-		sprite->setAnimationSpeed(DISAPEARING, 4);
-		sprite->addKeyframe(DISAPEARING, glm::vec2(1.0 / 3.0, 5.0 / 6.0));
+		sprite->setAnimationSpeed(DISAPEARING, 12);
+		sprite->addKeyframe(DISAPEARING, glm::vec2(1.0 / 3.0, 5.0 / 6.0)); 
 		sprite->addKeyframe(DISAPEARING, glm::vec2(4.0 / 6.0, 5.0 / 6.0));
 	}
 	sprite->changeAnimation(BASE);
