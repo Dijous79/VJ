@@ -3,6 +3,8 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include "Scene.h"
 #include "Game.h"
+#include <windows.h>
+#pragma comment(lib,"winmm.lib")
 
 
 #define SCREEN_X 0
@@ -70,6 +72,10 @@ void Scene::retry() {
 
 void Scene::init1()
 {
+	
+	PlaySound(NULL, NULL, 0);
+	PlaySound(TEXT("sounds/mtFuji.wav"), NULL, SND_FILENAME | SND_ASYNC);
+
 	initShaders();
 	initBase();
 	map = TileMap::createTileMap("levels/level01.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
@@ -111,6 +117,8 @@ void Scene::init1()
 
 void Scene::init2()
 {
+	PlaySound(NULL, NULL, 0);
+	PlaySound(TEXT("sounds/barcelona.wav"), NULL, SND_FILENAME | SND_ASYNC);
 	initShaders();
 	initBase();
 	map = TileMap::createTileMap("levels/level02.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
@@ -138,6 +146,9 @@ void Scene::init2()
 
 void Scene::init3()
 {
+	PlaySound(NULL, NULL, 0);
+	PlaySound(TEXT("sounds/london.wav"), NULL, SND_FILENAME | SND_ASYNC);
+
 	initShaders();
 	initBase();
 	map = TileMap::createTileMap("levels/level03.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
@@ -383,6 +394,13 @@ void Scene::wireCollisions() {
 		std::set<Bubble*>::iterator it2 = bubbles.begin();
 		while (it2 != bubbles.end()) {
 			if ((*it2)->impacte(pWr,4)) {
+				
+				mciSendString(L"stop pang", NULL, 0, NULL);
+				mciSendString(L"open \"sounds/pang.wav\" type mpegvideo alias pang", NULL, 0, NULL);
+				mciSendString(L"seek pang to start", NULL, 0, NULL);
+				mciSendString(L"play pang", NULL, 0, NULL);
+
+
 				glm::ivec2 pos = (*it2)->getPos();
 				int type = (*it2)->getType();
 				if (type % 4 != 0) {
@@ -481,6 +499,12 @@ void Scene::playerBubbleCollisions() {
 		if ((*it2)->impacte(pP, 16)) {
 			bool direccio = (*it2)->impacte(pP,8);
 			if (lives != 0) {
+
+				mciSendString(L"stop Missed", NULL, 0, NULL);
+				mciSendString(L"open \"sounds/Missed.wav\" type mpegvideo alias missed", NULL, 0, NULL);
+				mciSendString(L"seek Missed to start", NULL, 0, NULL);
+				mciSendString(L"play Missed", NULL, 0, NULL);
+				
 				lives--;
 				viu = false;
 				moment = 3;

@@ -4,6 +4,8 @@
 #include "Bubble.h"
 #include "Game.h"
 #include <map>
+#include <windows.h>
+#pragma comment(lib,"winmm.lib")
 
 #define FALL 10
 #define JUMP_HEIGHT 200
