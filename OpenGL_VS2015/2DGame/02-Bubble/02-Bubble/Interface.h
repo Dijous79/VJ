@@ -12,7 +12,7 @@ public:
 	void update(int deltaTime);
 	void render();
 	void timeAct(int n);
-	//void setLives();
+	void setLives(int v);
 	void setScore(int i);
 	void gameOverText();
 	void toggleReadyLabel();
@@ -34,7 +34,8 @@ private:
 	Sprite* insertCoinLabel;
 	Sprite* cityLabel;
 	vector<Sprite*> scoreLabel;
-	Texture timeImage, gameOverImage, timeNumbersImage, readyImage, panelBase, insertCoinImage, citiesNameImage, scoreNumbersImage;
+	vector<Sprite*> liveslabel;
+	Texture timeImage, gameOverImage, timeNumbersImage, readyImage, panelBase, insertCoinImage, citiesNameImage, scoreNumbersImage, livesImage;
 };
 
 #endif

@@ -83,6 +83,7 @@ void Scene::init1()
 	player->setTileMap(map);
 	map->setGbS(&gsBcks);
 	ui->init(texProgram, 0);
+	ui->setLives(lives);
 	projection = glm::ortho(0.f, float(SCREEN_WIDTH), float(SCREEN_HEIGHT), 0.f);
 	
 
@@ -126,6 +127,7 @@ void Scene::init2()
 	player->setPosition(glm::vec2(INIT_PLAYER_X_TILES * map->getTileSize(), INIT_PLAYER_Y_TILES * map->getTileSize()));
 	player->setTileMap(map);
 	ui->init(texProgram, 1);
+	ui->setLives(lives);
 	GlassBlock* gb1 = new GlassBlock();
 	gb1->init(glm::ivec2(SCREEN_X, SCREEN_Y), glm::ivec2(8 * 16, 8 * 8), glm::ivec2(32, 8), 1, texProgram);
 	gsBcks.insert(gb1);
@@ -157,6 +159,7 @@ void Scene::init3()
 	player->setPosition(glm::vec2(INIT_PLAYER_X_TILES * map->getTileSize(), INIT_PLAYER_Y_TILES * map->getTileSize()));
 	player->setTileMap(map);
 	ui->init(texProgram, 2);
+	ui->setLives(lives);
 	
 	bubble1 = new Bubble();
 	bubble1->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, 0, 10 * map->getTileSize(), true);
@@ -556,6 +559,7 @@ void Scene::playerBubbleCollisions() {
 				mciSendString(L"play Missed", NULL, 0, NULL);
 				
 				lives--;
+				ui->setLives(lives);
 				viu = false;
 				moment = 3;
 				timerRetry = 0;
