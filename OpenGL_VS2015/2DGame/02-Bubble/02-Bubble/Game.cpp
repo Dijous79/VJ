@@ -54,6 +54,7 @@ bool Game::update(int deltaTime)
 		if (Game::instance().getKey(GLFW_KEY_ENTER)) {
 			printf("abans\n");
 			delete mainMenu;
+			mainMenu = NULL;
 			scene = new Scene();
 			scene->init1();
 			printf("després\n");
