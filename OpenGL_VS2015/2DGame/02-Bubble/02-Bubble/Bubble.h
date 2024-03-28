@@ -20,7 +20,7 @@ public:
 	bool impacte(glm::ivec2 posCable, int superficie);
 	glm::ivec2 getPos();
 	int getType();
-
+	void setJumpx(int x);
 	glm::ivec2 getCenter();
 
 

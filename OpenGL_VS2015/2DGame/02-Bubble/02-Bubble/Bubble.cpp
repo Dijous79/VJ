@@ -291,3 +291,7 @@ int Bubble::despCentre(int t) {
 	}
 
 }
+
+void Bubble::setJumpx(int x) {
+	jump_x = x;
+}

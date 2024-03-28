@@ -406,8 +406,9 @@ void Scene::wireCollisions() {
 				if (type % 4 != 0) {
 					for (int b = 0; b < 2; b++) {
 						Bubble* bubble = new Bubble();
-						bubble->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, type - 1, pos.y, b);
-						bubble->setPosition(glm::vec2(pos.x + b * 10, pos.y + 10));
+						bubble->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, type - 1, pos.y-type*8, b);
+						bubble->setPosition(glm::vec2(pos.x + b* type*8, pos.y + type+1*8));
+						bubble->setJumpx(-10);
 						bubble->setTileMap(map);
 						bubbles.insert(bubble);
 					}
