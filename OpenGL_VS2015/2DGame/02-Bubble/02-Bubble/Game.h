@@ -49,7 +49,6 @@ private:
 	Scene* scene;
 	Menu* mainMenu;
 	Menu* credits;
-	int moment;
 
 };
 
