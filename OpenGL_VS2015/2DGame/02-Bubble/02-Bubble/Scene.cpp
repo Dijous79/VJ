@@ -18,6 +18,7 @@ Scene::Scene()
 {
 	map = NULL;
 	player = NULL;
+	lives = 3;
 }
 
 Scene::~Scene()
@@ -38,7 +39,6 @@ void Scene::initBase() {
 	points = 0;
 	multiplier = 1;
 	startCd = 0;
-	lives = 3;
 	timerInvulnerabilty = timerTxtInvulnerabilty = 0;
 	god = false;
 	playerVisible = true;
@@ -50,6 +50,22 @@ void Scene::initBase() {
 	backGround->setNumberAnimations(1);
 	backGround->setAnimationSpeed(0, 1);
 	backGround->setPosition(glm::ivec2(SCREEN_X, SCREEN_X));
+	moment = 0;
+}
+
+void Scene::retry() {
+	switch (whatScene)
+	{
+	case 1:
+		init1();
+		break;
+	case 2:
+		init2();
+		break;
+	case 3:
+		init3();
+		break;
+	}
 }
 
 void Scene::init1()
@@ -143,6 +159,7 @@ void Scene::init3()
 
 void Scene::flush() {
 	delete player;
+	delete cadaver;
 	gsBcks.clear();
 	wrs.clear();
 	drops.clear();
@@ -154,7 +171,9 @@ void Scene::flush() {
 
 void Scene::update(int deltaTime)
 {
-	if (startCd <= 45) {
+	switch (moment)
+	{
+	case 0:
 		if (startCd == 25)
 			ui->toggleReadyLabel();
 		if (startCd == 30)
@@ -163,15 +182,17 @@ void Scene::update(int deltaTime)
 			ui->toggleReadyLabel();
 		if (startCd == 40)
 			ui->toggleReadyLabel();
-		if (startCd == 45)
+		if (startCd == 45) {
 			ui->toggleReadyLabel();
+			moment = 1;
+		}
 		if (startCd == 50)
 			ui->toggleReadyLabel();
 		if (startCd == 55)
 			ui->toggleReadyLabel();
 		startCd++;
-	}
-	else {
+		break;
+	case 1:
 		currentTime += deltaTime;
 		if (currentTime > 100000) {
 			ui->timeAct(0);
@@ -179,8 +200,7 @@ void Scene::update(int deltaTime)
 		}
 		else {
 			ui->timeAct(100 - (currentTime) / 1000);
-			if(viu)player->update(deltaTime);
-			else cadaver->update(deltaTime);
+			player->update(deltaTime);
 			for (std::set<GlassBlock*>::iterator it = gsBcks.begin(); it != gsBcks.end(); ++it) {
 				(*it)->update(deltaTime);
 			}
@@ -215,7 +235,7 @@ void Scene::update(int deltaTime)
 					}
 				}
 				if (timerTxtInvulnerabilty == 0) {
-					playerVisible=!playerVisible;
+					playerVisible = !playerVisible;
 					timerTxtInvulnerabilty = 10;
 				}
 				else {
@@ -240,6 +260,15 @@ void Scene::update(int deltaTime)
 				break;
 			}
 		}
+		break;
+	case 3:
+		cadaver->update(deltaTime);
+		timerRetry++;
+		if (timerRetry == 180) {
+			flush();
+			retry();
+		}
+		break;
 	}
 }
 
@@ -433,11 +462,13 @@ void Scene::playerBubbleCollisions() {
 
 	while (it2 != bubbles.end()) {
 		if ((*it2)->impacte(pP, 16)) {
+			bool direccio = (*it2)->impacte(pP,8);
 			if (lives != 0) {
 				lives--;
-				timerInvulnerabilty = INVULNERABILITY;
 				viu = false;
-				cadaver->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, false);
+				moment = 3;
+				timerRetry = 0;
+				cadaver->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, direccio);
 				cadaver->setPosition(player->getPos());
 				cadaver->setTileMap(map);
 			}

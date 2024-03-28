@@ -48,6 +48,7 @@ private:
 	void playerBubbleCollisions();
 	void instanceDrop(glm::ivec2 centerSpawn);
 	void moriste();
+	void retry();
 
 private:
 	int lives;
@@ -76,7 +77,7 @@ private:
 	Bubble* bubble2;
 	Bubble* bubble3;
 	Bubble* bubble4;
-	int timerInvulnerabilty, timerTxtInvulnerabilty, cdStopBubs;
+	int timerInvulnerabilty, timerTxtInvulnerabilty,timerRetry, cdStopBubs, moment;
 	bool god,playerVisible, viu, bubbleStoped;
 };
 
