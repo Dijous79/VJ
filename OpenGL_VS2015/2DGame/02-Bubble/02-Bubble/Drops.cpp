@@ -15,7 +15,7 @@ void Drops::update(int deltaTime) {
 	map->collisionMoveDown(posi, size, &posi.y);
 	sprite->setPosition(glm::vec2(float(tileMapDispl.x + posi.x), float(tileMapDispl.y + posi.y)));
 	cd--;
-	if (cd < 90 && !dis) {
+	if (cd < 120 && !dis) {
 		sprite->changeAnimation(DISAPEARING);
 		dis = true;
 	}

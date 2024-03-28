@@ -7,7 +7,7 @@ void PowerUp::init(const glm::ivec2& tileMapPos, glm::ivec2 posiO, ShaderProgram
 	posi = posiO;
 	tileMapDispl = tileMapPos;
 	whatIsIt = pwu;
-	cd = 60 * 3;
+	cd = 60 * 6;
 	dis = false;
 	spritesheet.loadFromFile("images/PowerUps.png", TEXTURE_PIXEL_FORMAT_RGBA);
 	sprite = Sprite::createSprite(size, glm::vec2(1.0 / 11.0, 1.0), &spritesheet, &shaderProgram);
