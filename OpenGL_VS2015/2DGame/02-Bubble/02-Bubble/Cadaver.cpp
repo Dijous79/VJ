@@ -41,6 +41,11 @@ void Cadaver::update(int deltaTime)
 			first_jump = false;
 		}
 
+		if (map->collisionMoveUp(posCadaver, glm::ivec2(32, 32), &posCadaver.y)) {
+			jump_x = abs(jump_x);
+			jump_x += 1;
+		}
+
 		if (fwd) {
 			sprite->changeAnimation(0);
 			posCadaver.x += 1;

@@ -113,17 +113,22 @@ void Bubble::update(int deltaTime)
 {
 	sprite->update(deltaTime);
 
+	glm::ivec2 aux_pos= posBubble;
+	aux_pos.y += despCentre(tam_txt.x);
+	glm::ivec2 aux_tam = tam_txt;
+	aux_tam.y -= despCentre(tam_txt.x);
+
+
 	if (fwd) {
-		posBubble.x += 8;
-		if (map->collisionMoveRight(posBubble, tam_txt)) {
+		posBubble.x += 1;
+		if (map->collisionMoveRightBub(aux_pos, aux_tam)) {
 			fwd = false;
 			posBubble.x -= 1;
 		}
-		posBubble.x -= 7;
 	}
 	else {
 		posBubble.x -= 1;
-		if (map->collisionMoveLeftBub(posBubble, tam_txt)) {
+		if (map->collisionMoveLeftBub(aux_pos, aux_tam)) {
 			fwd = true;
 			posBubble.x += 1;
 		}
