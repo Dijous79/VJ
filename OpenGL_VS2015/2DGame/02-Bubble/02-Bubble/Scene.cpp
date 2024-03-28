@@ -144,6 +144,31 @@ void Scene::init3()
 	player->setPosition(glm::vec2(INIT_PLAYER_X_TILES * map->getTileSize(), INIT_PLAYER_Y_TILES * map->getTileSize()));
 	player->setTileMap(map);
 	ui->init(texProgram, 2);
+	
+	bubble1 = new Bubble();
+	bubble1->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, 0, 10 * map->getTileSize(), true);
+	bubble1->setPosition(glm::vec2(10 * map->getTileSize(), 10 * map->getTileSize()));
+	bubble1->setTileMap(map);
+	bubbles.insert(bubble1);
+
+	bubble2 = new Bubble();
+	bubble2->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, 1, 10 * map->getTileSize(), true);
+	bubble2->setPosition(glm::vec2(10 * map->getTileSize(), 10 * map->getTileSize()));
+	bubble2->setTileMap(map);
+	bubbles.insert(bubble2);
+
+	bubble3 = new Bubble();
+	bubble3->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, 2, 10 * map->getTileSize(), true);
+	bubble3->setPosition(glm::vec2(10 * map->getTileSize(), 10 * map->getTileSize()));
+	bubble3->setTileMap(map);
+	bubbles.insert(bubble3);
+
+	bubble4 = new Bubble();
+	bubble4->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, 3, 10 * map->getTileSize(), true);
+	bubble4->setPosition(glm::vec2(10 * map->getTileSize(), 10 * map->getTileSize()));
+	bubble4->setTileMap(map);
+	bubbles.insert(bubble4);
+
 	GlassBlock* gb1 = new GlassBlock();
 	gb1->init(glm::ivec2(SCREEN_X, SCREEN_Y), glm::ivec2(8 * 11, 8 * 17), glm::ivec2(24, 8), 0, texProgram);
 	gsBcks.insert(gb1);

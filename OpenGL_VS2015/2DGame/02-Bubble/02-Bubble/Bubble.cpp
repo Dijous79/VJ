@@ -101,8 +101,10 @@ void Bubble::init(const glm::ivec2& tileMapPos, ShaderProgram& shaderProgram, in
 	first_jump = true;
 	this->Yini = Yini;
 	jump_x = 0;
-	blocs = vector<glm::ivec2>();
-	timers = vector<int>();
+	blocsDown = vector<glm::ivec2>();
+	timersDown = vector<int>();
+	blocsUp = vector<glm::ivec2>();
+	timersUp = vector<int>();
 }
 
 void Bubble::update(int deltaTime)
@@ -119,7 +121,7 @@ void Bubble::update(int deltaTime)
 	}
 	else {
 		posBubble.x -= 1;
-		if (map->collisionMoveLeft(posBubble, tam_txt)) {
+		if (map->collisionMoveLeftBub(posBubble, tam_txt)) {
 			fwd = true;
 			posBubble.x += 1;
 		}
@@ -162,14 +164,42 @@ void Bubble::update(int deltaTime)
 	jump_x += 1;
 
 
+	vector<glm::ivec2> v3 = map->getUpTilePos(posBubble, tam_txt);
+	vector<int> v4 = vector<int>(v3.size(), 3);
+
+	timersUp.insert(timersUp.end(), v4.begin(), v4.end());
+	blocsUp.insert(blocsUp.end(), v3.begin(), v3.end());
+
+	for (int i = 0; i < blocsUp.size(); i++) {
+		glm::ivec2 pos = blocsUp[i];
+		if (map->circleRect(posBubble.x + tam_txt.x / 2 + despCentre(tam_txt.x), posBubble.y + tam_txt.y / 2 + despCentre(tam_txt.x), tam_txt.x / 2, pos.x, pos.y, 8, 8, &posBubble.y, true)) {
+			
+			jump_x = abs(jump_x);
+			jump_x += 1;
+			posBubble.y += 8+tam_txt.y -despCentre(tam_txt.x);
+			blocsUp.erase(blocsUp.begin() + i);
+			timersUp.erase(timersUp.begin() + i);
+			break;
+		}
+	}
+	for (int i = 0; i < timersUp.size(); i++) {
+		if (timersUp[i] == 1) {
+			blocsUp.erase(blocsUp.begin() + i);
+			timersUp.erase(timersUp.begin() + i);
+		}
+		else {
+			timersUp[i] -= 1;
+		}
+	}
+
 	vector<glm::ivec2> v1 = map->getDownTilePos(posBubble, tam_txt);
 	vector<int> v2 = vector<int>(v1.size(), 3);
 
-	timers.insert(timers.end(), v2.begin(), v2.end());
-	blocs.insert(blocs.end(), v1.begin(), v1.end());
+	timersDown.insert(timersDown.end(), v2.begin(), v2.end());
+	blocsDown.insert(blocsDown.end(), v1.begin(), v1.end());
 
-	for (int i = 0; i < blocs.size(); i++) {
-		glm::ivec2 pos = blocs[i];
+	for (int i = 0; i < blocsDown.size(); i++) {
+		glm::ivec2 pos = blocsDown[i];
 		if (map->circleRect(posBubble.x + tam_txt.x / 2, posBubble.y + tam_txt.y / 2, tam_txt.x / 2, pos.x, pos.y, 8, 8, &posBubble.y, true)) {
 			if (first_jump && posBubble.y + tam_txt.x > 20 * 8) {
 				first_jump = false;
@@ -190,20 +220,21 @@ void Bubble::update(int deltaTime)
 			}
 			jump_x = abs(jump_x) * -1;
 			jump_x += 1;
-			blocs.erase(blocs.begin() + i);
-			timers.erase(timers.begin() + i);
+			blocsDown.erase(blocsDown.begin() + i);
+			timersDown.erase(timersDown.begin() + i);
 			break;
 		}
 	}
-	for (int i = 0; i < timers.size(); i++) {
-		if (timers[i] == 1) {
-			blocs.erase(blocs.begin() + i);
-			timers.erase(timers.begin() + i);
+	for (int i = 0; i < timersDown.size(); i++) {
+		if (timersDown[i] == 1) {
+			blocsDown.erase(blocsDown.begin() + i);
+			timersDown.erase(timersDown.begin() + i);
 		}
 		else {
-			timers[i] -= 1;
+			timersDown[i] -= 1;
 		}
 	}
+
 
 
 	sprite->setPosition(glm::vec2(float(tileMapDispl.x + posBubble.x), float(tileMapDispl.y + posBubble.y)));
@@ -239,4 +270,22 @@ int Bubble::getType() {
 
 glm::ivec2 Bubble::getCenter() {
 	return posBubble + tam_txt / 2;
+}
+
+int Bubble::despCentre(int t) {
+	switch (t) {
+	case 8:
+		return 1;
+		break;
+	case 16:
+		return 2;
+		break;
+	case 32:
+		return 6;
+		break;
+	case 48:
+		return 8;
+		break;
+	}
+
 }

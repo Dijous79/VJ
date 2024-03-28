@@ -24,6 +24,7 @@ public:
 	glm::ivec2 getCenter();
 
 
+
 private:
 	bool jumping, first_jump;
 	bool fwd;
@@ -34,12 +35,13 @@ private:
 	Texture spritesheet;
 	Sprite* sprite;
 	TileMap* map;
-	vector<int> timers;
-	vector<glm::ivec2> blocs;
+	vector<int> timersDown,timersUp;
+	vector<glm::ivec2> blocsDown,blocsUp;
 	int bub;
 
 	glm::vec2 getTextPosBubble(int type);
 	void infoBubble(glm::ivec2* tam, glm::vec2* part, int type);
+	int despCentre(int t);
 
 };
 
