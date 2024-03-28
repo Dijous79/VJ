@@ -49,6 +49,7 @@ void PowerUp::destroy() {
 		break;
 	case 1:
 		scn->addPoints(100);
+		scn->stopTime();
 		break;
 	case 2:
 		scn->addPoints(100);

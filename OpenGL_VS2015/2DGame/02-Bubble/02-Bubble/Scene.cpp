@@ -43,6 +43,8 @@ void Scene::initBase() {
 	god = false;
 	playerVisible = true;
 	viu = true;
+	cdStopBubs = 0;
+	bubbleStoped = false;
 	spritesheet.loadFromFile("images/backgrounds.png", TEXTURE_PIXEL_FORMAT_RGBA);
 	backGround = Sprite::createSprite(glm::ivec2(8 * 48, 8 * 26), glm::vec2(1.0 / 3.0, 1.0), &spritesheet, &texProgram);
 	backGround->setNumberAnimations(1);
@@ -191,8 +193,14 @@ void Scene::update(int deltaTime)
 			for (std::set<Drops*>::iterator it = drops.begin(); it != drops.end(); ++it) {
 				(*it)->update(deltaTime);
 			}
-			for (std::set<Bubble*>::iterator it = bubbles.begin(); it != bubbles.end(); ++it) {
-				(*it)->update(deltaTime);
+			if (bubbleStoped) {
+				if (cdStopBubs > 0) cdStopBubs--;
+				else bubbleStoped = false;
+			}
+			else {
+				for (std::set<Bubble*>::iterator it = bubbles.begin(); it != bubbles.end(); ++it) {
+					(*it)->update(deltaTime);
+				}
 			}
 			wireCollisions();
 			dropCollisions();
@@ -259,8 +267,10 @@ void Scene::render()
 	for (std::set<Drops*>::iterator it = drops.begin(); it != drops.end(); ++it) {
 		(*it)->render();
 	}
-	for (std::set<Bubble*>::iterator it = bubbles.begin(); it != bubbles.end(); ++it) {
-		(*it)->render();
+	if (!(cdStopBubs > 0 && cdStopBubs < 120 && (cdStopBubs / 4) % 2 == 0)) {
+		for (std::set<Bubble*>::iterator it = bubbles.begin(); it != bubbles.end(); ++it) {
+			(*it)->render();
+		}
 	}
 	if (playerVisible && viu) player->render();
 	else if(!viu) cadaver-> render();
@@ -443,7 +453,6 @@ void Scene::playerBubbleCollisions() {
 	}
 }
 
-
 void Scene::moriste() {
 	ui->gameOverText();
 }
@@ -452,4 +461,9 @@ void Scene::godCheat() {
 	god = !god;
 	timerTxtInvulnerabilty = timerInvulnerabilty= 0;
 	playerVisible=true;
+}
+
+void Scene::stopTime() {
+	bubbleStoped = true;
+	cdStopBubs = 6 * 60;
 }

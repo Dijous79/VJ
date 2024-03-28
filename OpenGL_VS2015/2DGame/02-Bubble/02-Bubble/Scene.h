@@ -38,6 +38,7 @@ public:
 	void addPoints(int pts);
 	void flush();
 	void godCheat();
+	void stopTime();
 
 private:
 	void initBase();
@@ -75,8 +76,8 @@ private:
 	Bubble* bubble2;
 	Bubble* bubble3;
 	Bubble* bubble4;
-	int timerInvulnerabilty, timerTxtInvulnerabilty;
-	bool god,playerVisible, viu;
+	int timerInvulnerabilty, timerTxtInvulnerabilty, cdStopBubs;
+	bool god,playerVisible, viu, bubbleStoped;
 };
 
 
