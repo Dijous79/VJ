@@ -40,6 +40,7 @@ public:
 	void mouseRelease(int button);
 
 	void putMainMenu();
+	void lvlWin(int what, int score);
 
 	bool getKey(int key) const;
 
@@ -52,6 +53,7 @@ private:
 	Menu* mainMenu;
 	Menu* credits;
 	int moment;
+	int nextScene;
 
 };
 

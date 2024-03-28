@@ -94,6 +94,18 @@ void Interface::init(ShaderProgram& shaderProgram, int city) {
 	cityLabel->setPosition(glm::ivec2(8 * 19, 8 * 26));
 	cityLabel->changeAnimation(city);
 
+	stageImage.loadFromFile("images/whatStage.png", TEXTURE_PIXEL_FORMAT_RGBA);
+	stageLabel = Sprite::createSprite(glm::ivec2(8 * 9, 9), glm::vec2(1.0, 1.0 / 3.0), &stageImage, &shaderProgram);
+	stageLabel->setNumberAnimations(3);
+	stageLabel->setAnimationSpeed(0, 1);
+	stageLabel->addKeyframe(0, glm::vec2(0.0, 0.0));
+	stageLabel->setAnimationSpeed(2, 1);
+	stageLabel->addKeyframe(2, glm::vec2(0.0, 2.0 / 3.0));
+	stageLabel->setAnimationSpeed(1, 1);
+	stageLabel->addKeyframe(1, glm::vec2(0.0, 1.0 / 3.0));
+	stageLabel->setPosition(glm::ivec2(8 * 19, 8 * 28));
+	stageLabel->changeAnimation(city);
+
 	scoreNumbersImage.loadFromFile("images/scoreNumbers.png", TEXTURE_PIXEL_FORMAT_RGBA);
 	scoreLabel = *(new vector<Sprite*>(6));
 	for (int i = 0; i < 6; ++i) {
@@ -141,6 +153,7 @@ void Interface::render() {
 	baseInfoPanel->render();
 	insertCoinLabel->render();
 	cityLabel->render();
+	stageLabel->render();
 	for (int i = 0; i < 6; ++i)
 		scoreLabel[i]->render();
 	for (int i = 0; i < lives; ++i)

@@ -33,9 +33,10 @@ private:
 	Sprite* baseInfoPanel;
 	Sprite* insertCoinLabel;
 	Sprite* cityLabel;
+	Sprite* stageLabel;
 	vector<Sprite*> scoreLabel;
 	vector<Sprite*> liveslabel;
-	Texture timeImage, gameOverImage, timeNumbersImage, readyImage, panelBase, insertCoinImage, citiesNameImage, scoreNumbersImage, livesImage;
+	Texture timeImage, gameOverImage, timeNumbersImage, readyImage, panelBase, insertCoinImage, citiesNameImage, scoreNumbersImage, livesImage, stageImage;
 };
 
 #endif
