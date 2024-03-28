@@ -34,6 +34,7 @@ Scene::~Scene()
 }
 
 void Scene::initBase() {
+	mciSendString(L"stop Continue", NULL, 0, NULL);
 	player = new Player();
 	player->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, this);
 	cadaver = new Cadaver();
@@ -481,7 +482,7 @@ void Scene::wireCollisions() {
 					if (whatScene == 4)
 						moriste();
 					else
-						moment = 2;
+					moment = 2;
 					timerRetry = 0;
 				}
 			}
@@ -563,9 +564,11 @@ void Scene::addPoints(int pts) {
 
 void Scene::playerBubbleCollisions() {
 	glm::ivec2 pP = player->getPos();
+	pP.x += 8;
 	std::set<Bubble*>::iterator it2 = bubbles.begin();
 
 	while (it2 != bubbles.end()) {
+		
 		if ((*it2)->impacte(pP, 16)) {
 			bool direccio = (*it2)->impacte(pP,8);
 			if (lives != 0) {
