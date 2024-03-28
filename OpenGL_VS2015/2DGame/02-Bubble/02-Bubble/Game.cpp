@@ -8,15 +8,16 @@ void Game::init()
 {
 	bPlay = true;
 	glClearColor(0.3f, 0.3f, 0.3f, 1.0f);
-	mainMenu = new Menu();
-	mainMenu->init();
+	scene = new Scene();
+	scene->initMm();
 	keyDown = false;
+	moment = 0;
 }
 
 bool Game::update(int deltaTime)
 {
-	if (scene != NULL) {
-		scene->update(deltaTime);
+	scene->update(deltaTime);
+	if (moment == 1) {
 		if (Game::instance().getKey(GLFW_KEY_1)) {
 			if (!keyDown) {
 				scene->flush();
@@ -47,14 +48,10 @@ bool Game::update(int deltaTime)
 		else
 			keyDown = false;
 	}
-	else if (mainMenu != NULL) {
-		mainMenu->update(deltaTime);
+	else if (moment == 0) {
 		if (Game::instance().getKey(GLFW_KEY_ENTER)) {
-			delete mainMenu;
-			mainMenu = NULL;
-			scene = new Scene();
 			scene->init1();
-			
+			moment = 1;
 		}
 	}
 	
