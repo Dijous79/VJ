@@ -31,6 +31,7 @@ public:
 	void init1();
 	void init2();
 	void init3();
+	void initMm();
 	void update(int deltaTime);
 	void render();
 	bool space4Wire();

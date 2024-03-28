@@ -11,14 +11,14 @@ void Game::init()
 
 	scene = new Scene(this);
 	scene->initMm();
-
+	moment = 0;
 	keyDown = false;
 }
 
 bool Game::update(int deltaTime)
 {
-	if (scene != NULL) {
-		scene->update(deltaTime);
+	scene->update(deltaTime);
+	if (moment == 1) {
 		if (Game::instance().getKey(GLFW_KEY_1)) {
 			if (!keyDown) {
 				scene->flush();
@@ -49,14 +49,11 @@ bool Game::update(int deltaTime)
 		else
 			keyDown = false;
 	}
-	else if (mainMenu != NULL) {
-		mainMenu->update(deltaTime);
+	else if (moment == 0) {
 		if (Game::instance().getKey(GLFW_KEY_ENTER)) {
-			delete mainMenu;
-			mainMenu = NULL;
-			scene = new Scene();
+			printf("asdsdfsdfa\n");
 			scene->init1();
-			
+			moment = 1;
 		}
 	}
 	
@@ -69,8 +66,6 @@ void Game::render()
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	if (scene != NULL)
 		scene->render();
-	if (mainMenu != NULL)
-		mainMenu->render();
 }
 
 void Game::keyPressed(int key)

@@ -118,6 +118,7 @@ void Scene::init1()
 	backGround->addKeyframe(0, glm::vec2(0.0, 0.0));
 	backGround->changeAnimation(0);
 	whatScene = 1;
+
 }
 
 void Scene::init2()
@@ -198,7 +199,6 @@ void Scene::init3()
 	backGround->addKeyframe(0, glm::vec2(1.0 / 3.0, 0.0));
 	backGround->changeAnimation(0);
 	whatScene = 3;
-	moment = 0;
 }
 
 void Scene::initMm() {
@@ -391,7 +391,6 @@ void Scene::update(int deltaTime)
 
 void Scene::render()
 {
-	
 	if (moment == 4) {
 		glm::mat4 modelview;
 		texProgram.use();
@@ -427,10 +426,13 @@ void Scene::render()
 		for (std::set<Drops*>::iterator it = drops.begin(); it != drops.end(); ++it) {
 			(*it)->render();
 		}
+		for (std::set<Bubble*>::iterator it = bubbles.begin(); it != bubbles.end(); ++it) {
+			(*it)->render();
+		}
+		if (playerVisible && viu) player->render();
+		else if (!viu) cadaver->render();
+		ui->render();
 	}
-	if (playerVisible && viu) player->render();
-	else if(!viu) cadaver-> render();
-	ui->render();
 	
 }
 
