@@ -46,12 +46,33 @@ bool Game::update(int deltaTime)
 				keyDown = true;
 			}
 		}
+		else if (Game::instance().getKey(GLFW_KEY_U)) {
+			if (!keyDown) {
+				scene->addPoints(100);
+				scene->stopTime();
+				keyDown = true;
+			}
+		}
+		else if (Game::instance().getKey(GLFW_KEY_Y)) {
+			if (!keyDown) {
+				scene->setMaxWires(2);
+				scene->addPoints(100);
+				keyDown = true;
+			}
+		}
+		else if (Game::instance().getKey(GLFW_KEY_P)) {
+			if (!keyDown) {
+				scene->addPoints(100);
+				scene->pum();
+				keyDown = true;
+			}
+		}
 		else
 			keyDown = false;
 	}
 	else if (moment == 0) {
 		if (Game::instance().getKey(GLFW_KEY_ENTER)) {
-			printf("asdsdfsdfa\n");
+			
 			scene->init1();
 			moment = 1;
 		}
@@ -102,3 +123,4 @@ void Game::putMainMenu() {
 	scene->initMm();
 	moment = 0;
 }
+

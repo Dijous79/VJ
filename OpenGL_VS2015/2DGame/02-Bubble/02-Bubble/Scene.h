@@ -41,6 +41,8 @@ public:
 	void flush();
 	void godCheat();
 	void stopTime();
+	void shield();
+	void pum();
 
 private:
 	void initBase();
@@ -67,7 +69,7 @@ private:
 	int wrsAllowed;
 	int cd2DestroyGlass;
 	std::set<DynamicObj*> dynObjDestr;
-	bool destroyingGlass;
+	bool destroyingGlass, escut;
 	int points;
 	int multiplier;
 	Sprite* backGround;
@@ -85,7 +87,7 @@ private:
 	Sprite* insertCoinMenuLabel;
 	Texture mainMenuWallaperImage, insertCoinImage;
 	Game* gm;
-
+	int timerPum;
 };
 
 

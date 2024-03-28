@@ -52,7 +52,11 @@ void PowerUp::destroy() {
 		break;
 	case 2:
 		scn->addPoints(100);
+		scn->shield();
 		break;
+	case 3:
+		scn->addPoints(100);
+		scn->pum();
 	default:
 		break;
 	}

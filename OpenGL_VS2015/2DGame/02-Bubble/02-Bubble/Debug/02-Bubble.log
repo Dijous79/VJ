@@ -1,7 +1,51 @@
-﻿  PowerUp.cpp
+﻿  Bubble.cpp
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\shared\minwindef.h(130,1): warning C4005: 'APIENTRY': redefinición de macro
+  (compilando archivo de origen "Bubble.cpp")
+  C:\Users\janch\source\repos\Dijous79\VJ\OpenGL_VS2015\libs\glfw-3.3.8\include\GLFW\glfw3.h(123,1):
+  vea la definición anterior de 'APIENTRY'
+  
+C:\Users\janch\source\repos\Dijous79\VJ\OpenGL_VS2015\2DGame\02-Bubble\02-Bubble\Bubble.cpp(180,20): warning C4018: '<': no coinciden signed/unsigned
+C:\Users\janch\source\repos\Dijous79\VJ\OpenGL_VS2015\2DGame\02-Bubble\02-Bubble\Bubble.cpp(192,20): warning C4018: '<': no coinciden signed/unsigned
+C:\Users\janch\source\repos\Dijous79\VJ\OpenGL_VS2015\2DGame\02-Bubble\02-Bubble\Bubble.cpp(208,20): warning C4018: '<': no coinciden signed/unsigned
+C:\Users\janch\source\repos\Dijous79\VJ\OpenGL_VS2015\2DGame\02-Bubble\02-Bubble\Bubble.cpp(235,20): warning C4018: '<': no coinciden signed/unsigned
+  Cadaver.cpp
+C:\Users\janch\source\repos\Dijous79\VJ\OpenGL_VS2015\2DGame\02-Bubble\02-Bubble\Cadaver.cpp(95,15): warning C4244: '=': conversión de 'T' a 'int'; posible pérdida de datos
+C:\Users\janch\source\repos\Dijous79\VJ\OpenGL_VS2015\2DGame\02-Bubble\02-Bubble\Cadaver.cpp(95,15): warning C4244:         with
+C:\Users\janch\source\repos\Dijous79\VJ\OpenGL_VS2015\2DGame\02-Bubble\02-Bubble\Cadaver.cpp(95,15): warning C4244:         [
+C:\Users\janch\source\repos\Dijous79\VJ\OpenGL_VS2015\2DGame\02-Bubble\02-Bubble\Cadaver.cpp(95,15): warning C4244:             T=float
+C:\Users\janch\source\repos\Dijous79\VJ\OpenGL_VS2015\2DGame\02-Bubble\02-Bubble\Cadaver.cpp(95,15): warning C4244:         ]
+  Drops.cpp
+  Food.cpp
+  Game.cpp
+  Player.cpp
+C:\Users\janch\source\repos\Dijous79\VJ\OpenGL_VS2015\2DGame\02-Bubble\02-Bubble\Player.cpp(86,28): warning C4244: '-=': conversión de 'double' a 'T'; posible pérdida de datos
+C:\Users\janch\source\repos\Dijous79\VJ\OpenGL_VS2015\2DGame\02-Bubble\02-Bubble\Player.cpp(86,28): warning C4244:         with
+C:\Users\janch\source\repos\Dijous79\VJ\OpenGL_VS2015\2DGame\02-Bubble\02-Bubble\Player.cpp(86,28): warning C4244:         [
+C:\Users\janch\source\repos\Dijous79\VJ\OpenGL_VS2015\2DGame\02-Bubble\02-Bubble\Player.cpp(86,28): warning C4244:             T=int
+C:\Users\janch\source\repos\Dijous79\VJ\OpenGL_VS2015\2DGame\02-Bubble\02-Bubble\Player.cpp(86,28): warning C4244:         ]
+C:\Users\janch\source\repos\Dijous79\VJ\OpenGL_VS2015\2DGame\02-Bubble\02-Bubble\Player.cpp(174,28): warning C4244: '+=': conversión de 'double' a 'T'; posible pérdida de datos
+C:\Users\janch\source\repos\Dijous79\VJ\OpenGL_VS2015\2DGame\02-Bubble\02-Bubble\Player.cpp(174,28): warning C4244:         with
+C:\Users\janch\source\repos\Dijous79\VJ\OpenGL_VS2015\2DGame\02-Bubble\02-Bubble\Player.cpp(174,28): warning C4244:         [
+C:\Users\janch\source\repos\Dijous79\VJ\OpenGL_VS2015\2DGame\02-Bubble\02-Bubble\Player.cpp(174,28): warning C4244:             T=int
+C:\Users\janch\source\repos\Dijous79\VJ\OpenGL_VS2015\2DGame\02-Bubble\02-Bubble\Player.cpp(174,28): warning C4244:         ]
+  PowerUp.cpp
+  Scene.cpp
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\shared\minwindef.h(130,1): warning C4005: 'APIENTRY': redefinición de macro
+  (compilando archivo de origen "Scene.cpp")
+  C:\Users\janch\source\repos\Dijous79\VJ\OpenGL_VS2015\libs\glfw-3.3.8\include\GLFW\glfw3.h(123,1):
+  vea la definición anterior de 'APIENTRY'
+  
+C:\Users\janch\source\repos\Dijous79\VJ\OpenGL_VS2015\2DGame\02-Bubble\02-Bubble\Scene.cpp(45,35): warning C4305: '=': truncamiento de 'double' a 'float'
+C:\Users\janch\source\repos\Dijous79\VJ\OpenGL_VS2015\2DGame\02-Bubble\02-Bubble\Scene.cpp(273,20): warning C4244: 'argumento': conversión de 'float' a 'int'; posible pérdida de datos
+C:\Users\janch\source\repos\Dijous79\VJ\OpenGL_VS2015\2DGame\02-Bubble\02-Bubble\Scene.cpp(564,20): warning C4018: '<': no coinciden signed/unsigned
+C:\Users\janch\source\repos\Dijous79\VJ\OpenGL_VS2015\2DGame\02-Bubble\02-Bubble\Scene.cpp(606,12): warning C4244: 'argumento': conversión de 'time_t' a 'unsigned int'; posible pérdida de datos
+  main.cpp
+  Generando código...
+C:\Users\janch\source\repos\Dijous79\VJ\OpenGL_VS2015\2DGame\02-Bubble\02-Bubble\Bubble.cpp(64,1): warning C4715: 'Bubble::getTextPosBubble': no todas las rutas de acceso de control devuelven un valor
+C:\Users\janch\source\repos\Dijous79\VJ\OpenGL_VS2015\2DGame\02-Bubble\02-Bubble\Bubble.cpp(298,1): warning C4715: 'Bubble::despCentre': no todas las rutas de acceso de control devuelven un valor
 LINK : warning LNK4098: la biblioteca predeterminada'MSVCRT' entra en conflicto con otras bibliotecas; use la biblioteca /NODEFAULTLIB:biblioteca
 SOIL.lib(image_DXT.obj) : warning LNK4099: no se encontró PDB '' con 'SOIL.lib(image_DXT.obj)' o en ''; se vinculará el objeto sin tener en cuenta información de depuración
 SOIL.lib(image_helper.obj) : warning LNK4099: no se encontró PDB '' con 'SOIL.lib(image_helper.obj)' o en ''; se vinculará el objeto sin tener en cuenta información de depuración
 SOIL.lib(SOIL.obj) : warning LNK4099: no se encontró PDB '' con 'SOIL.lib(SOIL.obj)' o en ''; se vinculará el objeto sin tener en cuenta información de depuración
 SOIL.lib(stb_image_aug.obj) : warning LNK4099: no se encontró PDB '' con 'SOIL.lib(stb_image_aug.obj)' o en ''; se vinculará el objeto sin tener en cuenta información de depuración
-  02-Bubble.vcxproj -> C:\Users\Usuario\Uni\VJ\Dijous79\VJ\OpenGL_VS2015\2DGame\02-Bubble\Debug\02-Bubble.exe
+  02-Bubble.vcxproj -> C:\Users\janch\Source\Repos\Dijous79\VJ\OpenGL_VS2015\2DGame\02-Bubble\Debug\02-Bubble.exe
