@@ -31,8 +31,6 @@ public:
 	void init1();
 	void init2();
 	void init3();
-	void initMm();
-	void initCred();
 	void update(int deltaTime);
 	void render();
 	bool space4Wire();
@@ -86,6 +84,7 @@ private:
 	Sprite* insertCoinMenuLabel;
 	Texture mainMenuWallaperImage, insertCoinImage;
 	Game* gm;
+
 };
 
 
