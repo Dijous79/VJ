@@ -26,7 +26,6 @@ private:
 	Sprite* sprite;
 	TileMap* map;
 
-	
 };
 
 
