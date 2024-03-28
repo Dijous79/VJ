@@ -204,7 +204,7 @@ void Scene::update(int deltaTime)
 			}
 			wireCollisions();
 			dropCollisions();
-			if (timerInvulnerabilty == 0 && !god) {
+			if (timerInvulnerabilty == 0 && !god && !bubbleStoped) {
 				playerBubbleCollisions();
 			}
 			else {
@@ -385,6 +385,9 @@ void Scene::setMaxWires(int nnw) {
 void Scene::dropCollisions() {
 	Drops* d = NULL;
 	for (std::set<Drops*>::iterator it = drops.begin(); it != drops.end(); ++it) {
+		if ((*it)->disapear()) {
+			d = (*it);
+		}
 		glm::ivec2 Dp = (*it)->posObj();
 		glm::ivec2 Ds = (*it)->sizeObj();
 		glm::ivec2 Pp = player->getPos();
