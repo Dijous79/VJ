@@ -16,10 +16,11 @@
 #define INVULNERABILITY 120
 
 
-Scene::Scene()
+Scene::Scene(Game* game)
 {
 	map = NULL;
 	player = NULL;
+	gm = game;
 	lives = 3;
 	mciSendString(L"open \"sounds/Continue.wav\" type mpegvideo alias Continue", NULL, 0, NULL);
 
@@ -86,6 +87,7 @@ void Scene::init1()
 	player->setTileMap(map);
 	map->setGbS(&gsBcks);
 	ui->init(texProgram, 0);
+	ui->setLives(lives);
 	projection = glm::ortho(0.f, float(SCREEN_WIDTH), float(SCREEN_HEIGHT), 0.f);
 	
 
@@ -128,6 +130,7 @@ void Scene::init2()
 	player->setPosition(glm::vec2(INIT_PLAYER_X_TILES * map->getTileSize(), INIT_PLAYER_Y_TILES * map->getTileSize()));
 	player->setTileMap(map);
 	ui->init(texProgram, 1);
+	ui->setLives(lives);
 	GlassBlock* gb1 = new GlassBlock();
 	gb1->init(glm::ivec2(SCREEN_X, SCREEN_Y), glm::ivec2(8 * 16, 8 * 8), glm::ivec2(32, 8), 1, texProgram);
 	gsBcks.insert(gb1);
@@ -158,6 +161,7 @@ void Scene::init3()
 	player->setPosition(glm::vec2(INIT_PLAYER_X_TILES * map->getTileSize(), INIT_PLAYER_Y_TILES * map->getTileSize()));
 	player->setTileMap(map);
 	ui->init(texProgram, 2);
+	ui->setLives(lives);
 	
 	bubble1 = new Bubble();
 	bubble1->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, 0, 10 * map->getTileSize(), true);
@@ -194,6 +198,31 @@ void Scene::init3()
 	backGround->addKeyframe(0, glm::vec2(1.0 / 3.0, 0.0));
 	backGround->changeAnimation(0);
 	whatScene = 3;
+	moment = 0;
+}
+
+void Scene::initMm() {
+	initShaders();
+	moment = 4;
+
+	mainMenuWallaperImage.loadFromFile("images/MainMenuWallaper.png", TEXTURE_PIXEL_FORMAT_RGBA);
+	mainMenuWallaper = Sprite::createSprite(glm::ivec2(8 * 48, 8 * 30), glm::vec2(1.0, 1.0), &mainMenuWallaperImage, &texProgram);
+	mainMenuWallaper->setNumberAnimations(1);
+	mainMenuWallaper->setAnimationSpeed(0, 1);
+	mainMenuWallaper->setPosition(glm::ivec2(SCREEN_X, SCREEN_Y));
+	mainMenuWallaper->addKeyframe(0, glm::vec2(0.0, 0.0));
+	mainMenuWallaper->changeAnimation(0);
+
+	insertCoinImage.loadFromFile("images/insertCoinMenu.png", TEXTURE_PIXEL_FORMAT_RGBA);
+	insertCoinMenuLabel = Sprite::createSprite(glm::ivec2(8 * 22, 8 * 3), glm::vec2(1.0, 1.0), &insertCoinImage, &texProgram);
+	insertCoinMenuLabel->setNumberAnimations(1);
+	insertCoinMenuLabel->setAnimationSpeed(0, 1);
+	insertCoinMenuLabel->setPosition(glm::ivec2(SCREEN_X + 8 * 13, SCREEN_Y + 8 * 25));
+	insertCoinMenuLabel->addKeyframe(0, glm::vec2(0.0, 0.0));
+	insertCoinMenuLabel->changeAnimation(0);
+
+	projection = glm::ortho(0.f, float(SCREEN_WIDTH), float(SCREEN_HEIGHT), 0.f);
+	counterInsertCoinMainMenu = 0;
 }
 
 void Scene::flush() {
@@ -291,6 +320,9 @@ void Scene::update(int deltaTime)
 			else
 				moriste();
 		}
+		if (Game::instance().getKey(GLFW_KEY_SPACE)) {
+			gm->putMainMenu();
+		}
 		break;
 	case 2:
 		player->update(deltaTime);
@@ -351,35 +383,48 @@ void Scene::update(int deltaTime)
 			retry();
 		}
 		break;
+	case 4:
+		counterInsertCoinMainMenu++;
+		break;
 	}
 }
 
 void Scene::render()
 {
-	glm::mat4 modelview;
-	backGround->render();
-	texProgram.use();
-	texProgram.setUniformMatrix4f("projection", projection);
-	texProgram.setUniform4f("color", 1.0f, 1.0f, 1.0f, 1.0f);
-	modelview = glm::mat4(1.0f);
-	texProgram.setUniformMatrix4f("modelview", modelview);
-	texProgram.setUniform2f("texCoordDispl", 0.f, 0.f);
 	
-	map->render();
-	for (std::set<GlassBlock*>::iterator it = gsBcks.begin(); it != gsBcks.end(); ++it) {
-		(*it)->render();
+	if (moment == 4) {
+		glm::mat4 modelview;
+		texProgram.use();
+		texProgram.setUniformMatrix4f("projection", projection);
+		texProgram.setUniform4f("color", 1.0f, 1.0f, 1.0f, 1.0f);
+		modelview = glm::mat4(1.0f);
+		texProgram.setUniformMatrix4f("modelview", modelview);
+		texProgram.setUniform2f("texCoordDispl", 0.f, 0.f);
+		mainMenuWallaper->render();
+		if ((counterInsertCoinMainMenu / 30) % 2 == 0)
+			insertCoinMenuLabel->render();
 	}
-	for (std::set<DynamicObj*>::iterator it = dynObjDestr.begin(); it != dynObjDestr.end(); ++it) {
-		(*it)->render();
-	}
-	for (std::set<Wire*>::iterator it = wrs.begin(); it != wrs.end(); ++it) {
-		(*it)->render();
-	}
-	for (std::set<Drops*>::iterator it = drops.begin(); it != drops.end(); ++it) {
-		(*it)->render();
-	}
-	if (!(cdStopBubs > 0 && cdStopBubs < 120 && (cdStopBubs / 4) % 2 == 0)) {
-		for (std::set<Bubble*>::iterator it = bubbles.begin(); it != bubbles.end(); ++it) {
+	else {
+		glm::mat4 modelview;
+		texProgram.use();
+		backGround->render();
+		texProgram.setUniformMatrix4f("projection", projection);
+		texProgram.setUniform4f("color", 1.0f, 1.0f, 1.0f, 1.0f);
+		modelview = glm::mat4(1.0f);
+		texProgram.setUniformMatrix4f("modelview", modelview);
+		texProgram.setUniform2f("texCoordDispl", 0.f, 0.f);
+
+		map->render();
+		for (std::set<GlassBlock*>::iterator it = gsBcks.begin(); it != gsBcks.end(); ++it) {
+			(*it)->render();
+		}
+		for (std::set<DynamicObj*>::iterator it = dynObjDestr.begin(); it != dynObjDestr.end(); ++it) {
+			(*it)->render();
+		}
+		for (std::set<Wire*>::iterator it = wrs.begin(); it != wrs.end(); ++it) {
+			(*it)->render();
+		}
+		for (std::set<Drops*>::iterator it = drops.begin(); it != drops.end(); ++it) {
 			(*it)->render();
 		}
 	}
@@ -579,6 +624,7 @@ void Scene::playerBubbleCollisions() {
 				mciSendString(L"play Missed", NULL, 0, NULL);
 				
 				lives--;
+				ui->setLives(lives);
 				viu = false;
 				moment = 3;
 				timerRetry = 0;

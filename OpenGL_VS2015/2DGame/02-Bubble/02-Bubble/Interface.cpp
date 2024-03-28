@@ -107,6 +107,18 @@ void Interface::init(ShaderProgram& shaderProgram, int city) {
 		scoreLabel[i]->changeAnimation(10);
 	}
 	scoreLabel[0]->changeAnimation(0);
+
+	livesImage.loadFromFile("images/character.png", TEXTURE_PIXEL_FORMAT_RGBA);
+	liveslabel = *(new vector<Sprite*>(3));
+	for (int i = 0; i < 3; ++i) {
+		liveslabel[i] = Sprite::createSprite(glm::ivec2(16, 16), glm::vec2(0.1, 1.0 / 12.0), &livesImage, &shaderProgram);
+		liveslabel[i]->setNumberAnimations(1);
+		liveslabel[i]->addKeyframe(0, glm::vec2(0.8, 8.0 / 12.0));
+		liveslabel[i]->setPosition(glm::ivec2(16 * (1 + i), 8 * 28));
+		liveslabel[i]->changeAnimation(0);
+	}
+
+
 }
 
 void Interface::update(int deltaTime) {
@@ -131,6 +143,8 @@ void Interface::render() {
 	cityLabel->render();
 	for (int i = 0; i < 6; ++i)
 		scoreLabel[i]->render();
+	for (int i = 0; i < lives; ++i)
+		liveslabel[i]->render();
 	timeLabel->render();
 	timeNumber1->render();
 	timeNumber2->render();
@@ -171,4 +185,8 @@ void Interface::setScore(int n) {
 		else
 			scoreLabel[i]->changeAnimation(10);
 	}
+}
+
+void Interface::setLives(int v) {
+	lives = v;
 }
