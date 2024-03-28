@@ -8,7 +8,7 @@ void Game::init()
 {
 	bPlay = true;
 	glClearColor(0.3f, 0.3f, 0.3f, 1.0f);
-	scene = new Scene();
+	scene = new Scene(this);
 	scene->initMm();
 	keyDown = false;
 	moment = 0;
@@ -97,5 +97,8 @@ bool Game::getKey(int key) const
 	return keys[key];
 }
 
-
-
+void Game::putMainMenu() {
+	scene->flush();
+	scene->initMm();
+	moment = 0;
+}

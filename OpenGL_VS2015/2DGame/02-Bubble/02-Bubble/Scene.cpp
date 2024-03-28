@@ -16,10 +16,11 @@
 #define INVULNERABILITY 120
 
 
-Scene::Scene()
+Scene::Scene(Game* game)
 {
 	map = NULL;
 	player = NULL;
+	gm = game;
 	lives = 3;
 }
 
@@ -203,12 +204,20 @@ void Scene::initMm() {
 	mainMenuWallaper = Sprite::createSprite(glm::ivec2(8 * 48, 8 * 30), glm::vec2(1.0, 1.0), &mainMenuWallaperImage, &texProgram);
 	mainMenuWallaper->setNumberAnimations(1);
 	mainMenuWallaper->setAnimationSpeed(0, 1);
-	mainMenuWallaper->setPosition(glm::ivec2(SCREEN_X, SCREEN_X));
-
-	projection = glm::ortho(0.f, float(SCREEN_WIDTH), float(SCREEN_HEIGHT), 0.f);
-
+	mainMenuWallaper->setPosition(glm::ivec2(SCREEN_X, SCREEN_Y));
 	mainMenuWallaper->addKeyframe(0, glm::vec2(0.0, 0.0));
 	mainMenuWallaper->changeAnimation(0);
+
+	insertCoinImage.loadFromFile("images/insertCoinMenu.png", TEXTURE_PIXEL_FORMAT_RGBA);
+	insertCoinMenuLabel = Sprite::createSprite(glm::ivec2(8 * 22, 8 * 3), glm::vec2(1.0, 1.0), &insertCoinImage, &texProgram);
+	insertCoinMenuLabel->setNumberAnimations(1);
+	insertCoinMenuLabel->setAnimationSpeed(0, 1);
+	insertCoinMenuLabel->setPosition(glm::ivec2(SCREEN_X + 8 * 13, SCREEN_Y + 8 * 25));
+	insertCoinMenuLabel->addKeyframe(0, glm::vec2(0.0, 0.0));
+	insertCoinMenuLabel->changeAnimation(0);
+
+	projection = glm::ortho(0.f, float(SCREEN_WIDTH), float(SCREEN_HEIGHT), 0.f);
+	counterInsertCoinMainMenu = 0;
 }
 
 void Scene::flush() {
@@ -306,6 +315,9 @@ void Scene::update(int deltaTime)
 			else
 				moriste();
 		}
+		if (Game::instance().getKey(GLFW_KEY_SPACE)) {
+			gm->putMainMenu();
+		}
 		break;
 	case 3:
 		cadaver->update(deltaTime);
@@ -316,24 +328,35 @@ void Scene::update(int deltaTime)
 		}
 		break;
 	case 4:
+		counterInsertCoinMainMenu++;
 		break;
 	}
 }
 
 void Scene::render()
 {
-	glm::mat4 modelview;
-	texProgram.use();
-	texProgram.setUniformMatrix4f("projection", projection);
-	texProgram.setUniform4f("color", 1.0f, 1.0f, 1.0f, 1.0f);
-	modelview = glm::mat4(1.0f);
-	texProgram.setUniformMatrix4f("modelview", modelview);
-	texProgram.setUniform2f("texCoordDispl", 0.f, 0.f);
+	
 	if (moment == 4) {
+		glm::mat4 modelview;
+		texProgram.use();
+		texProgram.setUniformMatrix4f("projection", projection);
+		texProgram.setUniform4f("color", 1.0f, 1.0f, 1.0f, 1.0f);
+		modelview = glm::mat4(1.0f);
+		texProgram.setUniformMatrix4f("modelview", modelview);
+		texProgram.setUniform2f("texCoordDispl", 0.f, 0.f);
 		mainMenuWallaper->render();
+		if ((counterInsertCoinMainMenu / 30) % 2 == 0)
+			insertCoinMenuLabel->render();
 	}
 	else {
+		glm::mat4 modelview;
+		texProgram.use();
 		backGround->render();
+		texProgram.setUniformMatrix4f("projection", projection);
+		texProgram.setUniform4f("color", 1.0f, 1.0f, 1.0f, 1.0f);
+		modelview = glm::mat4(1.0f);
+		texProgram.setUniformMatrix4f("modelview", modelview);
+		texProgram.setUniform2f("texCoordDispl", 0.f, 0.f);
 
 		map->render();
 		for (std::set<GlassBlock*>::iterator it = gsBcks.begin(); it != gsBcks.end(); ++it) {

@@ -39,6 +39,8 @@ public:
 	void mousePress(int button);
 	void mouseRelease(int button);
 
+	void putMainMenu();
+
 	bool getKey(int key) const;
 
 private:

@@ -19,12 +19,13 @@
 // Scene contains all the entities of our game.
 // It is responsible for updating and render them.
 
+class Game;
 
 class Scene
 {
 
 public:
-	Scene();
+	Scene(Game* gm);
 	~Scene();
 
 	void init1();
@@ -79,11 +80,12 @@ private:
 	Bubble* bubble2;
 	Bubble* bubble3;
 	Bubble* bubble4;
-	int timerInvulnerabilty, timerTxtInvulnerabilty,timerRetry, cdStopBubs, moment;
+	int timerInvulnerabilty, timerTxtInvulnerabilty,timerRetry, cdStopBubs, moment, counterInsertCoinMainMenu;
 	bool god,playerVisible, viu, bubbleStoped;
 	Sprite* mainMenuWallaper;
 	Sprite* insertCoinMenuLabel;
 	Texture mainMenuWallaperImage, insertCoinImage;
+	Game* gm;
 };
 
 
