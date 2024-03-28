@@ -51,9 +51,39 @@ bool Game::update(int deltaTime)
 	}
 	else if (moment == 0) {
 		if (Game::instance().getKey(GLFW_KEY_ENTER)) {
-			printf("asdsdfsdfa\n");
-			scene->init1();
+			scene->initInstructions();
+			moment = 3;
+			keyDown = true;
+		}
+	}
+	else if (moment == 2) {
+		if (Game::instance().getKey(GLFW_KEY_ENTER)) {
+			switch (nextScene)
+			{
+			case 2:
+				scene->init2();
+				break;
+			case 3:
+				scene->init3();
+				break;
+			case 4:
+				///////////// CREDITS //////////////////
+				break;
+			default:
+				break;
+			}
 			moment = 1;
+		}
+	}
+	else if (moment == 3) {
+		if (Game::instance().getKey(GLFW_KEY_ENTER)) {
+			if (!keyDown) {
+				scene->init1();
+				moment = 1;
+			}
+		}
+		else {
+			keyDown = false;
 		}
 	}
 	
@@ -101,4 +131,12 @@ void Game::putMainMenu() {
 	scene->flush();
 	scene->initMm();
 	moment = 0;
+}
+
+void Game::lvlWin(int what, int score) {
+	scene->flush();
+	scene->initLevelEnd(what, score);
+	moment = 2;
+	printf("%d\n", what);
+	nextScene = what;
 }

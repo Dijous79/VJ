@@ -32,6 +32,9 @@ public:
 	void init2();
 	void init3();
 	void initMm();
+	void initLevelEnd(int what, int extraScore);
+	void initCredits();
+	void initInstructions();
 	void update(int deltaTime);
 	void render();
 	bool space4Wire();
@@ -79,11 +82,17 @@ private:
 	Bubble* bubble2;
 	Bubble* bubble3;
 	Bubble* bubble4;
-	int timerInvulnerabilty, timerTxtInvulnerabilty,timerRetry, cdStopBubs, moment, counterInsertCoinMainMenu;
+	int timerInvulnerabilty, timerTxtInvulnerabilty,timerRetry, cdStopBubs, moment, counterInsertCoinMainMenu, numbs2render;
 	bool god,playerVisible, viu, bubbleStoped;
 	Sprite* mainMenuWallaper;
 	Sprite* insertCoinMenuLabel;
 	Texture mainMenuWallaperImage, insertCoinImage;
+	Sprite* winWallaper;
+	Sprite* stageLabel;
+	Sprite* ptsLabel;
+	Sprite* instructionsWallaper;
+	vector<Sprite*> scoreLabel;
+	Texture winWallaperImage, stageImage, numberScoreImage, ptsImage, instructionsImage;
 	Game* gm;
 
 };
