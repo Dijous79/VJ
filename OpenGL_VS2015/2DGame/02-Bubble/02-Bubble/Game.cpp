@@ -8,45 +8,55 @@ void Game::init()
 {
 	bPlay = true;
 	glClearColor(0.3f, 0.3f, 0.3f, 1.0f);
-	scene.init1();
+	mainMenu = new Menu();
+	mainMenu->init();
 	keyDown = false;
 }
 
 bool Game::update(int deltaTime)
 {
-	scene.update(deltaTime);
-	
-
-	if (Game::instance().getKey(GLFW_KEY_1)) {
-		if (!keyDown) {
-			scene.flush();
-			scene.init1();
-			keyDown = true;
+	if (scene != NULL) {
+		scene->update(deltaTime);
+		if (Game::instance().getKey(GLFW_KEY_1)) {
+			if (!keyDown) {
+				scene->flush();
+				scene->init1();
+				keyDown = true;
+			}
+		}
+		else if (Game::instance().getKey(GLFW_KEY_2)) {
+			if (!keyDown) {
+				scene->flush();
+				scene->init2();
+				keyDown = true;
+			}
+		}
+		else if (Game::instance().getKey(GLFW_KEY_3)) {
+			if (!keyDown) {
+				scene->flush();
+				scene->init3();
+				keyDown = true;
+			}
+		}
+		else if (Game::instance().getKey(GLFW_KEY_G)) {
+			if (!keyDown) {
+				scene->godCheat();
+				keyDown = true;
+			}
+		}
+		else
+			keyDown = false;
+	}
+	else if (mainMenu != NULL) {
+		mainMenu->update(deltaTime);
+		if (Game::instance().getKey(GLFW_KEY_ENTER)) {
+			delete mainMenu;
+			mainMenu = NULL;
+			scene = new Scene();
+			scene->init1();
+			
 		}
 	}
-	else if (Game::instance().getKey(GLFW_KEY_2)) {
-		if (!keyDown) {
-			scene.flush();
-			scene.init2();
-			keyDown = true;
-		}
-	}
-	else if (Game::instance().getKey(GLFW_KEY_3)) {
-		if (!keyDown) {
-			scene.flush();
-			scene.init3();
-			keyDown = true;
-		}
-	}
-	else if (Game::instance().getKey(GLFW_KEY_G)) {
-		if (!keyDown) {
-			scene.godCheat();
-			keyDown = true;
-		}
-	}
-	else
-		keyDown = false;
-
 	
 
 	return bPlay;
@@ -55,7 +65,10 @@ bool Game::update(int deltaTime)
 void Game::render()
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	scene.render();
+	if (scene != NULL)
+		scene->render();
+	if (mainMenu != NULL)
+		mainMenu->render();
 }
 
 void Game::keyPressed(int key)
