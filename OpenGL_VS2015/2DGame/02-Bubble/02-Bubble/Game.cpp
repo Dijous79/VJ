@@ -15,9 +15,7 @@ void Game::init()
 
 bool Game::update(int deltaTime)
 {
-	printf("abans de if\n");
 	if (scene != NULL) {
-		printf("entra\n");
 		scene->update(deltaTime);
 		if (Game::instance().getKey(GLFW_KEY_1)) {
 			if (!keyDown) {
@@ -52,12 +50,10 @@ bool Game::update(int deltaTime)
 	else if (mainMenu != NULL) {
 		mainMenu->update(deltaTime);
 		if (Game::instance().getKey(GLFW_KEY_ENTER)) {
-			printf("abans\n");
 			delete mainMenu;
 			mainMenu = NULL;
 			scene = new Scene();
 			scene->init1();
-			printf("després\n");
 			
 		}
 	}
@@ -69,13 +65,10 @@ bool Game::update(int deltaTime)
 void Game::render()
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	printf("renderScene\n");
 	if (scene != NULL)
 		scene->render();
-	printf("renderMenu\n");
 	if (mainMenu != NULL)
 		mainMenu->render();
-	printf("end\n");
 }
 
 void Game::keyPressed(int key)
