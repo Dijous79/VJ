@@ -165,8 +165,7 @@ bool Game::getKey(int key) const
 }
 
 void Game::putMainMenu() {
-	scene->flush();
-	scene->initMm();
+	
 	moment = 0;
 }
 

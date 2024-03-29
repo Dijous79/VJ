@@ -137,32 +137,32 @@ void Bubble::update(int deltaTime)
 	if (first_jump) {
 		switch (tam_txt.x) {
 		case 8:
-			posBubble.y = int((jump_x * 0.33) * (jump_x * 0.33) + Yini); //64 pixels per salt
+			posBubble.y = int((jump_x * 0.2) * (jump_x * 0.2) + Yini); //64 pixels per salt
 			break;
 		case 16:
-			posBubble.y = int((jump_x * 0.33) * (jump_x * 0.33) + Yini);
+			posBubble.y = int((jump_x * 0.2) * (jump_x * 0.2) + Yini);
 			break;
 		case 32:
-			posBubble.y = int((jump_x * 0.33) * (jump_x * 0.4) + Yini);    //132*3 d'altura
+			posBubble.y = int((jump_x * 0.2) * (jump_x * 0.2) + Yini);    //132*3 d'altura
 			break;
 		case 48:
-			posBubble.y = int((jump_x * 0.33) * (jump_x * 0.33) + Yini); //128 pixels per salt
+			posBubble.y = int((jump_x * 0.2) * (jump_x * 0.2) + Yini); //128 pixels per salt
 			break;
 		}
 	}
 	else {
 		switch (tam_txt.x) {
 		case 8:
-			posBubble.y = int((jump_x * 0.33) * (jump_x * 0.33)) + 19 * 8; //64 pixels per salt
+			posBubble.y = int((jump_x * 0.2) * (jump_x * 0.2)) + 19 * 8; //64 pixels per salt
 			break;
 		case 16:
-			posBubble.y = int((jump_x * 0.33) * (jump_x * 0.33) + 12.9 * 8);
+			posBubble.y = int((jump_x * 0.2) * (jump_x * 0.2) + 12.9 * 8);
 			break;
 		case 32:
-			posBubble.y = int((jump_x * 0.33) * (jump_x * 0.33) + 7.75 * 8);//132 d'altura
+			posBubble.y = int((jump_x * 0.2) * (jump_x * 0.2) + 7.75 * 8);//132 d'altura
 			break;
 		case 48:
-			posBubble.y = int((jump_x * 0.33) * (jump_x * 0.33)) + 25 / 3; //128 pixels per salt
+			posBubble.y = int((jump_x * 0.2) * (jump_x * 0.2)) + 25 / 3; //128 pixels per salt
 			break;
 		}
 	}
@@ -212,16 +212,16 @@ void Bubble::update(int deltaTime)
 				first_jump = false;
 				switch (tam_txt.x) { // canviar en funcó de la amplada de la parabola
 				case 8:
-					jump_x = 21;
+					jump_x = 34;
 					break;
 				case 16:
-					jump_x = 29;
+					jump_x = 47;
 					break;
 				case 32:
-					jump_x = 33;
+					jump_x = 53;
 					break;
 				case 48:
-					jump_x = 38;
+					jump_x = 62;
 					break;
 				}
 			}

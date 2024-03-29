@@ -68,6 +68,7 @@ private:
 	std::set<Wire*> wrs;
 	std::set<Drops*> drops;
 	std::set<Bubble*> bubbles;
+	bool ret;
 	std::set<BubbleDaver*> bubbledavers;
 	ShaderProgram texProgram;
 	float currentTime;

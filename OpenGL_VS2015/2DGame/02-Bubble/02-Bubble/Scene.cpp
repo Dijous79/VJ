@@ -23,7 +23,7 @@ Scene::Scene(Game* game)
 	gm = game;
 	lives = 3;
 	points = 0;
-	god = false;
+	god = ret =false;
 	timerPum = 0;
 	mciSendString(L"open \"sounds/Continue.wav\" type mpegvideo alias Continue", NULL, 0, NULL);
 
@@ -63,6 +63,8 @@ void Scene::initBase() {
 }
 
 void Scene::retry() {
+	ret = false;
+	flush();
 	switch (whatScene)
 	{
 	case 1:
@@ -75,6 +77,8 @@ void Scene::retry() {
 		init3();
 		break;
 	case 4:
+		PlaySound(NULL, NULL, 0);
+		gm->putMainMenu();
 		initMm();
 		break;
 	}
@@ -452,8 +456,12 @@ void Scene::update(int deltaTime)
 		if (currentTime > 104000) {
 			lives--;
 			if (lives != 0) {
-				flush();
-				retry();
+				PlaySound(NULL, NULL, 0);
+				mciSendString(L"stop GameOver", NULL, 0, NULL);
+				mciSendString(L"open \"sounds/GameOver.wav\" type mpegvideo alias GameOver", NULL, 0, NULL);
+				mciSendString(L"seek GameOver to start", NULL, 0, NULL);
+				mciSendString(L"play GameOver", NULL, 0, NULL);
+				ret=true;
 			}
 			else
 				whatScene=4;
@@ -537,14 +545,15 @@ void Scene::update(int deltaTime)
 		cadaver->update(deltaTime);
 		timerRetry++;
 		if (timerRetry == 180) {
-			flush();
-			retry();
+			
+			ret=true;
 		}
 		break;
 	case 4:
 		counterInsertCoinMainMenu++;
 		break;
 	}
+	if (ret) retry();
 }
 
 void Scene::render()
@@ -874,10 +883,11 @@ void Scene::playerBubbleCollisions() {
 					cadaver->setTileMap(map);
 				}
 				else {
-					mciSendString(L"stop Missed", NULL, 0, NULL);
-					mciSendString(L"open \"sounds/Missed.wav\" type mpegvideo alias missed", NULL, 0, NULL);
-					mciSendString(L"seek Missed to start", NULL, 0, NULL);
-					mciSendString(L"play Missed", NULL, 0, NULL);
+					PlaySound(NULL, NULL, 0);
+					mciSendString(L"stop GameOver", NULL, 0, NULL);
+					mciSendString(L"open \"sounds/GameOver.wav\" type mpegvideo alias GameOver", NULL, 0, NULL);
+					mciSendString(L"seek GameOver to start", NULL, 0, NULL);
+					mciSendString(L"play GameOver", NULL, 0, NULL);
 
 					cadaver->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, direccio);
 					cadaver->setPosition(player->getPos());
