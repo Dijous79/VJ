@@ -130,6 +130,15 @@ void Interface::init(ShaderProgram& shaderProgram, int city) {
 		liveslabel[i]->changeAnimation(0);
 	}
 
+	doubleShotImage.loadFromFile("images/doubleShotUi.png", TEXTURE_PIXEL_FORMAT_RGBA);
+	doubleShot = Sprite::createSprite(glm::ivec2(8 * 2, 8 * 2), glm::vec2(1.0, 1.0), &doubleShotImage, &shaderProgram);
+	doubleShot->setNumberAnimations(1);
+	doubleShot->setAnimationSpeed(0, 1);
+	doubleShot->addKeyframe(0, glm::vec2(0.0, 0.0));
+	doubleShot->setPosition(glm::ivec2(8 * 14, 8 * 28));
+	doubleShot->changeAnimation(0);
+
+	bDoubleShot = false;
 
 }
 
@@ -154,6 +163,8 @@ void Interface::render() {
 	insertCoinLabel->render();
 	cityLabel->render();
 	stageLabel->render();
+	if (bDoubleShot)
+		doubleShot->render();
 	for (int i = 0; i < 6; ++i)
 		scoreLabel[i]->render();
 	for (int i = 0; i < lives; ++i)
@@ -202,4 +213,8 @@ void Interface::setScore(int n) {
 
 void Interface::setLives(int v) {
 	lives = v;
+}
+
+void Interface::actDoubleShot() {
+	bDoubleShot = true;
 }

@@ -93,8 +93,10 @@ private:
 	Sprite* stageLabel;
 	Sprite* ptsLabel;
 	Sprite* instructionsWallaper;
+	Sprite* creditsWallaper;
 	vector<Sprite*> scoreLabel;
-	Texture winWallaperImage, stageImage, numberScoreImage, ptsImage, instructionsImage;
+	vector<Sprite*> finalScoreLabel;
+	Texture winWallaperImage, stageImage, numberScoreImage, ptsImage, instructionsImage, creditsImage;
 	Game* gm;
 	int timerPum;
 };

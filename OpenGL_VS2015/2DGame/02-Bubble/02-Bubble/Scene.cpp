@@ -303,6 +303,44 @@ void Scene::initInstructions() {
 	projection = glm::ortho(0.f, float(SCREEN_WIDTH), float(SCREEN_HEIGHT), 0.f);
 }
 
+void Scene::initCredits() {
+	initShaders();
+	moment = 7;
+
+	creditsImage.loadFromFile("images/creditWallaper.png", TEXTURE_PIXEL_FORMAT_RGBA);
+	creditsWallaper = Sprite::createSprite(glm::ivec2(8 * 48, 8 * 30), glm::vec2(1.0, 1.0), &creditsImage, &texProgram);
+	creditsWallaper->setNumberAnimations(1);
+	creditsWallaper->setAnimationSpeed(0, 1);
+	creditsWallaper->setPosition(glm::ivec2(SCREEN_X, SCREEN_Y));
+	creditsWallaper->addKeyframe(0, glm::vec2(0.0, 0.0));
+	creditsWallaper->changeAnimation(0);
+
+	numberScoreImage.loadFromFile("images/scoreNumbers.png", TEXTURE_PIXEL_FORMAT_RGBA);
+	finalScoreLabel = *(new vector<Sprite*>(7));
+	for (int i = 0; i < finalScoreLabel.size(); ++i) {
+		finalScoreLabel[i] = Sprite::createSprite(glm::ivec2(8, 9), glm::vec2(1.0 / 11.0, 1.0), &numberScoreImage, &texProgram);
+		finalScoreLabel[i]->setNumberAnimations(11);
+		for (int j = 0; j < 11; ++j) {
+			finalScoreLabel[i]->setAnimationSpeed(j, 1);
+			finalScoreLabel[i]->addKeyframe(j, glm::vec2(float(j) / 11.0, 0.0));
+		}
+		finalScoreLabel[i]->setPosition(glm::ivec2(8 * (27 - i), 8 * 13));
+		finalScoreLabel[i]->changeAnimation(10);
+	}
+	for (int i = 0; i < finalScoreLabel.size(); ++i) {
+		if (points > 0) {
+			finalScoreLabel[i]->changeAnimation(points % 10);
+			points /= 10;
+		}
+		else {
+			numbs2render = i;
+			i = finalScoreLabel.size();
+		}
+	}
+
+	projection = glm::ortho(0.f, float(SCREEN_WIDTH), float(SCREEN_HEIGHT), 0.f);
+}
+
 void Scene::flush() {
 	delete player;
 	delete cadaver;
@@ -405,9 +443,6 @@ void Scene::update(int deltaTime)
 			}
 			else
 				moriste();
-		}
-		if (Game::instance().getKey(GLFW_KEY_SPACE)) {
-			gm->putMainMenu();
 		}
 		break;
 	case 2:
@@ -517,6 +552,18 @@ void Scene::render()
 		texProgram.setUniformMatrix4f("modelview", modelview);
 		texProgram.setUniform2f("texCoordDispl", 0.f, 0.f);
 		instructionsWallaper->render();
+	}
+	else if (moment == 7) {
+		glm::mat4 modelview;
+		texProgram.use();
+		texProgram.setUniformMatrix4f("projection", projection);
+		texProgram.setUniform4f("color", 1.0f, 1.0f, 1.0f, 1.0f);
+		modelview = glm::mat4(1.0f);
+		texProgram.setUniformMatrix4f("modelview", modelview);
+		texProgram.setUniform2f("texCoordDispl", 0.f, 0.f);
+		creditsWallaper->render();
+		for (int i = 0; i < numbs2render; ++i)
+			finalScoreLabel[i]->render();
 	}
 	else {
 		glm::mat4 modelview;
@@ -642,10 +689,7 @@ void Scene::wireCollisions() {
 					//points += 1000;
 					//ui->setScore(points);
 					whatScene++;
-					if (whatScene == 4)
-						moriste();
-					else
-						moment = 2;
+					moment = 2;
 					timerRetry = 0;
 					
 				}
@@ -676,6 +720,7 @@ void Scene::instanceWire(glm::ivec2 pos, int off) {
 
 void Scene::setMaxWires(int nnw) {
 	wrsAllowed = nnw;
+	ui->actDoubleShot();
 }
 
 void Scene::dropCollisions() {
@@ -736,8 +781,9 @@ void Scene::playerBubbleCollisions() {
 		if ((*it2)->impacte(pP, 16)) {
 			if (escut) {
 				escut = false;
+				player->toggleShield();
+				printf("he sortit\n");
 				timerInvulnerabilty = 60 * 1;
-				break;
 			}
 			else {
 				bool direccio = (*it2)->impacte(pP, 8);
@@ -788,6 +834,7 @@ void Scene::stopTime() {
 
 void Scene::shield() {
 	escut = true;
+	player->toggleShield();
 }
 
 void Scene::pum() {
