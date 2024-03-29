@@ -45,7 +45,7 @@ void Scene::initBase() {
 	ui = new Interface();
 	currentTime = -(1000.0f * 40.0f) / 60.0;
 	wrsAllowed = 1;
-	multiplier = 1;
+	multiplier = vector<int>{0, 0, 0, 0};
 	startCd = 0;
 	timerInvulnerabilty = 0;
 	escut = false;
@@ -98,28 +98,10 @@ void Scene::init1()
 	
 
 	bubble1 = new Bubble();
-	bubble1->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, 0, 10 * map->getTileSize(), true);
-	bubble1->setPosition(glm::vec2(10 * map->getTileSize(), 10 * map->getTileSize()));
+	bubble1->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, 3, 10 * map->getTileSize(), true);
+	bubble1->setPosition(glm::vec2(5 * map->getTileSize(), 2 * map->getTileSize()));
 	bubble1->setTileMap(map);
 	bubbles.insert(bubble1);
-
-	bubble2 = new Bubble();
-	bubble2->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, 1, 10 * map->getTileSize(), true);
-	bubble2->setPosition(glm::vec2(10 * map->getTileSize(), 10 * map->getTileSize()));
-	bubble2->setTileMap(map);
-	bubbles.insert(bubble2);
-
-	bubble3 = new Bubble();
-	bubble3->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, 2, 10 * map->getTileSize(), true);
-	bubble3->setPosition(glm::vec2(10 * map->getTileSize(), 10 * map->getTileSize()));
-	bubble3->setTileMap(map);
-	bubbles.insert(bubble3);
-
-	bubble4 = new Bubble();
-	bubble4->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, 3, 10 * map->getTileSize(), true);
-	bubble4->setPosition(glm::vec2(10 * map->getTileSize(), 10 * map->getTileSize()));
-	bubble4->setTileMap(map);
-	bubbles.insert(bubble4);
 
 	backGround->addKeyframe(0, glm::vec2(0.0, 0.0));
 	backGround->changeAnimation(0);
@@ -139,6 +121,19 @@ void Scene::init2()
 	ui->init(texProgram, 1);
 	ui->setLives(lives);
 	ui->setScore(points);
+
+	bubble1 = new Bubble();
+	bubble1->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, 3, 10 * map->getTileSize(), true);
+	bubble1->setPosition(glm::vec2(3 * map->getTileSize(), 2 * map->getTileSize()));
+	bubble1->setTileMap(map);
+	bubbles.insert(bubble1);
+
+	bubble1 = new Bubble();
+	bubble1->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, 3, 10 * map->getTileSize(), true);
+	bubble1->setPosition(glm::vec2(23 * map->getTileSize(), 1 * map->getTileSize()));
+	bubble1->setTileMap(map);
+	bubbles.insert(bubble1);
+
 	GlassBlock* gb1 = new GlassBlock();
 	gb1->init(glm::ivec2(SCREEN_X, SCREEN_Y), glm::ivec2(8 * 16, 8 * 8), glm::ivec2(32, 8), 1, texProgram);
 	gsBcks.insert(gb1);
@@ -173,28 +168,28 @@ void Scene::init3()
 	ui->setScore(points);
 	
 	bubble1 = new Bubble();
-	bubble1->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, 0, 10 * map->getTileSize(), true);
-	bubble1->setPosition(glm::vec2(10 * map->getTileSize(), 10 * map->getTileSize()));
+	bubble1->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, 5, 10 * map->getTileSize(), true);
+	bubble1->setPosition(glm::vec2(10 * map->getTileSize(), 13 * map->getTileSize()));
 	bubble1->setTileMap(map);
 	bubbles.insert(bubble1);
 
 	bubble2 = new Bubble();
-	bubble2->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, 1, 10 * map->getTileSize(), true);
-	bubble2->setPosition(glm::vec2(10 * map->getTileSize(), 10 * map->getTileSize()));
+	bubble2->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, 5, 10 * map->getTileSize(), true);
+	bubble2->setPosition(glm::vec2(16 * map->getTileSize(), 13 * map->getTileSize()));
 	bubble2->setTileMap(map);
-	//bubbles.insert(bubble2);
+	bubbles.insert(bubble2);
 
 	bubble3 = new Bubble();
-	bubble3->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, 2, 10 * map->getTileSize(), true);
-	bubble3->setPosition(glm::vec2(10 * map->getTileSize(), 10 * map->getTileSize()));
+	bubble3->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, 5, 10 * map->getTileSize(), true);
+	bubble3->setPosition(glm::vec2(39 * map->getTileSize(), 13 * map->getTileSize()));
 	bubble3->setTileMap(map);
-	//bubbles.insert(bubble3);
+	bubbles.insert(bubble3);
 
 	bubble4 = new Bubble();
-	bubble4->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, 3, 10 * map->getTileSize(), true);
-	bubble4->setPosition(glm::vec2(10 * map->getTileSize(), 10 * map->getTileSize()));
+	bubble4->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, 7, 10 * map->getTileSize(), true);
+	bubble4->setPosition(glm::vec2(31 * map->getTileSize(), 2 * map->getTileSize()));
 	bubble4->setTileMap(map);
-	//bubbles.insert(bubble4);
+	bubbles.insert(bubble4);
 
 	GlassBlock* gb1 = new GlassBlock();
 	gb1->init(glm::ivec2(SCREEN_X, SCREEN_Y), glm::ivec2(8 * 11, 8 * 17), glm::ivec2(24, 8), 0, texProgram);
@@ -302,6 +297,44 @@ void Scene::initInstructions() {
 	instructionsWallaper->setPosition(glm::ivec2(SCREEN_X, SCREEN_Y));
 	instructionsWallaper->addKeyframe(0, glm::vec2(0.0, 0.0));
 	instructionsWallaper->changeAnimation(0);
+
+	projection = glm::ortho(0.f, float(SCREEN_WIDTH), float(SCREEN_HEIGHT), 0.f);
+}
+
+void Scene::initCredits() {
+	initShaders();
+	moment = 7;
+
+	creditsImage.loadFromFile("images/creditWallaper.png", TEXTURE_PIXEL_FORMAT_RGBA);
+	creditsWallaper = Sprite::createSprite(glm::ivec2(8 * 48, 8 * 30), glm::vec2(1.0, 1.0), &creditsImage, &texProgram);
+	creditsWallaper->setNumberAnimations(1);
+	creditsWallaper->setAnimationSpeed(0, 1);
+	creditsWallaper->setPosition(glm::ivec2(SCREEN_X, SCREEN_Y));
+	creditsWallaper->addKeyframe(0, glm::vec2(0.0, 0.0));
+	creditsWallaper->changeAnimation(0);
+
+	numberScoreImage.loadFromFile("images/scoreNumbers.png", TEXTURE_PIXEL_FORMAT_RGBA);
+	finalScoreLabel = *(new vector<Sprite*>(7));
+	for (int i = 0; i < finalScoreLabel.size(); ++i) {
+		finalScoreLabel[i] = Sprite::createSprite(glm::ivec2(16, 16), glm::vec2(1.0 / 11.0, 1.0), &numberScoreImage, &texProgram);
+		finalScoreLabel[i]->setNumberAnimations(11);
+		for (int j = 0; j < 11; ++j) {
+			finalScoreLabel[i]->setAnimationSpeed(j, 1);
+			finalScoreLabel[i]->addKeyframe(j, glm::vec2(float(j) / 11.0, 0.0));
+		}
+		finalScoreLabel[i]->setPosition(glm::ivec2(8 * (34 - i*2), 8 * 6));
+		finalScoreLabel[i]->changeAnimation(10);
+	}
+	for (int i = 0; i < finalScoreLabel.size(); ++i) {
+		if (points > 0) {
+			finalScoreLabel[i]->changeAnimation(points % 10);
+			points /= 10;
+		}
+		else {
+			numbs2render = i;
+			i = finalScoreLabel.size();
+		}
+	}
 
 	projection = glm::ortho(0.f, float(SCREEN_WIDTH), float(SCREEN_HEIGHT), 0.f);
 }
@@ -421,9 +454,6 @@ void Scene::update(int deltaTime)
 			}
 			else
 				moriste();
-		}
-		if (Game::instance().getKey(GLFW_KEY_SPACE)) {
-			gm->putMainMenu();
 		}
 		break;
 	case 2:
@@ -550,6 +580,18 @@ void Scene::render()
 		texProgram.setUniform2f("texCoordDispl", 0.f, 0.f);
 		instructionsWallaper->render();
 	}
+	else if (moment == 7) {
+		glm::mat4 modelview;
+		texProgram.use();
+		texProgram.setUniformMatrix4f("projection", projection);
+		texProgram.setUniform4f("color", 1.0f, 1.0f, 1.0f, 1.0f);
+		modelview = glm::mat4(1.0f);
+		texProgram.setUniformMatrix4f("modelview", modelview);
+		texProgram.setUniform2f("texCoordDispl", 0.f, 0.f);
+		creditsWallaper->render();
+		for (int i = 0; i < numbs2render; ++i)
+			finalScoreLabel[i]->render();
+	}
 	else {
 		glm::mat4 modelview;
 		texProgram.use();
@@ -638,7 +680,8 @@ void Scene::wireCollisions() {
 		}
 		if (gb != NULL) {
 			glm::ivec2 centreBlock = gb->getCenter();
-			instanceDrop(centreBlock);
+			points += 500;
+			ui->setScore(points);
 			dynObjDestr.insert(gb);
 			gsBcks.erase(gb);
 		}
@@ -651,7 +694,7 @@ void Scene::wireCollisions() {
 				mciSendString(L"seek pang to start", NULL, 0, NULL);
 				mciSendString(L"play pang", NULL, 0, NULL);
 
-
+				
 				glm::ivec2 pos = (*it2)->getPos();
 				int type = (*it2)->getType();
 				if (type % 4 != 0) {
@@ -665,6 +708,10 @@ void Scene::wireCollisions() {
 					}
 				}
 				glm::ivec2 centreBlock = (*it2)->getCenter();
+				srand(time(NULL));
+				if (rand() % 5 == 0)
+					instanceDrop(centreBlock);
+				addPoints(0, type, centreBlock);
 				instanceDrop(centreBlock);
 				BubbleDaver* bubbledaver = new BubbleDaver();
 				bubbledaver->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, type);
@@ -679,11 +726,9 @@ void Scene::wireCollisions() {
 					mciSendString(L"stop Continue", NULL, 0, NULL);
 					mciSendString(L"seek Continue to start", NULL, 0, NULL);
 					mciSendString(L"play Continue", NULL, 0, NULL);
-					//points += 1000;
-					//ui->setScore(points);
 					whatScene++;
-						moment = 2;
-						timerRetry = 0;
+					moment = 2;
+					timerRetry = 0;
 					
 				}
 			}
@@ -713,6 +758,7 @@ void Scene::instanceWire(glm::ivec2 pos, int off) {
 
 void Scene::setMaxWires(int nnw) {
 	wrsAllowed = nnw;
+	ui->actDoubleShot();
 }
 
 void Scene::dropCollisions() {
@@ -751,15 +797,29 @@ void Scene::instanceDrop(glm::ivec2 centerSpawn) {
 	}
 	else {
 		PowerUp* aux = new PowerUp();
-		aux->init(glm::ivec2(SCREEN_X, SCREEN_Y), centerSpawn, texProgram, rand() % 3);
+		aux->init(glm::ivec2(SCREEN_X, SCREEN_Y), centerSpawn, texProgram, rand() % 4);
 		aux->setTileMap(map);
 		aux->setScene(this);
 		drops.insert(aux);
 	}
 }
 
-void Scene::addPoints(int pts) { 
-	points += pts * multiplier; 
+void Scene::addPoints(int pts, int whatType, glm::ivec2 centreBlock) {
+	if (whatType == -1)
+		points += pts;
+	else {
+		int type = whatType % 4;
+		for (int i = 0; i < 4; ++i) {
+			if (type == i) {
+				if (multiplier[i] < 8 && multiplier[i] > 0) multiplier[i] *= 2;
+				else if (multiplier[i] == 0) multiplier[i]++;
+			}
+			else {
+				multiplier[i] = 0;
+			}
+		}
+		points += 50 * (4 - type) * multiplier[type];
+	}
 	ui->setScore(points);
 }
 
@@ -773,8 +833,9 @@ void Scene::playerBubbleCollisions() {
 		if ((*it2)->impacte(pP, 16)) {
 			if (escut) {
 				escut = false;
+				player->toggleShield();
+				printf("he sortit\n");
 				timerInvulnerabilty = 60 * 1;
-				break;
 			}
 			else {
 				bool direccio = (*it2)->impacte(pP, 8);
@@ -825,6 +886,7 @@ void Scene::stopTime() {
 
 void Scene::shield() {
 	escut = true;
+	player->toggleShield();
 }
 
 void Scene::pum() {

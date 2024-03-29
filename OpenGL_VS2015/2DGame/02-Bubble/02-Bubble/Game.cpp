@@ -48,7 +48,6 @@ bool Game::update(int deltaTime)
 		}
 		else if (Game::instance().getKey(GLFW_KEY_U)) {
 			if (!keyDown) {
-				scene->addPoints(100);
 				scene->stopTime();
 				keyDown = true;
 			}
@@ -56,13 +55,11 @@ bool Game::update(int deltaTime)
 		else if (Game::instance().getKey(GLFW_KEY_Y)) {
 			if (!keyDown) {
 				scene->setMaxWires(2);
-				scene->addPoints(100);
 				keyDown = true;
 			}
 		}
 		else if (Game::instance().getKey(GLFW_KEY_P)) {
 			if (!keyDown) {
-				scene->addPoints(100);
 				scene->pum();
 				keyDown = true;
 			}
@@ -72,10 +69,14 @@ bool Game::update(int deltaTime)
 	}
 	else if (moment == 0) {
 		if (Game::instance().getKey(GLFW_KEY_ENTER)) {
-			scene->initInstructions();
-			moment = 3;
-			keyDown = true;
+			if (!keyDown) {
+				scene->initInstructions();
+				moment = 3;
+				keyDown = true;
+			}
 		}
+		else
+			keyDown = false;
 	}
 	else if (moment == 2) {
 		if (Game::instance().getKey(GLFW_KEY_ENTER)) {
@@ -83,17 +84,21 @@ bool Game::update(int deltaTime)
 			{
 			case 2:
 				scene->init2();
+				moment = 1;
 				break;
 			case 3:
 				scene->init3();
+				moment = 1;
 				break;
 			case 4:
-				///////////// CREDITS //////////////////
+				scene->initCredits();
+				moment = 4;
+				keyDown = true;
 				break;
 			default:
 				break;
 			}
-			moment = 1;
+			
 		}
 	}
 	else if (moment == 3) {
@@ -101,6 +106,17 @@ bool Game::update(int deltaTime)
 			if (!keyDown) {
 				scene->init1();
 				moment = 1;
+			}
+		}
+		else {
+			keyDown = false;
+		}
+	}
+	else if (moment == 4) {
+		if (Game::instance().getKey(GLFW_KEY_ENTER)) {
+			if (!keyDown) {
+				scene->initMm();
+				moment = 0;
 			}
 		}
 		else {

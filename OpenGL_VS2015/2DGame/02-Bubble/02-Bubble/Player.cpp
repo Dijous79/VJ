@@ -23,6 +23,9 @@ void Player::init(const glm::ivec2& tileMapPos, ShaderProgram& shaderProgram, Sc
 	inAnim = false;
 	lastDir = false;
 	jump = false;
+	shield = false;
+	counting = false;
+	cdShieldEnd = 0;
 	Bfr = 0;
 	cdShoot = 0;
 	scn = scene;
@@ -68,13 +71,28 @@ void Player::init(const glm::ivec2& tileMapPos, ShaderProgram& shaderProgram, Sc
 
 	sprite->changeAnimation(0);
 	tileMapDispl = tileMapPos;
-	sprite->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)));
 
+	shImage.loadFromFile("images/shield.png", TEXTURE_PIXEL_FORMAT_RGBA);
+	sh = Sprite::createSprite(size + glm::ivec2(8, 8), glm::vec2(0.5, 0.5), &shImage, &shaderProgram);
+	sh->setNumberAnimations(2);
+
+	sh->setAnimationSpeed(0, 16);
+	sh->addKeyframe(0, glm::vec2(0.0, 0.0));
+	sh->addKeyframe(0, glm::vec2(0.5, 0.0));
+
+	sh->setAnimationSpeed(0, 16);
+	sh->addKeyframe(1, glm::vec2(0.0, 0.5));
+	sh->addKeyframe(1, glm::vec2(0.5, 0.5));
+
+	sprite->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)));
+	sh->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x - 8), float(tileMapDispl.y + posPlayer.y - 8)));
+	sh->changeAnimation(0);
 }
 
 void Player::update(int deltaTime)
 {
 	sprite->update(deltaTime);
+	sh->update(deltaTime);
 	cdShoot--;
 	if (inAnim) {
 		if (Bfr > 0) Bfr--;
@@ -201,11 +219,23 @@ void Player::update(int deltaTime)
 		}
 	}
 
+	if (counting) {
+		if (cdShieldEnd > 0)
+			cdShieldEnd--;
+		else {
+			shield = false;
+			counting = false;
+		}
+	}
+
 	sprite->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)));
+	sh->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x - 4), float(tileMapDispl.y + posPlayer.y - 4)));
 }
 
 void Player::render()
 {
+	if (shield)
+		sh->render();
 	sprite->render();
 }
 
@@ -224,4 +254,17 @@ glm::ivec2 Player::getPos() { return posPlayer; }
 
 glm::ivec2 Player::getSize() { return size; }
 
+void Player::toggleShield() {
+	if (shield) {
+		sh->changeAnimation(1);
+		cdShieldEnd = 20;
+		printf("%d\n", cdShieldEnd);
+		counting = true;
+		printf("i'm alive\n");
+	}
+	else {
+		sh->changeAnimation(0);
+		shield = true;
+	}
+}
 

@@ -23,23 +23,29 @@ public:
 	void setTileMap(TileMap* tileMap);
 	void setPosition(const glm::vec2& pos);
 
+	void toggleShield();
+
 	glm::ivec2 getPos();
 	glm::ivec2 getSize();
 
 private:
 	bool bClimbing;
 	bool inAnim;
+	bool shield, counting;
 	int Bfr;
 	bool lastDir;
 	bool iOc;
 	bool jump;
 	int cdShoot;
+	int cdShieldEnd;
 	glm::ivec2 tileMapDispl, posPlayer, size;
 	int startY;
 	Texture spritesheet;
 	Sprite* sprite;
 	TileMap* map;
 	Scene* scn;
+	Sprite* sh;
+	Texture shImage;
 
 };
 
