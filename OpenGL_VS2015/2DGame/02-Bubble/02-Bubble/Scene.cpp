@@ -833,7 +833,6 @@ void Scene::playerBubbleCollisions() {
 		if ((*it2)->impacte(pP, 16)) {
 			if (escut) {
 				escut = false;
-				player->toggleShield();
 				printf("he sortit\n");
 				timerInvulnerabilty = 60 * 1;
 			}
@@ -886,7 +885,6 @@ void Scene::stopTime() {
 
 void Scene::shield() {
 	escut = true;
-	player->toggleShield();
 }
 
 void Scene::pum() {
