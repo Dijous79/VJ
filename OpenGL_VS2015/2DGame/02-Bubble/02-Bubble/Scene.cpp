@@ -892,6 +892,8 @@ void Scene::playerBubbleCollisions() {
 					cadaver->setTileMap(map);
 				}
 				else {
+					ui->perdiste();
+
 					PlaySound(NULL, NULL, 0);
 					mciSendString(L"stop GameOver", NULL, 0, NULL);
 					mciSendString(L"open \"sounds/GameOver.wav\" type mpegvideo alias GameOver", NULL, 0, NULL);
@@ -904,7 +906,7 @@ void Scene::playerBubbleCollisions() {
 					viu = false;
 					whatScene=4;
 					moment = 3;
-					timerRetry = 0;
+					timerRetry = -15;
 				}
 				it2 = bubbles.end();
 			}
@@ -981,4 +983,6 @@ void Scene::pum() {
 void Scene::gameReset() {
 	points = 0;
 	lives = 3;
+	ui->setScore(0);
+	ui->setLives(3);
 }
