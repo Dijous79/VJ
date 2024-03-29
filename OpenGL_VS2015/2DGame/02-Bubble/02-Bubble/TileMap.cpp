@@ -186,7 +186,7 @@ bool TileMap::collisionMoveLeftBub(const glm::ivec2& pos, const glm::ivec2& size
 {
 	int x, y0, y1;
 
-	x = (pos.x-1) / tileSize;
+	x = (pos.x) / tileSize;
 	y0 = pos.y / tileSize;
 	y1 = (pos.y + size.y - 1) / tileSize;
 	for (int y = y0; y <= y1; y++)
@@ -434,7 +434,7 @@ vector<glm::ivec2> TileMap::getDownTilePos(const glm::ivec2& pos, const glm::ive
 	y = (pos.y + size.y - 1) / tileSize;
 	vector<glm::ivec2> tiles = vector<glm::ivec2>();
 	int i = 0;
-	for (int x = x0 - 2; x < x1 + 2; x++)
+	for (int x = x0 - 1; x < x1 + 1; x++)
 	{
 		char aux = map[y * mapSize.x + x];
 		if (aux != '\0' && aux != 'v' && aux != 'b' && aux != 'n' && aux != 'V' && aux != 'B' && aux != 'N' && aux != '1' && aux != 'Z' && aux != 'X' && aux != 'S')
@@ -442,15 +442,13 @@ vector<glm::ivec2> TileMap::getDownTilePos(const glm::ivec2& pos, const glm::ive
 			tiles.push_back(glm::vec2(x * tileSize, y * tileSize));
 		}
 		i = i + 1;
-
-		for (auto it = (*objs).begin(); it != (*objs).end(); ++it) {
-			glm::ivec2 posA = (*it)->posObj();
-			glm::ivec2 sizeA = (*it)->sizeObj();
-			int xe = posA.x / tileSize;
-			int xd = xe + size.x / tileSize;
-			int ya = posA.y / tileSize;
-			if (x >= xe && x <= xd && y == ya) {
-				tiles.push_back(glm::vec2(x * tileSize, y * tileSize));
+	}
+	for (auto it = (*objs).begin(); it != (*objs).end(); ++it) {
+		glm::ivec2 posA = (*it)->posObj();
+		glm::ivec2 sizeA = (*it)->sizeObj();
+		if (posA.y > pos.y) {
+			for (int i = 0; i < sizeA.x / 8; i++) {
+				tiles.push_back(glm::vec2(posA.x + i * 8, posA.y));
 			}
 		}
 	}
