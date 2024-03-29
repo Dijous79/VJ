@@ -27,7 +27,7 @@ void PowerUp::init(const glm::ivec2& tileMapPos, glm::ivec2 posiO, ShaderProgram
 		sprite->addKeyframe(DISAPEARING, glm::vec2(1.0 / 11.0, 0.0));
 		sprite->addKeyframe(DISAPEARING, glm::vec2(10.0 / 11.0, 0.0));
 	}
-	else if (pwu == 2) {
+	else if (pwu == 3) {
 		sprite->setAnimationSpeed(BASE, 1);
 		for (int i = 2; i < 10; ++i)
 			sprite->addKeyframe(BASE, glm::vec2(i * (1.0 / 11.0), 0.0));
@@ -35,7 +35,7 @@ void PowerUp::init(const glm::ivec2& tileMapPos, glm::ivec2 posiO, ShaderProgram
 		sprite->addKeyframe(DISAPEARING, glm::vec2(3.0 / 11.0, 0.0));
 		sprite->addKeyframe(DISAPEARING, glm::vec2(10.0 / 11.0, 0.0));
 	}
-	else if (pwu == 3) {
+	else if (pwu == 2) {
 		spritesheet.loadFromFile("images/dynamite.png", TEXTURE_PIXEL_FORMAT_RGBA);
 		sprite = Sprite::createSprite(size, glm::vec2(1.0 / 4.0, 1.0), &spritesheet, &shaderProgram);
 		sprite->setNumberAnimations(2);
@@ -63,11 +63,11 @@ void PowerUp::destroy() {
 		scn->addPoints(100, -1, posi + size / 2);
 		scn->stopTime();
 		break;
-	case 2:
+	case 3:
 		scn->addPoints(100, -1, posi + size / 2);
 		scn->shield();
 		break;
-	case 3:
+	case 2:
 		scn->addPoints(100, -1, posi + size / 2);
 		scn->pum();
 	default:
