@@ -186,7 +186,7 @@ void Interface::render() {
 	}
 	if (bDoubleShot)
 		doubleShot->render();
-	for (int i = 0; i < 6; ++i)
+	for (int i = 0; i < scoreLabel.size(); ++i)
 		scoreLabel[i]->render();
 	for (int i = 0; i < lives; ++i)
 		liveslabel[i]->render();
