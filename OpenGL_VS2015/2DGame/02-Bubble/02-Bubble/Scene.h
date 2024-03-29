@@ -48,6 +48,7 @@ public:
 	void stopTime();
 	void shield();
 	void pum();
+	void gameReset();
 
 private:
 	void initBase();

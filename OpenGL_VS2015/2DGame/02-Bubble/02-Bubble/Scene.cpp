@@ -535,7 +535,7 @@ void Scene::update(int deltaTime)
 		timerRetry++;
 		if (timerRetry == 180) {
 			mciSendString(L"stop Continue", NULL, 0, NULL);
-			int aux = 100 - currentTime / 10000;
+			int aux = 100 - (currentTime / 1000);
 			points += aux * 100;
 			gm->lvlWin(whatScene, aux * 100);
 		}
@@ -629,8 +629,10 @@ void Scene::render()
 		for (std::set<Drops*>::iterator it = drops.begin(); it != drops.end(); ++it) {
 			(*it)->render();
 		}
-		for (std::set<Bubble*>::iterator it = bubbles.begin(); it != bubbles.end(); ++it) {
-			(*it)->render();
+		if (!(bubbleStoped && cdStopBubs < 60 * 2 && (cdStopBubs / 15) % 2 == 0)) {
+			for (std::set<Bubble*>::iterator it = bubbles.begin(); it != bubbles.end(); ++it) {
+				(*it)->render();
+			}
 		}
 		for (std::set<BubbleDaver*>::iterator it = bubbledavers.begin(); it != bubbledavers.end(); ++it) {
 			(*it)->render();
@@ -730,7 +732,6 @@ void Scene::wireCollisions() {
 				if (rand() % 5 == 0)
 					instanceDrop(centreBlock);
 				addPoints(0, type, centreBlock);
-				instanceDrop(centreBlock);
 				BubbleDaver* bubbledaver = new BubbleDaver();
 				bubbledaver->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, type);
 				bubbledaver->setPosition(pos);
@@ -833,7 +834,7 @@ void Scene::instanceDrop(glm::ivec2 centerSpawn) {
 	}
 	else {
 		PowerUp* aux = new PowerUp();
-		aux->init(glm::ivec2(SCREEN_X, SCREEN_Y), centerSpawn, texProgram, rand() % 4);
+		aux->init(glm::ivec2(SCREEN_X, SCREEN_Y), centerSpawn, texProgram, rand() % 3);
 		aux->setTileMap(map);
 		aux->setScene(this);
 		drops.insert(aux);
@@ -975,4 +976,9 @@ void Scene::pum() {
 				timerPum = 0;
 		}
 	}
+}
+
+void Scene::gameReset() {
+	points = 0;
+	lives = 3;
 }

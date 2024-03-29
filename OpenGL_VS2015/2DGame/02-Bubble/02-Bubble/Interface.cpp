@@ -140,6 +140,23 @@ void Interface::init(ShaderProgram& shaderProgram, int city) {
 
 	bDoubleShot = false;
 
+	gameOverTrueImage.loadFromFile("images/gameOverTrue.png", TEXTURE_PIXEL_FORMAT_RGBA);
+	gameOverLabelTrue = Sprite::createSprite(glm::ivec2(8 * 17, 16), glm::vec2(1.0, 1.0), &gameOverTrueImage, &shaderProgram);
+	gameOverLabelTrue->setNumberAnimations(1);
+	gameOverLabelTrue->setAnimationSpeed(0, 1);
+	gameOverLabelTrue->addKeyframe(0, glm::vec2(0.0, 0.0));
+	gameOverLabelTrue->setPosition(glm::ivec2(8 * 16, 8 * 12));
+	gameOverLabelTrue->changeAnimation(0);
+
+	gameOverBoardImage.loadFromFile("images/gameOverUi.png", TEXTURE_PIXEL_FORMAT_RGBA);
+	gameOverBoardLabel = Sprite::createSprite(glm::ivec2(8 * 10, 8), glm::vec2(1.0, 1.0), &gameOverBoardImage, &shaderProgram);
+	gameOverBoardLabel->setNumberAnimations(1);
+	gameOverBoardLabel->setAnimationSpeed(0, 1);
+	gameOverBoardLabel->addKeyframe(0, glm::vec2(0.0, 0.0));
+	gameOverBoardLabel->setPosition(glm::ivec2(8 * 2, 8 * 29));
+	gameOverBoardLabel->changeAnimation(0);
+	gameOver = false;
+
 }
 
 void Interface::update(int deltaTime) {
@@ -163,6 +180,10 @@ void Interface::render() {
 	insertCoinLabel->render();
 	cityLabel->render();
 	stageLabel->render();
+	if (gameOver) {
+		gameOverLabelTrue->render();
+		gameOverBoardLabel->render();
+	}
 	if (bDoubleShot)
 		doubleShot->render();
 	for (int i = 0; i < 6; ++i)
@@ -217,4 +238,8 @@ void Interface::setLives(int v) {
 
 void Interface::actDoubleShot() {
 	bDoubleShot = true;
+}
+
+void Interface::perdiste() {
+	gameOver = true;
 }

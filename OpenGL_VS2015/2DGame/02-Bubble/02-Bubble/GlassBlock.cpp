@@ -1,7 +1,7 @@
 #include "GlassBlock.h"
 
 enum GlassAnims {
-	SH3, DH3, SH4, DH4
+	SH3, DH3, SH4, DH4, BLANK
 };
 
 GlassAnims decode(glm::ivec2 sz, bool dynamic) {
@@ -27,7 +27,7 @@ void GlassBlock::init(const glm::ivec2& tileMapPos, glm::ivec2 posiO, glm::ivec2
 	tileMapDispl = tileMapPos;
 	spritesheet.loadFromFile("images/BreakingGlasses.png", TEXTURE_PIXEL_FORMAT_RGBA);
 	sprite = Sprite::createSprite(size, glm::vec2((sizeObj.x / 8) / 19.0, (sizeObj.y / 8) / 13.0), &spritesheet, &shaderProgram);
-	sprite->setNumberAnimations(4);
+	sprite->setNumberAnimations(5);
 
 	sprite->setAnimationSpeed(SH4, 8);
 	sprite->addKeyframe(SH4, glm::vec2(10.0 / 19.0, float(4 * col) / 13.0));
@@ -51,6 +51,9 @@ void GlassBlock::init(const glm::ivec2& tileMapPos, glm::ivec2 posiO, glm::ivec2
 	sprite->addKeyframe(DH3, glm::vec2(3.0 * col + 8.0 / 19.0, 12.0 / 13.0));
 	sprite->addKeyframe(DH3, glm::vec2(14.0 / 19.0, 12.0 / 13.0));
 
+	sprite->setAnimationSpeed(BLANK, 1);
+	sprite->addKeyframe(BLANK, glm::vec2(14.0 / 19.0, 12.0 / 13.0));
+
 	sprite->changeAnimation(decode(size, false));
 	sprite->setPosition(glm::vec2(float(tileMapDispl.x + posi.x), float(tileMapDispl.y + posi.y)));
 }
@@ -61,7 +64,7 @@ void GlassBlock::update(int deltaTime) {
 			cdDestroy--;
 		}
 		else
-			sprite->setAnimationSpeed(decode(size, true), 0);
+			sprite->changeAnimation(BLANK);
 	}
 }
 

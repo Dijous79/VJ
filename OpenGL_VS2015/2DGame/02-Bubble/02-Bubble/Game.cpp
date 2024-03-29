@@ -46,7 +46,7 @@ bool Game::update(int deltaTime)
 				keyDown = true;
 			}
 		}
-		else if (Game::instance().getKey(GLFW_KEY_U)) {
+		else if (Game::instance().getKey(GLFW_KEY_T)) {
 			if (!keyDown) {
 				scene->stopTime();
 				keyDown = true;
@@ -58,7 +58,7 @@ bool Game::update(int deltaTime)
 				keyDown = true;
 			}
 		}
-		else if (Game::instance().getKey(GLFW_KEY_P)) {
+		else if (Game::instance().getKey(GLFW_KEY_U)) {
 			if (!keyDown) {
 				scene->pum();
 				keyDown = true;
@@ -105,6 +105,7 @@ bool Game::update(int deltaTime)
 		if (Game::instance().getKey(GLFW_KEY_ENTER)) {
 			if (!keyDown) {
 				scene->init1();
+				scene->gameReset();
 				moment = 1;
 			}
 		}
