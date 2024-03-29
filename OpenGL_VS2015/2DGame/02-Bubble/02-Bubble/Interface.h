@@ -17,16 +17,19 @@ public:
 	void gameOverText();
 	void toggleReadyLabel();
 	void actDoubleShot();
+	void perdiste();
 
 private:
 	void setTimeNumber(Sprite* tn, ShaderProgram& shaderProgram);
 
 	int time;
 	int lives;
-	bool bReady, bInsertCoin, bDoubleShot;
+	bool bReady, bInsertCoin, bDoubleShot, gameOver;
 	int cdAnimInsertCoin;
 	Sprite* timeLabel;
 	Sprite* gameOverLabel;
+	Sprite* gameOverLabelTrue;
+	Sprite* gameOverBoardLabel;
 	Sprite* timeNumber1;
 	Sprite* timeNumber2;
 	Sprite* timeNumber3;
@@ -38,7 +41,7 @@ private:
 	Sprite* doubleShot;
 	vector<Sprite*> scoreLabel;
 	vector<Sprite*> liveslabel;
-	Texture timeImage, gameOverImage, timeNumbersImage, readyImage, panelBase, insertCoinImage, citiesNameImage, scoreNumbersImage, livesImage, stageImage, doubleShotImage;
+	Texture timeImage, gameOverImage, timeNumbersImage, readyImage, panelBase, insertCoinImage, citiesNameImage, scoreNumbersImage, livesImage, stageImage, doubleShotImage, gameOverTrueImage, gameOverBoardImage;
 };
 
 #endif
