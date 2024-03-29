@@ -17,7 +17,7 @@ public:
 	void setTileMap(TileMap* tileMap);
 	void setPosition(const glm::vec2& pos);
 
-	bool impacte(glm::ivec2 posCable, int superficie);
+	bool impacte(glm::ivec2 posCable, int superficie, int alcada);
 	glm::ivec2 getPos();
 	int getType();
 	void setJumpx(int x);

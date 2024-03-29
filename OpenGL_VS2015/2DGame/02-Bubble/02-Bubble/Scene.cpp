@@ -707,7 +707,7 @@ void Scene::wireCollisions() {
 		}
 		std::set<Bubble*>::iterator it2 = bubbles.begin();
 		while (it2 != bubbles.end()) {
-			if ((*it2)->impacte(pWr, 4)) {
+			if ((*it2)->impacte(pWr, 4, 400)) {
 				
 				mciSendString(L"stop pang", NULL, 0, NULL);
 				mciSendString(L"open \"sounds/pang.wav\" type mpegvideo alias pang", NULL, 0, NULL);
@@ -867,14 +867,14 @@ void Scene::playerBubbleCollisions() {
 
 	while (it2 != bubbles.end()) {
 		
-		if ((*it2)->impacte(pP, 16)) {
+		if ((*it2)->impacte(pP, 16,32)) {
 			if (escut) {
 				escut = false;
 				printf("he sortit\n");
 				timerInvulnerabilty = 60 * 1;
 			}
 			else {
-				bool direccio = (*it2)->impacte(pP, 8);
+				bool direccio = (*it2)->impacte(pP, 8, 32);
 				if (lives != 0) {
 
 					mciSendString(L"stop Missed", NULL, 0, NULL);
