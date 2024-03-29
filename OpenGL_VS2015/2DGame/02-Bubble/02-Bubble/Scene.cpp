@@ -867,14 +867,14 @@ void Scene::playerBubbleCollisions() {
 
 	while (it2 != bubbles.end()) {
 		
-		if ((*it2)->impacte(pP, 16,32)) {
+		if ((*it2)->impacte(pP, 16,29)) {
 			if (escut) {
 				escut = false;
 				printf("he sortit\n");
 				timerInvulnerabilty = 60 * 1;
 			}
 			else {
-				bool direccio = (*it2)->impacte(pP, 8, 32);
+				bool direccio = (*it2)->impacte(pP, 8, 29);
 				if (lives != 0) {
 
 					mciSendString(L"stop Missed", NULL, 0, NULL);
