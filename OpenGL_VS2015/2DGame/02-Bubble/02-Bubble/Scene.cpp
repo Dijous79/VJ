@@ -615,7 +615,7 @@ void Scene::render()
 		for (std::set<Drops*>::iterator it = drops.begin(); it != drops.end(); ++it) {
 			(*it)->render();
 		}
-		if (!(bubbleStoped && cdStopBubs < 60 * 2 && (cdStopBubs / 10) % 2 == 0)) {
+		if (!(bubbleStoped && cdStopBubs < 60 * 2 && (cdStopBubs / 15) % 2 == 0)) {
 			for (std::set<Bubble*>::iterator it = bubbles.begin(); it != bubbles.end(); ++it) {
 				(*it)->render();
 			}
