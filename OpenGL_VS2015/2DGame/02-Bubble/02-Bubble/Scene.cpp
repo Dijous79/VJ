@@ -398,7 +398,7 @@ void Scene::update(int deltaTime)
 				(*it)->update(deltaTime);
 			}
 			for (std::set<Wire*>::iterator it = wrs.begin(); it != wrs.end(); ++it) {
-				//(*it)->update(deltaTime);
+				(*it)->update(deltaTime);
 			}
 			for (std::set<Drops*>::iterator it = drops.begin(); it != drops.end(); ++it) {
 				(*it)->update(deltaTime);
