@@ -15,7 +15,7 @@ void Wire::init(const glm::ivec2& tileMapPos, glm::ivec2 posiO, ShaderProgram& s
 	sprite->setNumberAnimations(2);
 
 
-	sprite->setAnimationSpeed(Moving, 50);
+	sprite->setAnimationSpeed(Moving, 60);
 	for (int i = 0; i < 70; ++i)
 		sprite->addKeyframe(Moving, glm::vec2(float(i) / 70.0, 0));
 
