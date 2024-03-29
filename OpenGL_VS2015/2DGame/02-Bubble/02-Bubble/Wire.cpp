@@ -51,3 +51,7 @@ glm::vec2 Wire::topHitBox() {
 	res.y = posi.y / 8;
 	return res;
 }
+
+int Wire::getBoxSize(){
+	return boxSize;
+}

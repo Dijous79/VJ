@@ -707,7 +707,7 @@ void Scene::wireCollisions() {
 		}
 		std::set<Bubble*>::iterator it2 = bubbles.begin();
 		while (it2 != bubbles.end()) {
-			if ((*it2)->impacte(pWr, 4, 400)) {
+			if ((*it2)->impacte(pWr, 4, (*it)->getBoxSize())) {
 				
 				mciSendString(L"stop pang", NULL, 0, NULL);
 				mciSendString(L"open \"sounds/pang.wav\" type mpegvideo alias pang", NULL, 0, NULL);
@@ -986,3 +986,4 @@ void Scene::gameReset() {
 	ui->setScore(0);
 	ui->setLives(3);
 }
+

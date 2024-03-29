@@ -7,6 +7,7 @@ public:
 	void update(int deltaTime) override;
 	void destroy() override;
 	glm::vec2 topHitBox();
+	int getBoxSize();
 private:
 	int boxSize;
 	int cd;
