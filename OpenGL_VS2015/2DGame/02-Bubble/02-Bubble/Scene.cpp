@@ -759,7 +759,7 @@ void Scene::instanceDrop(glm::ivec2 centerSpawn) {
 	}
 	else {
 		PowerUp* aux = new PowerUp();
-		aux->init(glm::ivec2(SCREEN_X, SCREEN_Y), centerSpawn, texProgram, rand() % 3);
+		aux->init(glm::ivec2(SCREEN_X, SCREEN_Y), centerSpawn, texProgram, rand() % 4);
 		aux->setTileMap(map);
 		aux->setScene(this);
 		drops.insert(aux);

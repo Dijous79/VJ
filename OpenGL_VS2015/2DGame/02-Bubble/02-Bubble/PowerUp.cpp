@@ -35,6 +35,19 @@ void PowerUp::init(const glm::ivec2& tileMapPos, glm::ivec2 posiO, ShaderProgram
 		sprite->addKeyframe(DISAPEARING, glm::vec2(3.0 / 11.0, 0.0));
 		sprite->addKeyframe(DISAPEARING, glm::vec2(10.0 / 11.0, 0.0));
 	}
+	else if (pwu == 3) {
+		spritesheet.loadFromFile("images/dynamite.png", TEXTURE_PIXEL_FORMAT_RGBA);
+		sprite = Sprite::createSprite(size, glm::vec2(1.0 / 4.0, 1.0), &spritesheet, &shaderProgram);
+		sprite->setNumberAnimations(2);
+
+		sprite->setAnimationSpeed(BASE, 5);
+		sprite->addKeyframe(BASE, glm::vec2(0.0 / 4.0, 0.0));
+		sprite->addKeyframe(BASE, glm::vec2(1.0 / 4.0, 0.0));
+		sprite->addKeyframe(BASE, glm::vec2(2.0 / 4.0, 0.0));
+		sprite->setAnimationSpeed(DISAPEARING, 12);
+		sprite->addKeyframe(DISAPEARING, glm::vec2(1.0 / 4.0, 0.0));
+		sprite->addKeyframe(DISAPEARING, glm::vec2(3.0 / 4.0, 0.0));
+	}
 	sprite->changeAnimation(BASE);
 	sprite->setPosition((glm::vec2(float(tileMapDispl.x + posi.x), float(tileMapDispl.y + posi.y))));
 }
