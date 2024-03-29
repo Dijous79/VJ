@@ -38,6 +38,7 @@ Scene::~Scene()
 }
 
 void Scene::initBase() {
+	srand(time(NULL));
 	mciSendString(L"stop Ending", NULL, 0, NULL);
 	mciSendString(L"stop Continue", NULL, 0, NULL);
 	player = new Player();
@@ -730,7 +731,7 @@ void Scene::wireCollisions() {
 					}
 				}
 				glm::ivec2 centreBlock = (*it2)->getCenter();
-				srand(time(NULL));
+				srand(time(NULL)+type);
 				if (rand() % 5 == 0)
 					instanceDrop(centreBlock);
 				addPoints(0, type, centreBlock);
@@ -962,7 +963,10 @@ void Scene::pum() {
 				bubbles.insert(bubble);
 			}
 			glm::ivec2 centreBlock = (*it2)->getCenter();
-			instanceDrop(centreBlock);
+			srand(time(NULL)+pos.y);
+			if (rand() % 5 == 0) {
+				instanceDrop(centreBlock);
+			}
 			BubbleDaver* bubbledaver = new BubbleDaver();
 			bubbledaver->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, type);
 			bubbledaver->setPosition(pos);

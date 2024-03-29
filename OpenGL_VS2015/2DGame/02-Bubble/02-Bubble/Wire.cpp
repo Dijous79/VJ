@@ -13,7 +13,7 @@ void Wire::init(const glm::ivec2& tileMapPos, glm::ivec2 posiO, ShaderProgram& s
 	spritesheet.loadFromFile("images/StdWire.png", TEXTURE_PIXEL_FORMAT_RGBA);
 	sprite = Sprite::createSprite(size, glm::vec2(1.0 / 70, 1.0), &spritesheet, &shaderProgram);
 	sprite->setNumberAnimations(1);
-	sprite->setAnimationSpeed(0, 54);
+	sprite->setAnimationSpeed(0, 60);
 	for (int i = 0; i < 70; ++i)
 		sprite->addKeyframe(0, glm::vec2(float(i) / 70.0, 0));
 	sprite->changeAnimation(0);
