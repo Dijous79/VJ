@@ -22,6 +22,7 @@ Scene::Scene(Game* game)
 	player = NULL;
 	gm = game;
 	lives = 3;
+	points = 0;
 	god = false;
 	timerPum = 0;
 	mciSendString(L"open \"sounds/Continue.wav\" type mpegvideo alias Continue", NULL, 0, NULL);
@@ -44,10 +45,9 @@ void Scene::initBase() {
 	ui = new Interface();
 	currentTime = -(1000.0f * 40.0f) / 60.0;
 	wrsAllowed = 1;
-	points = 0;
 	multiplier = 1;
 	startCd = 0;
-	timerInvulnerabilty = timerTxtInvulnerabilty = 0;
+	timerInvulnerabilty = 0;
 	escut = false;
 	playerVisible = true;
 	viu = true;
@@ -93,6 +93,7 @@ void Scene::init1()
 	map->setGbS(&gsBcks);
 	ui->init(texProgram, 0);
 	ui->setLives(lives);
+	ui->setScore(points);
 	projection = glm::ortho(0.f, float(SCREEN_WIDTH), float(SCREEN_HEIGHT), 0.f);
 	
 
@@ -137,6 +138,7 @@ void Scene::init2()
 	player->setTileMap(map);
 	ui->init(texProgram, 1);
 	ui->setLives(lives);
+	ui->setScore(points);
 	GlassBlock* gb1 = new GlassBlock();
 	gb1->init(glm::ivec2(SCREEN_X, SCREEN_Y), glm::ivec2(8 * 16, 8 * 8), glm::ivec2(32, 8), 1, texProgram);
 	gsBcks.insert(gb1);
@@ -168,6 +170,7 @@ void Scene::init3()
 	player->setTileMap(map);
 	ui->init(texProgram, 2);
 	ui->setLives(lives);
+	ui->setScore(points);
 	
 	bubble1 = new Bubble();
 	bubble1->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, 0, 10 * map->getTileSize(), true);
@@ -228,6 +231,79 @@ void Scene::initMm() {
 
 	projection = glm::ortho(0.f, float(SCREEN_WIDTH), float(SCREEN_HEIGHT), 0.f);
 	counterInsertCoinMainMenu = 0;
+}
+
+void Scene::initLevelEnd(int what, int extraScore) {
+	initShaders();
+	moment = 5;
+
+	winWallaperImage.loadFromFile("images/winWallaper.png", TEXTURE_PIXEL_FORMAT_RGBA);
+	winWallaper = Sprite::createSprite(glm::ivec2(8 * 48, 8 * 30), glm::vec2(1.0, 1.0), &winWallaperImage, &texProgram);
+	winWallaper->setNumberAnimations(1);
+	winWallaper->setAnimationSpeed(0, 1);
+	winWallaper->setPosition(glm::ivec2(SCREEN_X, SCREEN_Y));
+	winWallaper->addKeyframe(0, glm::vec2(0.0, 0.0));
+	winWallaper->changeAnimation(0);
+
+	ptsImage.loadFromFile("images/pts.png", TEXTURE_PIXEL_FORMAT_RGBA);
+	ptsLabel = Sprite::createSprite(glm::ivec2(8 * 4, 9), glm::vec2(1.0, 1.0), &ptsImage, &texProgram);
+	ptsLabel->setNumberAnimations(1);
+	ptsLabel->setAnimationSpeed(0, 1);
+	ptsLabel->setPosition(glm::ivec2(8 * 32, 8 * 21));
+	ptsLabel->addKeyframe(0, glm::vec2(0.0, 0.0));
+	ptsLabel->changeAnimation(0);
+
+	stageImage.loadFromFile("images/whatStage.png", TEXTURE_PIXEL_FORMAT_RGBA);
+	stageLabel = Sprite::createSprite(glm::ivec2(8 * 9, 9), glm::vec2(1.0, 1.0 / 3.0), &stageImage, &texProgram);
+	stageLabel->setNumberAnimations(3);
+	stageLabel->setAnimationSpeed(0, 1);
+	stageLabel->addKeyframe(0, glm::vec2(0.0, 0.0));
+	stageLabel->setAnimationSpeed(2, 1);
+	stageLabel->addKeyframe(2, glm::vec2(0.0, 2.0 / 3.0));
+	stageLabel->setAnimationSpeed(1, 1);
+	stageLabel->addKeyframe(1, glm::vec2(0.0, 1.0 / 3.0));
+	stageLabel->setPosition(glm::ivec2(8 * 19, 8 * 17));
+	stageLabel->changeAnimation(what - 2);
+
+	numberScoreImage.loadFromFile("images/scoreNumbers.png", TEXTURE_PIXEL_FORMAT_RGBA);
+	scoreLabel = *(new vector<Sprite*>(6));
+	for (int i = 0; i < 6; ++i) {
+		scoreLabel[i] = Sprite::createSprite(glm::ivec2(8, 9), glm::vec2(1.0 / 11.0, 1.0), &numberScoreImage, &texProgram);
+		scoreLabel[i]->setNumberAnimations(11);
+		for (int j = 0; j < 11; ++j) {
+			scoreLabel[i]->setAnimationSpeed(j, 1);
+			scoreLabel[i]->addKeyframe(j, glm::vec2(float(j) / 11.0, 0.0));
+		}
+		scoreLabel[i]->setPosition(glm::ivec2(8 * (30 - i), 8 * 21));
+		scoreLabel[i]->changeAnimation(10);
+	}
+	for (int i = 0; i < scoreLabel.size(); ++i) {
+		if (extraScore > 0) {
+			scoreLabel[i]->changeAnimation(extraScore % 10);
+			extraScore /= 10;
+		}
+		else {
+			numbs2render = i;
+			i = scoreLabel.size();
+		}
+	}
+
+	projection = glm::ortho(0.f, float(SCREEN_WIDTH), float(SCREEN_HEIGHT), 0.f);
+}
+
+void Scene::initInstructions() {
+	initShaders();
+	moment = 6;
+
+	instructionsImage.loadFromFile("images/instructions.png", TEXTURE_PIXEL_FORMAT_RGBA);
+	instructionsWallaper = Sprite::createSprite(glm::ivec2(8 * 48, 8 * 30), glm::vec2(1.0, 1.0), &instructionsImage, &texProgram);
+	instructionsWallaper->setNumberAnimations(1);
+	instructionsWallaper->setAnimationSpeed(0, 1);
+	instructionsWallaper->setPosition(glm::ivec2(SCREEN_X, SCREEN_Y));
+	instructionsWallaper->addKeyframe(0, glm::vec2(0.0, 0.0));
+	instructionsWallaper->changeAnimation(0);
+
+	projection = glm::ortho(0.f, float(SCREEN_WIDTH), float(SCREEN_HEIGHT), 0.f);
 }
 
 void Scene::flush() {
@@ -416,8 +492,9 @@ void Scene::update(int deltaTime)
 		timerRetry++;
 		if (timerRetry == 180) {
 			mciSendString(L"stop Continue", NULL, 0, NULL);
-			flush();
-			retry();
+			int aux = 100 - currentTime / 10000;
+			points += aux * 100;
+			gm->lvlWin(whatScene, aux * 100);
 		}
 		break;
 	
@@ -448,6 +525,30 @@ void Scene::render()
 		mainMenuWallaper->render();
 		if ((counterInsertCoinMainMenu / 30) % 2 == 0)
 			insertCoinMenuLabel->render();
+	}
+	else if (moment == 5) {
+		glm::mat4 modelview;
+		texProgram.use();
+		texProgram.setUniformMatrix4f("projection", projection);
+		texProgram.setUniform4f("color", 1.0f, 1.0f, 1.0f, 1.0f);
+		modelview = glm::mat4(1.0f);
+		texProgram.setUniformMatrix4f("modelview", modelview);
+		texProgram.setUniform2f("texCoordDispl", 0.f, 0.f);
+		winWallaper->render();
+		stageLabel->render();
+		ptsLabel->render();
+		for (int i = 0; i < numbs2render; ++i)
+			scoreLabel[i]->render();
+	}
+	else if (moment == 6) {
+		glm::mat4 modelview;
+		texProgram.use();
+		texProgram.setUniformMatrix4f("projection", projection);
+		texProgram.setUniform4f("color", 1.0f, 1.0f, 1.0f, 1.0f);
+		modelview = glm::mat4(1.0f);
+		texProgram.setUniformMatrix4f("modelview", modelview);
+		texProgram.setUniform2f("texCoordDispl", 0.f, 0.f);
+		instructionsWallaper->render();
 	}
 	else {
 		glm::mat4 modelview;
