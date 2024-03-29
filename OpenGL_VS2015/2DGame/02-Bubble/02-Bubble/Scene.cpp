@@ -186,14 +186,14 @@ void Scene::init3()
 	bubbles.insert(bubble2);
 
 	bubble3 = new Bubble();
-	bubble3->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, 5, 13 * map->getTileSize(), true);
+	bubble3->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, 5, 13 * map->getTileSize(), false);
 	bubble3->setPosition(glm::vec2(39 * map->getTileSize(), 13 * map->getTileSize()));
 	bubble3->setTileMap(map);
 	bubbles.insert(bubble3);
 
 	bubble4 = new Bubble();
-	bubble4->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, 7, 2 * map->getTileSize(), true);
-	bubble4->setPosition(glm::vec2(31 * map->getTileSize(), 2 * map->getTileSize()));
+	bubble4->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, 7, 1 * map->getTileSize(), true);
+	bubble4->setPosition(glm::vec2(31 * map->getTileSize(), 1 * map->getTileSize()));
 	bubble4->setTileMap(map);
 	bubbles.insert(bubble4);
 
