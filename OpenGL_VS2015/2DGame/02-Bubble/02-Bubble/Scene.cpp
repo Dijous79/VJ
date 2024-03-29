@@ -522,7 +522,7 @@ void Scene::update(int deltaTime)
 		timerRetry++;
 		if (timerRetry == 180) {
 			mciSendString(L"stop Continue", NULL, 0, NULL);
-			int aux = 100 - currentTime / 10000;
+			int aux = 100 - (currentTime / 1000);
 			points += aux * 100;
 			gm->lvlWin(whatScene, aux * 100);
 		}
@@ -615,8 +615,10 @@ void Scene::render()
 		for (std::set<Drops*>::iterator it = drops.begin(); it != drops.end(); ++it) {
 			(*it)->render();
 		}
-		for (std::set<Bubble*>::iterator it = bubbles.begin(); it != bubbles.end(); ++it) {
-			(*it)->render();
+		if (!(bubbleStoped && cdStopBubs < 60 * 2 && (cdStopBubs / 10) % 2 == 0)) {
+			for (std::set<Bubble*>::iterator it = bubbles.begin(); it != bubbles.end(); ++it) {
+				(*it)->render();
+			}
 		}
 		for (std::set<BubbleDaver*>::iterator it = bubbledavers.begin(); it != bubbledavers.end(); ++it) {
 			(*it)->render();
@@ -927,4 +929,9 @@ void Scene::pum() {
 				timerPum = 0;
 		}
 	}
+}
+
+void Scene::gameReset() {
+	points = 0;
+	lives = 3;
 }
