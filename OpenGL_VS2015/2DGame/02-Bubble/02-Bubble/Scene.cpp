@@ -73,6 +73,9 @@ void Scene::retry() {
 	case 3:
 		init3();
 		break;
+	case 4:
+		initMm();
+		break;
 	}
 }
 
@@ -103,19 +106,19 @@ void Scene::init1()
 	bubble2->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, 1, 10 * map->getTileSize(), true);
 	bubble2->setPosition(glm::vec2(10 * map->getTileSize(), 10 * map->getTileSize()));
 	bubble2->setTileMap(map);
-	//bubbles.insert(bubble2);
+	bubbles.insert(bubble2);
 
 	bubble3 = new Bubble();
 	bubble3->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, 2, 10 * map->getTileSize(), true);
 	bubble3->setPosition(glm::vec2(10 * map->getTileSize(), 10 * map->getTileSize()));
 	bubble3->setTileMap(map);
-	//bubbles.insert(bubble3);
+	bubbles.insert(bubble3);
 
 	bubble4 = new Bubble();
 	bubble4->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, 3, 10 * map->getTileSize(), true);
 	bubble4->setPosition(glm::vec2(10 * map->getTileSize(), 10 * map->getTileSize()));
 	bubble4->setTileMap(map);
-	//bubbles.insert(bubble4);
+	bubbles.insert(bubble4);
 
 	backGround->addKeyframe(0, glm::vec2(0.0, 0.0));
 	backGround->changeAnimation(0);
@@ -176,19 +179,19 @@ void Scene::init3()
 	bubble2->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, 1, 10 * map->getTileSize(), true);
 	bubble2->setPosition(glm::vec2(10 * map->getTileSize(), 10 * map->getTileSize()));
 	bubble2->setTileMap(map);
-	bubbles.insert(bubble2);
+	//bubbles.insert(bubble2);
 
 	bubble3 = new Bubble();
 	bubble3->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, 2, 10 * map->getTileSize(), true);
 	bubble3->setPosition(glm::vec2(10 * map->getTileSize(), 10 * map->getTileSize()));
 	bubble3->setTileMap(map);
-	bubbles.insert(bubble3);
+	//bubbles.insert(bubble3);
 
 	bubble4 = new Bubble();
 	bubble4->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, 3, 10 * map->getTileSize(), true);
 	bubble4->setPosition(glm::vec2(10 * map->getTileSize(), 10 * map->getTileSize()));
 	bubble4->setTileMap(map);
-	bubbles.insert(bubble4);
+	//bubbles.insert(bubble4);
 
 	GlassBlock* gb1 = new GlassBlock();
 	gb1->init(glm::ivec2(SCREEN_X, SCREEN_Y), glm::ivec2(8 * 11, 8 * 17), glm::ivec2(24, 8), 0, texProgram);
@@ -284,6 +287,21 @@ void Scene::update(int deltaTime)
 			for (std::set<Drops*>::iterator it = drops.begin(); it != drops.end(); ++it) {
 				(*it)->update(deltaTime);
 			}
+			for (std::set<BubbleDaver*>::iterator it = bubbledavers.begin(); it != bubbledavers.end(); ++it) {
+				(*it)->update(deltaTime);
+			}
+			for (int i = 0; i < 1; i++) {
+				std::set<BubbleDaver*>::iterator it4 = bubbledavers.begin();
+				while (it4 != bubbledavers.end()) {
+					if ((*it4)->check()) {
+						bubbledavers.erase(*it4);
+						it4 = bubbledavers.end();
+					}
+					else {
+						it4++;
+					}
+				}
+			}
 			if (bubbleStoped) {
 				if (cdStopBubs > 0) cdStopBubs--;
 				else bubbleStoped = false;
@@ -304,14 +322,12 @@ void Scene::update(int deltaTime)
 			}
 			
 			else {
-				cout << god << timerInvulnerabilty << endl;
 				if (!god) {
 					timerInvulnerabilty--;
 					if (timerInvulnerabilty == 0) {
 						playerVisible = true;
 					}
 				}
-				cout << god << timerInvulnerabilty << endl;
 				if (timerTxtInvulnerabilty == 0) {
 					playerVisible = !playerVisible;
 					timerTxtInvulnerabilty = 10;
@@ -347,6 +363,22 @@ void Scene::update(int deltaTime)
 		}
 		for (std::set<Drops*>::iterator it = drops.begin(); it != drops.end(); ++it) {
 			(*it)->update(deltaTime);
+		}
+		for (std::set<BubbleDaver*>::iterator it = bubbledavers.begin(); it != bubbledavers.end(); ++it) {
+			(*it)->update(deltaTime);
+		}
+		for (int i = 0; i < 1; i++) {
+			std::set<BubbleDaver*>::iterator it4 = bubbledavers.begin();
+			while (it4 != bubbledavers.end()) {
+				if ((*it4)->check()) {
+					printf("entru");
+					bubbledavers.erase(*it4);
+					it4 = bubbledavers.end();
+				}
+				else {
+					it4++;
+				}
+			}
 		}
 		if (bubbleStoped) {
 			if (cdStopBubs > 0) cdStopBubs--;
@@ -443,6 +475,9 @@ void Scene::render()
 		for (std::set<Bubble*>::iterator it = bubbles.begin(); it != bubbles.end(); ++it) {
 			(*it)->render();
 		}
+		for (std::set<BubbleDaver*>::iterator it = bubbledavers.begin(); it != bubbledavers.end(); ++it) {
+			(*it)->render();
+		}
 		if (playerVisible && viu) player->render();
 		else if (!viu) cadaver->render();
 		ui->render();
@@ -521,7 +556,7 @@ void Scene::wireCollisions() {
 				if (type % 4 != 0) {
 					for (int b = 0; b < 2; b++) {
 						Bubble* bubble = new Bubble();
-						bubble->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, type - 1, pos.y - (type % 4) * 8, b);
+						bubble->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, type - 1, pos.y - (type % 4) * 4, b);
 						bubble->setPosition(glm::vec2(pos.x + b * (type % 4) * 8, pos.y + (type % 4) + 1 * 8));
 						bubble->setJumpx(-10);
 						bubble->setTileMap(map);
@@ -530,6 +565,11 @@ void Scene::wireCollisions() {
 				}
 				glm::ivec2 centreBlock = (*it2)->getCenter();
 				instanceDrop(centreBlock);
+				BubbleDaver* bubbledaver = new BubbleDaver();
+				bubbledaver->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, type);
+				bubbledaver->setPosition(pos);
+				bubbledaver->setTileMap(map);
+				bubbledavers.insert(bubbledaver);
 				bubbles.erase(it2);
 				wr = *it;
 				it2 = bubbles.end();
@@ -541,11 +581,8 @@ void Scene::wireCollisions() {
 					//points += 1000;
 					//ui->setScore(points);
 					whatScene++;
-					if (whatScene == 4)
-						moriste();
-					else
 						moment = 2;
-					timerRetry = 0;
+						timerRetry = 0;
 					
 				}
 			}
@@ -704,7 +741,7 @@ void Scene::pum() {
 			int type = (*it2)->getType();
 			for (int b = 0; b < 2; b++) {
 				Bubble* bubble = new Bubble();
-				bubble->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, type - 1, pos.y - (type % 4) * 8, b);
+				bubble->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, type - 1, pos.y - (type % 4) * 4, b);
 				bubble->setPosition(glm::vec2(pos.x + b * (type % 4) * 8, pos.y + (type % 4) + 1 * 8));
 				bubble->setJumpx(-10);
 				bubble->setTileMap(map);
@@ -712,6 +749,11 @@ void Scene::pum() {
 			}
 			glm::ivec2 centreBlock = (*it2)->getCenter();
 			instanceDrop(centreBlock);
+			BubbleDaver* bubbledaver = new BubbleDaver();
+			bubbledaver->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, type);
+			bubbledaver->setPosition(pos);
+			bubbledaver->setTileMap(map);
+			bubbledavers.insert(bubbledaver);
 			bubbles.erase(it2);
 			it2 = bubbles.begin();
 			timerPum=10;
