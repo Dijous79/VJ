@@ -19,6 +19,7 @@ Player::Player() {}
 
 void Player::init(const glm::ivec2& tileMapPos, ShaderProgram& shaderProgram, Scene* scene)
 {
+	pulsada = false;
 	bClimbing = false;
 	inAnim = false;
 	lastDir = false;
@@ -198,25 +199,32 @@ void Player::update(int deltaTime)
 			posPlayer.y += FALL_STEP;
 			map->collisionMoveDown(posPlayer, size, &posPlayer.y);
 		}
-		if (Game::instance().getKey(GLFW_KEY_S) && cdShoot < 0) {
-			if (scn->space4Wire()) {
-				int off = 8;
-				if (bClimbing)
-					off += 4;
-				else if (!lastDir)
-					off += 8;
-				scn->instanceWire(posPlayer, off);
-				inAnim = true;
-				Bfr = 4;
-				cdShoot = 9;
-				if (!bClimbing) {
-					if (lastDir)
-						sprite->changeAnimation(SHOOTING_LEFT);
-					else
-						sprite->changeAnimation(SHOOTING_RIGHT);
+		if (Game::instance().getKey(GLFW_KEY_S)) {
+			if (cdShoot < 0) {
+				if (!pulsada) {
+					pulsada = true;
+					if (scn->space4Wire()) {
+						int off = 8;
+						if (bClimbing)
+							off += 4;
+						else if (!lastDir)
+							off += 8;
+						scn->instanceWire(posPlayer, off);
+						inAnim = true;
+						Bfr = 4;
+						cdShoot = 10;
+						if (!bClimbing) {
+							if (lastDir)
+								sprite->changeAnimation(SHOOTING_LEFT);
+							else
+								sprite->changeAnimation(SHOOTING_RIGHT);
+						}
+					}
 				}
 			}
-		}
+		}else
+			pulsada = false;
+		
 	}
 
 	if (counting) {

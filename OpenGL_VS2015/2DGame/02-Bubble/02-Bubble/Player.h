@@ -35,7 +35,7 @@ private:
 	int Bfr;
 	bool lastDir;
 	bool iOc;
-	bool jump;
+	bool jump, pulsada;
 	int cdShoot;
 	int cdShieldEnd;
 	glm::ivec2 tileMapDispl, posPlayer, size;

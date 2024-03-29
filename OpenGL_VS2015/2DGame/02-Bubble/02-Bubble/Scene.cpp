@@ -38,6 +38,7 @@ Scene::~Scene()
 }
 
 void Scene::initBase() {
+	mciSendString(L"stop Ending", NULL, 0, NULL);
 	mciSendString(L"stop Continue", NULL, 0, NULL);
 	player = new Player();
 	player->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, this);
@@ -345,6 +346,7 @@ void Scene::flush() {
 	delete cadaver;
 	gsBcks.clear();
 	wrs.clear();
+	bubbledavers.clear();
 	drops.clear();
 	dynObjDestr.clear();
 	bubbles.clear();
@@ -454,7 +456,9 @@ void Scene::update(int deltaTime)
 				retry();
 			}
 			else
-				moriste();
+				whatScene=4;
+				moment = 2;
+				timerRetry = 0;
 		}
 		break;
 	case 2:
@@ -723,10 +727,19 @@ void Scene::wireCollisions() {
 				wr = *it;
 				it2 = bubbles.end();
 				if (bubbles.empty()) {
-					PlaySound(NULL, NULL, 0);
-					mciSendString(L"stop Continue", NULL, 0, NULL);
-					mciSendString(L"seek Continue to start", NULL, 0, NULL);
-					mciSendString(L"play Continue", NULL, 0, NULL);
+					if (whatScene != 3) {
+						PlaySound(NULL, NULL, 0);
+						mciSendString(L"stop Continue", NULL, 0, NULL);
+						mciSendString(L"seek Continue to start", NULL, 0, NULL);
+						mciSendString(L"play Continue", NULL, 0, NULL);
+					}
+					else {
+						PlaySound(NULL, NULL, 0);
+						mciSendString(L"stop Ending", NULL, 0, NULL);
+						mciSendString(L"open \"sounds/Ending.wav\" type mpegvideo alias Ending", NULL, 0, NULL);
+						mciSendString(L"seek Ending to start", NULL, 0, NULL);
+						mciSendString(L"play Ending", NULL, 0, NULL);
+					}
 					whatScene++;
 					moment = 2;
 					timerRetry = 0;
@@ -749,6 +762,11 @@ bool Scene::space4Wire() {
 }
 
 void Scene::instanceWire(glm::ivec2 pos, int off) {
+	mciSendString(L"stop shoot", NULL, 0, NULL);
+	mciSendString(L"open \"sounds/shoot.wav\" type mpegvideo alias shoot", NULL, 0, NULL);
+	mciSendString(L"seek shoot to start", NULL, 0, NULL);
+	mciSendString(L"play shoot", NULL, 0, NULL);
+
 	Wire* wr = new Wire();
 	glm::ivec2 posA = pos;
 	posA.x += off;
@@ -855,9 +873,20 @@ void Scene::playerBubbleCollisions() {
 					cadaver->setPosition(player->getPos());
 					cadaver->setTileMap(map);
 				}
-				else
-					moriste();
+				else {
+					mciSendString(L"stop Missed", NULL, 0, NULL);
+					mciSendString(L"open \"sounds/Missed.wav\" type mpegvideo alias missed", NULL, 0, NULL);
+					mciSendString(L"seek Missed to start", NULL, 0, NULL);
+					mciSendString(L"play Missed", NULL, 0, NULL);
 
+					cadaver->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, direccio);
+					cadaver->setPosition(player->getPos());
+					cadaver->setTileMap(map);
+					viu = false;
+					whatScene=4;
+					moment = 3;
+					timerRetry = 0;
+				}
 				it2 = bubbles.end();
 			}
 		}
