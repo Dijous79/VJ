@@ -3,6 +3,7 @@
 
 
 #include <glm/glm.hpp>
+#include <vector>
 #include "ShaderProgram.h"
 #include "TileMap.h"
 #include "Player.h"
@@ -40,7 +41,7 @@ public:
 	bool space4Wire();
 	void instanceWire(glm::ivec2 pos, int off);
 	void setMaxWires(int nnw);
-	void addPoints(int pts);
+	void addPoints(int pts, int whatType, glm::ivec2 centreBlock);
 	void flush();
 	void godCheat();
 	void stopTime();
@@ -74,7 +75,7 @@ private:
 	std::set<DynamicObj*> dynObjDestr;
 	bool destroyingGlass, escut;
 	int points;
-	int multiplier;
+	vector<int> multiplier;
 	Sprite* backGround;
 	Texture spritesheet;
 	Interface* ui;

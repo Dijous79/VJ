@@ -107,8 +107,8 @@ void Interface::init(ShaderProgram& shaderProgram, int city) {
 	stageLabel->changeAnimation(city);
 
 	scoreNumbersImage.loadFromFile("images/scoreNumbers.png", TEXTURE_PIXEL_FORMAT_RGBA);
-	scoreLabel = *(new vector<Sprite*>(6));
-	for (int i = 0; i < 6; ++i) {
+	scoreLabel = *(new vector<Sprite*>(8));
+	for (int i = 0; i < 8; ++i) {
 		scoreLabel[i] = Sprite::createSprite(glm::ivec2(8, 9), glm::vec2(1.0 / 11.0, 1.0), &scoreNumbersImage, &shaderProgram);
 		scoreLabel[i]->setNumberAnimations(11);
 		for (int j = 0; j < 11; ++j) {

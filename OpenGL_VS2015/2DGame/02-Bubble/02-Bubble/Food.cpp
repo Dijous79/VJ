@@ -30,10 +30,16 @@ void Food::init(const glm::ivec2& tileMapPos, glm::ivec2 posiO, ShaderProgram& s
 }
 
 void Food::destroy() {
-	if (whatIsIt < 20)
-		scn->addPoints(500);
+	if (whatIsIt < 20) {
+		if (whatIsIt == 0)
+			scn->addPoints(500, -1, posi + size / 2);
+		if (whatIsIt <= 10)
+			scn->addPoints(whatIsIt * 1000, -1, posi + size / 2);
+		else 
+			scn->addPoints(10000 + (whatIsIt - 10) * 2, -1, posi + size / 2);
+	}
 	else
-		scn->addPoints(1000);
+		scn->addPoints(48000, -1, posi + size / 2);
 }
 
 void Food::setPosSize(int wht, glm::ivec2 posiO) {
