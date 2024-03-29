@@ -11,24 +11,18 @@ void Wire::init(const glm::ivec2& tileMapPos, glm::ivec2 posiO, ShaderProgram& s
 	cd = 1;
 	tileMapDispl = tileMapPos;
 	spritesheet.loadFromFile("images/StdWire.png", TEXTURE_PIXEL_FORMAT_RGBA);
-	sprite = Sprite::createSprite(size, glm::vec2(1.0 / 70, 1.0 / 1.0), &spritesheet, &shaderProgram);
-	sprite->setNumberAnimations(2);
-
-
-	sprite->setAnimationSpeed(Moving, 60);
+	sprite = Sprite::createSprite(size, glm::vec2(1.0 / 70, 1.0), &spritesheet, &shaderProgram);
+	sprite->setNumberAnimations(1);
+	sprite->setAnimationSpeed(0, 53);
 	for (int i = 0; i < 70; ++i)
-		sprite->addKeyframe(Moving, glm::vec2(float(i) / 70.0, 0));
-
-	sprite->setAnimationSpeed(Nothing, 0);
-	sprite->addKeyframe(Nothing, glm::vec2(0, 1.0f / 2.0));
-
-	sprite->changeAnimation(Moving);
+		sprite->addKeyframe(0, glm::vec2(float(i) / 70.0, 0));
+	sprite->changeAnimation(0);
 	sprite->setPosition(glm::vec2(float(tileMapDispl.x + posi.x), float(tileMapDispl.y + posi.y)));
 }
 
 void Wire::update(int deltaTime) {
 	sprite->update(deltaTime);
-	if (cd < 4) {
+	if (cd < 3) {
 		posi.y -= 2;
 		boxSize += 2;
 		cd++;
