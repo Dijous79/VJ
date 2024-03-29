@@ -73,14 +73,12 @@ void Interface::init(ShaderProgram& shaderProgram, int city) {
 
 	insertCoinImage.loadFromFile("images/insertCoin.png", TEXTURE_PIXEL_FORMAT_RGBA);
 	insertCoinLabel = Sprite::createSprite(glm::ivec2(8 * 12, 8), glm::vec2(1.0, 0.5), &insertCoinImage, &shaderProgram);
-	insertCoinLabel->setNumberAnimations(2);
-	insertCoinLabel->setAnimationSpeed(0, 1);
+	insertCoinLabel->setNumberAnimations(1);
+	insertCoinLabel->setAnimationSpeed(0, 3);
 	insertCoinLabel->addKeyframe(0, glm::vec2(0.0, 0.5));
-	insertCoinLabel->setAnimationSpeed(1, 1);
-	insertCoinLabel->addKeyframe(1, glm::vec2(0.0, 0.0));
+	insertCoinLabel->addKeyframe(0, glm::vec2(0.0, 0.0));
 	insertCoinLabel->setPosition(glm::ivec2(8 * 34, 8 * 28));
-	insertCoinLabel->changeAnimation(1);
-	bInsertCoin = true;
+	insertCoinLabel->changeAnimation(0);
 
 	citiesNameImage.loadFromFile("images/cities.png", TEXTURE_PIXEL_FORMAT_RGBA);
 	cityLabel = Sprite::createSprite(glm::ivec2(8 * 10, 9), glm::vec2(1.0, 1.0 / 3.0), &citiesNameImage, &shaderProgram);
@@ -160,19 +158,7 @@ void Interface::init(ShaderProgram& shaderProgram, int city) {
 }
 
 void Interface::update(int deltaTime) {
-	if (cdAnimInsertCoin > 0)
-		cdAnimInsertCoin--;
-	else {
-		cdAnimInsertCoin = 20;
-		if (bInsertCoin) {
-			bInsertCoin = false;
-			insertCoinLabel->changeAnimation(0);
-		}
-		else {
-			bInsertCoin = true;
-			insertCoinLabel->changeAnimation(1);
-		}
-	}
+	insertCoinLabel->update(deltaTime);
 }
 
 void Interface::render() {

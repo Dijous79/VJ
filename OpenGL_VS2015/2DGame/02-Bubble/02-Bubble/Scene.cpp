@@ -390,6 +390,7 @@ void Scene::update(int deltaTime)
 		}
 		else {
 			ui->timeAct(100 - (currentTime) / 1000);
+			ui->update(deltaTime);
 			player->update(deltaTime);
 			for (std::set<GlassBlock*>::iterator it = gsBcks.begin(); it != gsBcks.end(); ++it) {
 				(*it)->update(deltaTime);
@@ -471,6 +472,7 @@ void Scene::update(int deltaTime)
 		break;
 	case 2:
 		player->update(deltaTime);
+		ui->update(deltaTime);
 		for (std::set<GlassBlock*>::iterator it = gsBcks.begin(); it != gsBcks.end(); ++it) {
 			(*it)->update(deltaTime);
 		}
