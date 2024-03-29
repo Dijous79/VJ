@@ -98,8 +98,9 @@ void Scene::init1()
 	
 
 	bubble1 = new Bubble();
-	bubble1->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, 3, 10 * map->getTileSize(), true);
+	bubble1->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, 3, 2 * map->getTileSize(), true);
 	bubble1->setPosition(glm::vec2(5 * map->getTileSize(), 2 * map->getTileSize()));
+	bubble1->setJumpx(0);
 	bubble1->setTileMap(map);
 	bubbles.insert(bubble1);
 
@@ -123,13 +124,13 @@ void Scene::init2()
 	ui->setScore(points);
 
 	bubble1 = new Bubble();
-	bubble1->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, 3, 10 * map->getTileSize(), true);
+	bubble1->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, 3, 3 * map->getTileSize(), true);
 	bubble1->setPosition(glm::vec2(3 * map->getTileSize(), 2 * map->getTileSize()));
 	bubble1->setTileMap(map);
 	bubbles.insert(bubble1);
 
 	bubble1 = new Bubble();
-	bubble1->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, 3, 10 * map->getTileSize(), true);
+	bubble1->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, 3, 1 * map->getTileSize(), true);
 	bubble1->setPosition(glm::vec2(23 * map->getTileSize(), 1 * map->getTileSize()));
 	bubble1->setTileMap(map);
 	bubbles.insert(bubble1);
@@ -168,25 +169,25 @@ void Scene::init3()
 	ui->setScore(points);
 	
 	bubble1 = new Bubble();
-	bubble1->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, 5, 10 * map->getTileSize(), true);
+	bubble1->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, 5, 13 * map->getTileSize(), true);
 	bubble1->setPosition(glm::vec2(10 * map->getTileSize(), 13 * map->getTileSize()));
 	bubble1->setTileMap(map);
 	bubbles.insert(bubble1);
 
 	bubble2 = new Bubble();
-	bubble2->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, 5, 10 * map->getTileSize(), true);
+	bubble2->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, 5, 13 * map->getTileSize(), true);
 	bubble2->setPosition(glm::vec2(16 * map->getTileSize(), 13 * map->getTileSize()));
 	bubble2->setTileMap(map);
 	bubbles.insert(bubble2);
 
 	bubble3 = new Bubble();
-	bubble3->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, 5, 10 * map->getTileSize(), true);
+	bubble3->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, 5, 13 * map->getTileSize(), true);
 	bubble3->setPosition(glm::vec2(39 * map->getTileSize(), 13 * map->getTileSize()));
 	bubble3->setTileMap(map);
 	bubbles.insert(bubble3);
 
 	bubble4 = new Bubble();
-	bubble4->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, 7, 10 * map->getTileSize(), true);
+	bubble4->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, 7, 2 * map->getTileSize(), true);
 	bubble4->setPosition(glm::vec2(31 * map->getTileSize(), 2 * map->getTileSize()));
 	bubble4->setTileMap(map);
 	bubbles.insert(bubble4);

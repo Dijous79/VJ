@@ -49,7 +49,7 @@ void Cadaver::update(int deltaTime)
 		if (fwd) {
 			sprite->changeAnimation(0);
 			posCadaver.x += 1;
-			if (map->collisionMoveRight(posCadaver, glm::ivec2(32, 32))) {
+			if (map->collisionMoveRightBub(posCadaver, glm::ivec2(32, 32))) {
 				fwd = false;
 				posCadaver.x -= 1;
 			}
@@ -57,7 +57,7 @@ void Cadaver::update(int deltaTime)
 		else {
 			sprite->changeAnimation(1);
 			posCadaver.x -= 1;
-			if (map->collisionMoveLeft(posCadaver, glm::ivec2(32, 32))) {
+			if (map->collisionMoveLeftBub(posCadaver, glm::ivec2(32, 32))) {
 				fwd = true;
 				posCadaver.x += 1;
 			}
