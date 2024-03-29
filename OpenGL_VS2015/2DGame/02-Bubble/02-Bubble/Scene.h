@@ -15,6 +15,7 @@
 #include "Interface.h"
 #include "Bubble.h"
 #include "Cadaver.h"
+#include "Bubbledaver.h"
 
 
 // Scene contains all the entities of our game.
@@ -67,6 +68,7 @@ private:
 	std::set<Wire*> wrs;
 	std::set<Drops*> drops;
 	std::set<Bubble*> bubbles;
+	std::set<BubbleDaver*> bubbledavers;
 	ShaderProgram texProgram;
 	float currentTime;
 	glm::mat4 projection;

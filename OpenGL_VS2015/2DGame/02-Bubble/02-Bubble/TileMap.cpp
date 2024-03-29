@@ -309,18 +309,14 @@ bool TileMap::collisionMoveUp(const glm::ivec2& pos, const glm::ivec2& size, int
 
 	x0 = (pos.x + (5 * size.x / 16)) / tileSize;
 	x1 = x0 + (11 * size.x / 16) / tileSize;
-	y = (pos.y + 1) / tileSize;
+	y = (pos.y +15) / tileSize;
 	for (int x = x0; x <= x1; x++)
 	{
 		///////////////mirem si hi ha objectes solids de tilemap/////////
 		char aux = map[y * mapSize.x + x];
 		if (aux != '\0' && aux != 'v' && aux != 'b' && aux != 'n')
 		{
-			if (*posY - tileSize * y + size.y <= 4)
-			{
-				*posY = tileSize * y - size.y;
-				return true;
-			}
+			return true;
 		}
 		///////////////mirem si hi ha objectes dinamics solids/////////
 		for (auto it = (*objs).begin(); it != (*objs).end(); ++it) {
@@ -330,11 +326,7 @@ bool TileMap::collisionMoveUp(const glm::ivec2& pos, const glm::ivec2& size, int
 			int xd = xe + size.x / tileSize;
 			int ya = posA.y / tileSize;
 			if (x >= xe && x <= xd && y == ya) {
-				if (*posY - tileSize * y + size.y <= 4)
-				{
-					*posY = tileSize * y - size.y;
-					return true;
-				}
+				return true;
 			}
 		}
 	}

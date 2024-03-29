@@ -73,6 +73,9 @@ void Scene::retry() {
 	case 3:
 		init3();
 		break;
+	case 4:
+		initMm();
+		break;
 	}
 }
 
@@ -99,7 +102,6 @@ void Scene::init1()
 	bubble1->setPosition(glm::vec2(5 * map->getTileSize(), 2 * map->getTileSize()));
 	bubble1->setTileMap(map);
 	bubbles.insert(bubble1);
-
 
 	backGround->addKeyframe(0, glm::vec2(0.0, 0.0));
 	backGround->changeAnimation(0);
@@ -394,6 +396,21 @@ void Scene::update(int deltaTime)
 			for (std::set<Drops*>::iterator it = drops.begin(); it != drops.end(); ++it) {
 				(*it)->update(deltaTime);
 			}
+			for (std::set<BubbleDaver*>::iterator it = bubbledavers.begin(); it != bubbledavers.end(); ++it) {
+				(*it)->update(deltaTime);
+			}
+			for (int i = 0; i < 1; i++) {
+				std::set<BubbleDaver*>::iterator it4 = bubbledavers.begin();
+				while (it4 != bubbledavers.end()) {
+					if ((*it4)->check()) {
+						bubbledavers.erase(*it4);
+						it4 = bubbledavers.end();
+					}
+					else {
+						it4++;
+					}
+				}
+			}
 			if (bubbleStoped) {
 				if (cdStopBubs > 0) cdStopBubs--;
 				else bubbleStoped = false;
@@ -452,6 +469,22 @@ void Scene::update(int deltaTime)
 		}
 		for (std::set<Drops*>::iterator it = drops.begin(); it != drops.end(); ++it) {
 			(*it)->update(deltaTime);
+		}
+		for (std::set<BubbleDaver*>::iterator it = bubbledavers.begin(); it != bubbledavers.end(); ++it) {
+			(*it)->update(deltaTime);
+		}
+		for (int i = 0; i < 1; i++) {
+			std::set<BubbleDaver*>::iterator it4 = bubbledavers.begin();
+			while (it4 != bubbledavers.end()) {
+				if ((*it4)->check()) {
+					printf("entru");
+					bubbledavers.erase(*it4);
+					it4 = bubbledavers.end();
+				}
+				else {
+					it4++;
+				}
+			}
 		}
 		if (bubbleStoped) {
 			if (cdStopBubs > 0) cdStopBubs--;
@@ -585,6 +618,9 @@ void Scene::render()
 		for (std::set<Bubble*>::iterator it = bubbles.begin(); it != bubbles.end(); ++it) {
 			(*it)->render();
 		}
+		for (std::set<BubbleDaver*>::iterator it = bubbledavers.begin(); it != bubbledavers.end(); ++it) {
+			(*it)->render();
+		}
 		if (playerVisible && viu) player->render();
 		else if (!viu) cadaver->render();
 		ui->render();
@@ -664,7 +700,7 @@ void Scene::wireCollisions() {
 				if (type % 4 != 0) {
 					for (int b = 0; b < 2; b++) {
 						Bubble* bubble = new Bubble();
-						bubble->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, type - 1, pos.y - (type % 4) * 8, b);
+						bubble->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, type - 1, pos.y - (type % 4) * 4, b);
 						bubble->setPosition(glm::vec2(pos.x + b * (type % 4) * 8, pos.y + (type % 4) + 1 * 8));
 						bubble->setJumpx(-10);
 						bubble->setTileMap(map);
@@ -676,6 +712,12 @@ void Scene::wireCollisions() {
 				if (rand() % 5 == 0)
 					instanceDrop(centreBlock);
 				addPoints(0, type, centreBlock);
+				instanceDrop(centreBlock);
+				BubbleDaver* bubbledaver = new BubbleDaver();
+				bubbledaver->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, type);
+				bubbledaver->setPosition(pos);
+				bubbledaver->setTileMap(map);
+				bubbledavers.insert(bubbledaver);
 				bubbles.erase(it2);
 				wr = *it;
 				it2 = bubbles.end();
@@ -862,7 +904,7 @@ void Scene::pum() {
 			int type = (*it2)->getType();
 			for (int b = 0; b < 2; b++) {
 				Bubble* bubble = new Bubble();
-				bubble->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, type - 1, pos.y - (type % 4) * 8, b);
+				bubble->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, type - 1, pos.y - (type % 4) * 4, b);
 				bubble->setPosition(glm::vec2(pos.x + b * (type % 4) * 8, pos.y + (type % 4) + 1 * 8));
 				bubble->setJumpx(-10);
 				bubble->setTileMap(map);
@@ -870,6 +912,11 @@ void Scene::pum() {
 			}
 			glm::ivec2 centreBlock = (*it2)->getCenter();
 			instanceDrop(centreBlock);
+			BubbleDaver* bubbledaver = new BubbleDaver();
+			bubbledaver->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, type);
+			bubbledaver->setPosition(pos);
+			bubbledaver->setTileMap(map);
+			bubbledavers.insert(bubbledaver);
 			bubbles.erase(it2);
 			it2 = bubbles.begin();
 			timerPum=10;
