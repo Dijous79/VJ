@@ -693,6 +693,10 @@ void Scene::wireCollisions() {
 			}
 		}
 		if (gb != NULL) {
+			mciSendString(L"stop glass", NULL, 0, NULL);
+			mciSendString(L"open \"sounds/glass.wav\" type mpegvideo alias glass", NULL, 0, NULL);
+			mciSendString(L"seek glass to start", NULL, 0, NULL);
+			mciSendString(L"play glass", NULL, 0, NULL);
 			glm::ivec2 centreBlock = gb->getCenter();
 			points += 500;
 			ui->setScore(points);
@@ -806,6 +810,10 @@ void Scene::dropCollisions() {
 				d = (*it);
 				it = drops.end();
 				--it;
+				mciSendString(L"stop item", NULL, 0, NULL);
+				mciSendString(L"open \"sounds/item.wav\" type mpegvideo alias item", NULL, 0, NULL);
+				mciSendString(L"seek item to start", NULL, 0, NULL);
+				mciSendString(L"play item", NULL, 0, NULL);
 			}
 		}
 	}
